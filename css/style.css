@@ -1,0 +1,69 @@
+/* multifields */
+.multifields.table { display: table; width: 100%; }
+.multifields::after { content: ""; display: table; width: 100%; }
+.multifields .item-group { padding: .5rem .5rem 0; }
+.multifields .item-rows { border: 1px solid #e0e0e0; transition: background-color .15s; }
+.multifields .item-rows { display: table; width: calc(100% - 1rem); margin-left: 1rem; }
+.multifields .item-section > .item-rows { width: calc(100% - .5rem); margin-left: .5rem; }
+.multifields .group-toolbar, .multifields > .item-rows, .multifields .item-row, .multifields .item-cols { display: table; width: 100%; margin: 0 }
+.multifields .item-cell, .multifields .item-group-title, .multifields .item-group-select, .multifields .item-action, .multifields .item-title, .multifields .item-thumb { display: table-cell }
+.multifields .item-cell, .multifields .item-group-title { padding-right: .25rem; vertical-align: top; }
+.multifields .item-group-title, .multifields > .group-toolbar > .item-group-title { vertical-align: middle; font-weight: 700; }
+.multifields .item-group-title input { font-weight: normal }
+.multifields .item-cell:last-child { padding-right: 0; }
+.multifields .item-title { vertical-align: middle; }
+.multifields .item-title:first-child { padding-left: 0; }
+.multifields .item-group-select, .multifields .item-action { width: .01%; vertical-align: middle; white-space: nowrap; }
+.multifields .item-action { padding: 0 .5rem; font-size: 1rem; }
+.multifields .item-action i { opacity: .7; }
+.multifields .item-action i:hover { opacity: 1; }
+.multifields .group-toolbar { margin-bottom: .5rem }
+.multifields .group-toolbar > .item-action { padding-right: 0 }
+.multifields .item-group-select select { width: auto }
+.multifields .item-rows { margin-bottom: .5rem; }
+.multifields .item-rows, .multifields .item-section > .item-rows, .multifields .item-section > .item-row { position: relative; vertical-align: middle; }
+.multifields .item-rows:not(.float) + .item-rows:not(.float) { margin-top: -1px }
+.multifields .item-row { width: calc(100% - .5rem); margin: .5rem 0 .5rem .5rem; }
+.multifields .item-row + .item-row { margin-top: 0 }
+.multifields .item-cell > .item-row { margin-left: 0; width: 100%; }
+.multifields .item-rows:hover { background-color: #f5f5f9; }
+.multifields .item-rows.active { z-index: 9; background-color: #fff8e1; border-color: #ffc107; opacity: .75; }
+.multifields .item-rows.hover { background-color: #fff8e1; border-color: #ffc107; }
+.multifields .mf-move { position: absolute; left: -1.2rem; top: 50%; height: 1rem; margin-top: -.5rem; font-size: 1rem; color: #000; opacity: .5; }
+.multifields .item-section > .item-row-group > .item-group > .group-toolbar > .mf-move { display: none; }
+.multifields .item-rows.active > .mf-move, .multifields .item-rows.active > .item-group > .group-toolbar > .mf-move, .multifields .mf-move:hover { opacity: 1; }
+.multifields .form-control-richtext { overflow: hidden; height: 1.9rem; min-height: 1.9rem; }
+.multifields .item-cell > select { width: 100% !important }
+.multifields .input-group { border-collapse: collapse }
+.multifields .input-group-btn { height: 1px }
+.multifields .input-group-btn .btn { height: 100% }
+.multifields .item-thumb { overflow: hidden; width: 5rem; height: 5rem; background: #fff no-repeat 50% 50%; background-size: contain; border: 1px solid #e0e0e0 }
+.multifields .item-thumb ~ .item-cell { padding-left: .25rem; vertical-align: middle }
+.multifields.dragging .item-rows > *:not(.item-section):not(.item-group), .multifields.dragging .item-rows.active:not(.placeholder) { pointer-events: none }
+.multifields.dragging .item-rows { pointer-events: all }
+.multifields.dragging > .item-rows::before { content: ""; position: absolute; z-index: 99; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none }
+.multifields .placeholder { z-index: 8 !important; display: block; border: 1px dashed; opacity: .5; visibility: visible !important; }
+.multifields .placeholder > i, .multifields .placeholder > div * { visibility: hidden }
+/* view */
+.multifields .item-rows.float { float: left; display: block; width: auto; height: auto; margin: 0 .5rem .5rem 0; }
+.multifields .item-rows.float ~ .item-rows:not(.float) { float: left; margin-bottom: .5rem; }
+.multifields .item-rows.float .item-row { width: 100%; margin: 0; }
+.multifields .item-rows.float .item-row .item-thumb { border: none; }
+.multifields .item-rows.float .mf-move { left: 0; top: 0; margin: 0; line-height: 1.1rem; }
+.multifields .item-rows.float .mf-move::before { content: "\f047"; }
+.multifields .item-rows.float .item-action { display: block; position: absolute; top: 0; right: 0; width: auto; margin: 0; padding: 0; }
+.multifields .thumb-item-rows { cursor: pointer; }
+.multifields .thumb-item-rows::before { content: "\f055"; position: absolute; top: 50%; left: 50%; width: 4rem; height: 4rem; line-height: 4rem; margin: -2rem 0 0 -2rem; text-align: center; font-size: 4rem; font-family: FontAwesome; color: rgba(0, 0, 0, .6); background-color: #fff; border-radius: 50%; opacity: 0; transition: opacity .4s; pointer-events: none }
+.multifields .thumb-item-rows:not([style])::before { opacity: .2; }
+.multifields .thumb-item-rows:hover::before { opacity: .6; }
+.multifields .item-thumb > .item-rows { position: absolute; z-index: -9; opacity: 0; visibility: hidden; }
+.multifields .col-item-thumb { display: table-cell; }
+.multifields .col-item-thumb-rows { display: table-cell; padding-left: 1rem; }
+.multifields .col-item-thumb-rows .item-rows { float: none; width: 100%; margin: 0 0 .5rem; border: none; background: none !important }
+.multifields .col-item-thumb-rows .item-row { margin-bottom: .5rem !important }
+.multifields .col-item-thumb-rows .mf-move + .item-row, .multifields .col-item-thumb-rows .item-rows:last-child { margin-bottom: 0 !important }
+.multifields .col-item-thumb-rows .mf-move, .multifields .col-item-thumb-rows .item-action { display: none !important }
+.multifields input[name^=tv] + input[type=button] { z-index: 5; float: right; margin-top: -2.30769em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+@media (max-width: 640px) {
+.multifields .col-item-thumb, .multifields .col-item-thumb-rows { width: 100% }
+}
