@@ -111,7 +111,7 @@ $config['render'] = false;
 $controller = new customTvMultifields($config, $modx);
 echo $controller->run();
 ?>
-<textarea name="tv<?= $field_id ?>" id="tv<?= $field_id ?>" style="display: block; height: 200px; margin-top: 1rem;"><?= $field_value ?></textarea>
+<textarea name="tv<?= $field_id ?>" id="tv<?= $field_id ?>" style="display: none; height: 200px; margin-top: 1rem;"><?= $field_value ?></textarea>
 <script>
   new Multifields('tv<?= $field_id ?>');
 </script>
