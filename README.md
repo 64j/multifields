@@ -304,3 +304,59 @@ __Макет в три колонки__
   }
 }
 ```
+
+__Секция__
+
+Набор полей
+
+
+```json
+{
+  "templates": {
+    "Section": {
+      "section": {
+        "title": "Section",
+        "rows": [
+          {
+            "items": [
+              {
+                "Description": {
+                  "type": "text",
+                  "title": "Описание",
+                  "placeholder": "Описание"
+                }
+              },
+              {
+                "Image": {
+                  "type": "image",
+                  "title": "Изображение",
+                  "placeholder": "Изображение"
+                }
+              }
+            ]
+          },
+          {
+            "Description": {
+              "type": "text",
+              "title": "Описание",
+              "placeholder": "Описание"
+            }
+          },
+          {
+            "Image": {
+              "type": "image",
+              "title": "Изображение",
+              "placeholder": "Изображение"
+            }
+          },
+          {
+            "group": {
+              "placeholder": "Название группы"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```
