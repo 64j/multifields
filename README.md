@@ -69,6 +69,8 @@ __Описание с изображением__
 * Description - уникальный идентификатор ячейки
 * Image - уникальный идентификатор ячейки
 
+<img src="https://api.monosnap.com/rpc/file/download?id=XDmUPNCjOYn1Icc7kqrfUdoz97YxLs">
+
 ```json
 {
   "templates": {
@@ -106,6 +108,7 @@ __Группа__
 * group - служебный параметр, для создания группы
 * placeholder - плейсхолдер (подсказка) в поле названия группы
 * rows - служебный параметр, для создания строки значений. Если оставить пустым, то группа по умолчанию будет пустая
+<img src="https://api.monosnap.com/rpc/file/download?id=ZnvteVSZ2ZOrEaaxjfpwRrksVKrLzB">
 
 ```json
 {
@@ -129,6 +132,7 @@ __HTML блок__
 * RichText - уникальный идентификатор ячейки
 * type - тип поля (richtext - html редактор по умолчанию)
 * placeholder - подсказка в поле
+<img src="https://api.monosnap.com/rpc/file/download?id=GaPMAHgBJpNo71y6QppnEqxeAQis3a">
 
 ```json
 {
@@ -162,6 +166,7 @@ __Слайдер__
 * type - тип поля
 * thumb - превью для выбраного значения в поле
 * placeholder - подсказка в поле
+<img src="https://api.monosnap.com/rpc/file/download?id=Y0k98uWXEwa32bl1WMxpMtRDI1xDzY">
 
 ```json
 {
@@ -206,6 +211,7 @@ __Слайд-шоу__
 * rows - служебный параметр, ставится обязательно, даже если одна ячейка
 * Thumb - служит заглушкой для полей внутри себя
 * value - можно указать значение по умолчанию (путь до картинки)
+<img src="https://api.monosnap.com/rpc/file/download?id=epPvZBczYymYOump3XQ5b3OupLS5NX">
 
 ```json
 {
@@ -256,6 +262,7 @@ __Макет в три колонки__
 * novalue - название как текст, не меняется
 * width - ширина колонки
 * rows - служебный параметр, ставится обязательно, даже если одна ячейка
+<img src="https://api.monosnap.com/rpc/file/download?id=1svPd6TlZkhAJhgIRya657kb4jIPEn">
 
 ```json
 {
@@ -309,6 +316,7 @@ __Секция__
 
 Набор полей
 
+<img src="https://api.monosnap.com/rpc/file/download?id=Ty8Cn8S8qx7hkScBWYIHOUC3uS7Lyp">
 
 ```json
 {
