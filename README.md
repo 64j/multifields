@@ -6,8 +6,8 @@
 
 #### Установка: 
 
-Скопировать содержимое в папку assets/tvs/multiFields.
-Создать TV с типом multiFields.
+Скопировать содержимое в папку __assets/tvs/multifields__.
+Создать TV с типом __multifields__.
 В возможных значениях TV прописать конфиг, в формате json.
 
 ```json
