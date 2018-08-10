@@ -1,14 +1,17 @@
 var Multifields = (function($, w, d) {
-  Multifields = function() {
-    if (!arguments[0]) {
+  Multifields = function(a) {
+    if (!a) {
       return;
     }
-    var s = this;
-    this.el = document.getElementById(arguments[0]);
+    this.id = a.id;
+    this.field_id = a.field_id;
+    this.field_name = a.field_name;
+    this.el = document.getElementById(this.field_id);
     this.el.complete = function() {
       s.oncomplete();
     };
-    this.wrap = document.getElementById('multifields_' + arguments[0]);
+    var s = this;
+    this.wrap = document.getElementById('multifields_' + this.field_id);
     this.wrap.addEventListener('keyup', function() {
       s.oncomplete();
     });
@@ -58,7 +61,7 @@ var Multifields = (function($, w, d) {
         tpl = toolbar.querySelector('select') || toolbar.querySelector('input');
         group = toolbar.parentNode;
         if (tpl && tpl.value) {
-          this.loadTemplate(this.el.id, tpl.value, function(data) {
+          this.loadTemplate(tpl.value, function(data) {
             if (data) {
               group.insertAdjacentHTML('beforeEnd', data);
               s.oncomplete();
@@ -69,7 +72,7 @@ var Multifields = (function($, w, d) {
         row = el.closest('.item-rows');
         if (row && row.dataset && row.dataset.tpl) {
           tpl = row.dataset.tpl.split('__');
-          this.loadTemplate(this.el.id, tpl[0], function(data) {
+          this.loadTemplate(tpl[0], function(data) {
             if (data) {
               row.insertAdjacentHTML('afterEnd', data);
               s.oncomplete();
@@ -128,7 +131,7 @@ var Multifields = (function($, w, d) {
       }
       s.oncomplete();
     },
-    loadTemplate: function(id, tpl, callback) {
+    loadTemplate: function(tpl, callback) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', '../assets/tvs/multifields/tv.ajax.php', true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -157,7 +160,7 @@ var Multifields = (function($, w, d) {
           }
         }
       };
-      xhr.send('field_id=' + id + '&template_name=' + tpl);
+      xhr.send('field_id=' + this.id + '&field_name=' + this.field_name + '&template_name=' + tpl);
     },
     build: function(a, c) {
       var s = this,
@@ -460,10 +463,10 @@ function multiFieldsOpenThumbWindow(e, tvID, el)
       overlay: 1,
       overlayclose: 1,
       content: '<div class="multifields table">' +
-      '<div class="col-item-thumb item-thumb"' + (el.style.backgroundImage ? ' style=\'background-image:' + el.style.backgroundImage + '\'' : '') + '></div>' +
-      '<div class="col-item-thumb-rows" id="' + el.id + '">' + el.innerHTML + '</div>' +
-      '</div>' +
-      '<div class="btn btn-success btn-block" onclick="multiFieldsSaveThumbWindow(\'' + el.id + '\',\'' + tvID + '\',this.parentNode.parentNode)">Ok</div>'
+          '<div class="col-item-thumb item-thumb"' + (el.style.backgroundImage ? ' style=\'background-image:' + el.style.backgroundImage + '\'' : '') + '></div>' +
+          '<div class="col-item-thumb-rows" id="' + el.id + '">' + el.innerHTML + '</div>' +
+          '</div>' +
+          '<div class="btn btn-success btn-block" onclick="multiFieldsSaveThumbWindow(\'' + el.id + '\',\'' + tvID + '\',this.parentNode.parentNode)">Ok</div>'
     });
     multiFieldsOpenThumbWindow.el.onchange = function(e) {
       if (e.target.dataset && e.target.dataset.thumb) {

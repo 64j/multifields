@@ -1,6 +1,6 @@
 <?php
 
-class customTvMultifields
+class multifields
 {
     private $config;
     private $thumb;
@@ -9,17 +9,15 @@ class customTvMultifields
     private $tpl;
     private $DLT;
 
-    function __construct($config = array(), $modx = array())
+    function __construct($config = array())
     {
+        $this->modx = evolutionCMS();
         $this->config = $config;
-        $this->modx = $modx;
-        require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
-        require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
 
         // :TODO multitv
         //        if ($this->config['schema'] == 'mtv') {
         //            $settings = array();
-        //            $tvName = $this->modx->db->getValue('SELECT name FROM ' . $modx->getFullTableName('site_tmplvars') . ' WHERE id=' . $this->config['field_id']);
+        //            $tvName = $this->modx->db->getValue('SELECT name FROM ' . $modx->getFullTableName('site_tmplvars') . ' WHERE id=' . $this->config['id']);
         //            require_once MODX_BASE_PATH . 'assets/tvs/multitv/configs/' . $tvName . '.config.inc.php';
         //
         //            if (!empty($this->config['value']) && !empty($this->config['value']['fieldValue'])) {
@@ -42,14 +40,14 @@ class customTvMultifields
         //            }
         //
         //            foreach ($settings['fields'] as $key => $value) {
-        //                $this->config['templates'][$tvName]['rows'][0]['row'][$key]['items'][] = $value;
+        //                $this->config['elements'][$tvName]['rows'][0]['row'][$key]['items'][] = $value;
         //            }
         //        }
     }
 
     private function templates($tpl = '', $data = array())
     {
-        if ($this->config['render']) {
+        if (!empty($this->config['render'])) {
             switch ($tpl) {
                 case 'wrap':
                     $tpl = $this->config['tplWrap'];
@@ -135,8 +133,8 @@ class customTvMultifields
         $out = '';
         $this->tpl = $this->config['template_name'];
 
-        if (isset($this->config['templates'][$this->tpl])) {
-            $out = $this->create($this->config['templates'][$this->tpl]);
+        if (isset($this->config['elements'][$this->tpl])) {
+            $out = $this->create($this->config['elements'][$this->tpl]);
         }
 
         return $out;
@@ -145,7 +143,7 @@ class customTvMultifields
     public function run()
     {
         return $this->templates('wrap', array(
-            'field_id' => $this->config['field_id'],
+            'field_id' => $this->config['id'],
             'toolbar' => $this->toolbar($this->config['title'], false),
             'wrap' => $this->create($this->config['value'])
         ));
@@ -218,13 +216,13 @@ class customTvMultifields
             'select' => ''
         );
 
-        if (!empty($this->config['templates']) && is_array($this->config['templates'])) {
+        if (!empty($this->config['elements']) && is_array($this->config['elements'])) {
             $options = '';
             $template = '';
             $templates = $templates ? explode(',', $templates) : array();
             $i = 0;
 
-            foreach ($this->config['templates'] as $key => $value) {
+            foreach ($this->config['elements'] as $key => $value) {
                 if ((empty($value['hidden']) && empty($templates)) || ($templates && in_array($key, $templates))) {
                     $options .= $this->templates('option', array(
                         'value' => $key,
@@ -292,12 +290,12 @@ class customTvMultifields
                 $name = (string)key($value);
 
                 if ($this->config['render']) {
-                    if (isset($this->config['templates'][$tpl]['rows'][0][$name]) && isset($value[$name])) {
+                    if (isset($this->config['elements'][$tpl]['rows'][0][$name]) && isset($value[$name])) {
                         if (is_array($value[$name])) {
-                            $value[$name] += $this->config['templates'][$tpl]['rows'][0][$name];
+                            $value[$name] += $this->config['elements'][$tpl]['rows'][0][$name];
                         } else {
                             $_ = isset($value[$name]) ? $value[$name] : '';
-                            $value = $this->config['templates'][$tpl]['rows'][0];
+                            $value = $this->config['elements'][$tpl]['rows'][0];
                             $value[$name]['value'] = $_;
                         }
                     }
@@ -309,9 +307,9 @@ class customTvMultifields
                         if (isset($value[$name]['rows'])) {
                             $value[$name]['rows'] = $this->fillData($value[$name]['rows']);
                         }
-                        if (isset($this->config['templates'][$tpl]['rows'][0][$name])) {
+                        if (isset($this->config['elements'][$tpl]['rows'][0][$name])) {
                             $_ = isset($value[$name]['value']) ? $value[$name]['value'] : '';
-                            $value[$name] = array_replace_recursive($value[$name], $this->config['templates'][$tpl]['rows'][0][$name]);
+                            $value[$name] = array_replace_recursive($value[$name], $this->config['elements'][$tpl]['rows'][0][$name]);
                             if ($_) {
                                 $value[$name]['value'] = $_;
                             }
@@ -322,15 +320,15 @@ class customTvMultifields
                             'value' => $value[$name],
                             'name' => $name
                         );
-                        if (isset($this->config['templates'][$tpl]['rows'][0][$name])) {
-                            $value[$name] += $this->config['templates'][$tpl]['rows'][0][$name];
+                        if (isset($this->config['elements'][$tpl]['rows'][0][$name])) {
+                            $value[$name] += $this->config['elements'][$tpl]['rows'][0][$name];
                         }
                     }
                     $this->tpl = '';
                 }
 
-                if (!empty($this->config['templates'][$tpl]['view'])) {
-                    $this->view = $this->config['templates'][$tpl]['view'];
+                if (!empty($this->config['elements'][$tpl]['view'])) {
+                    $this->view = $this->config['elements'][$tpl]['view'];
                 } else {
                     $this->view = '';
                 }
@@ -405,8 +403,8 @@ class customTvMultifields
         if (!empty($data['tpl'])) {
             $this->tpl = $data['tpl'];
         }
-        if (isset($this->config['templates'][$this->tpl]['group'])) {
-            $data += $this->config['templates'][$this->tpl]['group'];
+        if (isset($this->config['elements'][$this->tpl]['group'])) {
+            $data += $this->config['elements'][$this->tpl]['group'];
         }
         if (!empty($data['novalue'])) {
             $title = !empty($data['title']) ? $data['title'] : '';
@@ -441,8 +439,8 @@ class customTvMultifields
             $this->tpl = $data['tpl'];
         }
 
-        if (isset($this->config['templates'][$this->tpl]['section'])) {
-            $data = array_replace_recursive($data, $this->config['templates'][$this->tpl]['section']);
+        if (isset($this->config['elements'][$this->tpl]['section'])) {
+            $data = array_replace_recursive($data, $this->config['elements'][$this->tpl]['section']);
         }
 
         $out .= $this->templates('rows', array(
@@ -498,7 +496,7 @@ class customTvMultifields
             $name = !empty($data['name']) ? $data['name'] : $type;
             $attributes = !empty($data['attr']) ? ' ' . $data['attr'] : '';
             $guid = md5(time() . rand(0, 99999));
-            $id = $this->config['field_id'] . '__' . $guid . '__' . $type . '__' . $name;
+            $id = $this->config['id'] . '__' . $guid . '__' . $type . '__' . $name;
             $width = !empty($data['width']) ? ' style="width:' . $data['width'] . '"' : '';
             $class = '';
             $placeholder = !empty($data['placeholder']) ? $data['placeholder'] : '';
@@ -511,7 +509,7 @@ class customTvMultifields
                     //$class .= ' richtext';
                     $item = $this->templates('richtext', array(
                         'id' => $id,
-                        'field_id' => 'tv' . $this->config['field_id'],
+                        'field_id' => 'tv' . $this->config['id'],
                         'value' => $value,
                         'placeholder' => $placeholder,
                         'title' => $title
@@ -532,7 +530,7 @@ class customTvMultifields
                         $style = ' style="' . $style . '"';
                     }
                     if ($rows) {
-                        $attributes .= ' onclick="multiFieldsOpenThumbWindow(event,\'tv' . $this->config['field_id'] . '\',this);"';
+                        $attributes .= ' onclick="multiFieldsOpenThumbWindow(event,\'tv' . $this->config['id'] . '\',this);"';
                         $class = ' thumb-item-rows';
                         $rows = $this->rows($rows);
                     }
@@ -560,7 +558,7 @@ class customTvMultifields
                     $item = preg_replace('~<script[^>]*>.*?</script>~si', '', $item);
                     //$item = str_replace('onclick="BrowseServer(\'tv' . $id . '\')"', 'onclick="BrowseServer(this.previousElementSibling.id)"', $item);
                     if ($forThumb) {
-                        $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){multiFieldsChangeThumb(\'tv' . $this->config['field_id'] . '\',this)}, false);</script>';
+                        $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){multiFieldsChangeThumb(\'tv' . $this->config['id'] . '\',this)}, false);</script>';
                         $this->thumb = '';
                     }
                     break;
