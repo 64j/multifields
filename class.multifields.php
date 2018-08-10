@@ -13,40 +13,12 @@ class multifields
     {
         $this->modx = evolutionCMS();
         $this->config = $config;
-
-        // :TODO multitv
-        //        if ($this->config['schema'] == 'mtv') {
-        //            $settings = array();
-        //            $tvName = $this->modx->db->getValue('SELECT name FROM ' . $modx->getFullTableName('site_tmplvars') . ' WHERE id=' . $this->config['id']);
-        //            require_once MODX_BASE_PATH . 'assets/tvs/multitv/configs/' . $tvName . '.config.inc.php';
-        //
-        //            if (!empty($this->config['value']) && !empty($this->config['value']['fieldValue'])) {
-        //                $values = $this->config['value'];
-        //                $this->config['value'] = array();
-        //                foreach ($values['fieldValue'] as $key => $value) {
-        //                    $i = 0;
-        //                    $this->config['value']['rows'][$key]['tpl'] = $tvName . '__0';
-        //                    foreach ($value as $k => $v) {
-        //                        $items = $settings['fields'][$k];
-        //                        $items['value'] = $v;
-        //                        if (isset($items['caption'])) {
-        //                            $items['title'] = $items['caption'];
-        //                            unset($items['caption']);
-        //                        }
-        //                        $this->config['value']['rows'][$key]['row'][$i]['items'][] = $items;
-        //                        $i++;
-        //                    }
-        //                }
-        //            }
-        //
-        //            foreach ($settings['fields'] as $key => $value) {
-        //                $this->config['elements'][$tvName]['rows'][0]['row'][$key]['items'][] = $value;
-        //            }
-        //        }
     }
 
-    private function templates($tpl = '', $data = array())
-    {
+    private function templates(
+        $tpl = '',
+        $data = array()
+    ) {
         if (!empty($this->config['render'])) {
             switch ($tpl) {
                 case 'wrap':
@@ -84,7 +56,7 @@ class multifields
                 case 'item':
                     if (isset($data['tpl']) && isset($this->config['tpl' . $data['tpl']])) {
                         $tpl = $this->config['tpl' . $data['tpl']];
-                    } else if (isset($this->config['tpl' . $this->tpl])) {
+                    } elseif (isset($this->config['tpl' . $this->tpl])) {
                         $tpl = $this->config['tpl' . $this->tpl];
                     } else {
                         $tpl = $this->config['tpl'];
@@ -159,19 +131,19 @@ class multifields
                     $this->tpl = $data['tpl'];
                 }
                 if ($key === 'title' || $key === 'placeholder' || $key === 'value') {
-                } else if ($key === 'tpl') {
+                } elseif ($key === 'tpl') {
                     $this->tpl = $value;
-                } else if ($key === 'view') {
+                } elseif ($key === 'view') {
                     $this->view = $value;
-                } else if ($key === 'cols') {
+                } elseif ($key === 'cols') {
                     $out .= $this->cols($value);
-                } else if ($key === 'group') {
+                } elseif ($key === 'group') {
                     $out .= $this->group($value);
-                } else if ($key === 'rows') {
+                } elseif ($key === 'rows') {
                     $out .= $this->rows($value);
-                } else if ($key === 'section') {
+                } elseif ($key === 'section') {
                     $out .= $this->section($value);
-                } else if ($key === 'items') {
+                } elseif ($key === 'items') {
                     $out .= $this->templates('row', array(
                         'name' => $key,
                         'row' => $this->items($value)
@@ -208,8 +180,11 @@ class multifields
         return $out;
     }
 
-    private function toolbar($title = '', $move = true, $templates = '')
-    {
+    private function toolbar(
+        $title = '',
+        $move = true,
+        $templates = ''
+    ) {
         $data = array(
             'title' => $title,
             'move' => $move ? $this->templates('move') : '',
@@ -247,8 +222,10 @@ class multifields
         return $this->templates('toolbar', $data);
     }
 
-    private function cols($data = array(), $width = array())
-    {
+    private function cols(
+        $data = array(),
+        $width = array()
+    ) {
         $out = '';
 
         if (!empty($data)) {
@@ -277,9 +254,9 @@ class multifields
         foreach ($data as $key => $value) {
             if (isset($value['group'])) {
                 $out .= $this->create($value);
-            } else if (isset($value['section'])) {
+            } elseif (isset($value['section'])) {
                 $out .= $this->create($value);
-            } else if (is_array($value)) {
+            } elseif (is_array($value)) {
                 if (isset($value['tpl'])) {
                     $tpl = $this->tpl = $value['tpl'];
                 } else {
@@ -309,7 +286,9 @@ class multifields
                         }
                         if (isset($this->config['elements'][$tpl]['rows'][0][$name])) {
                             $_ = isset($value[$name]['value']) ? $value[$name]['value'] : '';
-                            $value[$name] = array_replace_recursive($value[$name], $this->config['elements'][$tpl]['rows'][0][$name]);
+                            $value[$name] = array_replace_recursive($value[$name],
+                                $this->config['elements'][$tpl]['rows'][0][$name]);
+
                             if ($_) {
                                 $value[$name]['value'] = $_;
                             }
@@ -351,47 +330,53 @@ class multifields
         foreach ($data as $key => $value) {
             if (is_numeric($key)) {
                 foreach ($value as $k => $v) {
-                    if ($k === 'rows') {
-                        if ($this->config['render']) {
-                            $out .= $this->templates('item', $this->renderData($v));
-                        } else {
-                            $out .= $this->templates('item', array(
-                                'class' => '',
-                                'width' => '',
-                                'title' => '',
-                                'value' => $this->row($v)
-                            ));
-                        }
-                    } else if ($k === 'group') {
-                        if (is_array($v)) {
-                            $v['name'] = $k;
-                        }
-                        $out .= $this->templates('item', array(
-                            'class' => '',
-                            'width' => !empty($v['width']) ? ' style="width:' . $v['width'] . '"' : '',
-                            'title' => '',
-                            'value' => $this->group($v)
-                        ));
-                    } else {
-                        if (is_array($v)) {
-                            $v['name'] = $k;
-                        }
-                        $out .= $this->templates('items', array(
-                            'items' => $this->item($v)
-                        ));
-                    }
+                    $out .= $this->_items($k, $v);
                 }
             } else {
-                if (is_array($value)) {
-                    $value['name'] = $key;
-                }
-                $out .= $this->templates('items', array(
-                    'items' => $this->item($value)
-                ));
+                $out .= $this->_items($key, $value);
             }
         }
 
         $this->tpl = '';
+
+        return $out;
+    }
+
+    private function _items(
+        $key,
+        $value
+    ) {
+        $out = '';
+
+        if ($key === 'rows') {
+            if ($this->config['render']) {
+                $out .= $this->templates('item', $this->renderData($value));
+            } else {
+                $out .= $this->templates('item', array(
+                    'class' => '',
+                    'width' => '',
+                    'title' => '',
+                    'value' => $this->row($value)
+                ));
+            }
+        } elseif ($key === 'group') {
+            if (is_array($value)) {
+                $value['name'] = $key;
+            }
+            $out .= $this->templates('item', array(
+                'class' => '',
+                'width' => !empty($value['width']) ? ' style="width:' . $value['width'] . '"' : '',
+                'title' => '',
+                'value' => $this->group($value)
+            ));
+        } else {
+            if (is_array($value)) {
+                $value['name'] = $key;
+            }
+            $out .= $this->templates('items', array(
+                'items' => $this->item($value)
+            ));
+        }
 
         return $out;
     }
@@ -571,7 +556,9 @@ class multifields
 
                 case 'date':
                     $item = renderFormElement($type, $id, $default, $elements, $value, $attributes, $data, $data);
-                    $item = str_replace('onclick="document.forms[\'mutate\'].elements[\'tv' . $id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $id . '\'].onblur(); return true;"', 'onclick="document.forms[\'mutate\'].elements[this.previousElementSibling.id].value=\'\';document.forms[\'mutate\'].elements[this.previousElementSibling.id].onblur(); return true;"', $item);
+                    $item = str_replace('onclick="document.forms[\'mutate\'].elements[\'tv' . $id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $id . '\'].onblur(); return true;"',
+                        'onclick="document.forms[\'mutate\'].elements[this.previousElementSibling.id].value=\'\';document.forms[\'mutate\'].elements[this.previousElementSibling.id].onblur(); return true;"',
+                        $item);
                     break;
 
                 default:
@@ -635,8 +622,10 @@ class multifields
         return $out;
     }
 
-    public function dbug($str = '', $exit = false)
-    {
+    public function dbug(
+        $str = '',
+        $exit = false
+    ) {
         print('<pre>');
         print_r($str);
         print('</pre>');

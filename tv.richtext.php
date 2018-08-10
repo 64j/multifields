@@ -2,7 +2,7 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-include_once("../../../index.php");
+include_once(dirname(__DIR__, 3) . '/index.php');
 
 $modx->db->connect();
 
@@ -57,7 +57,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         <tbody>
         <tr>
             <td>
-                <textarea name="ta" id="ta" cols="30" rows="10" style="opacity: 0; visibility: hidden"></textarea>
+                <textarea name="ta" id="ta" cols="30" rows="10"></textarea>
             </td>
         </tr>
         </tbody>

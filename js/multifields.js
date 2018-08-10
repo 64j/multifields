@@ -410,18 +410,22 @@ function multiFieldsOpenRTEinWindow(id, tvID)
       var w = this.contentWindow;
       var form = w.document.getElementById('ta_form');
       var textarea = w.document.getElementById('ta');
-      textarea.innerHTML = document.getElementById(id).innerHTML;
+      textarea.value = document.getElementById(id).value;
+      w.tinyMCE.get('ta').remove();
+      w.tinyMCE.execCommand("mceAddEditor", false, 'ta');
       form.addEventListener('submit', function(e) {
         textarea = this.querySelector('textarea#ta');
         setTimeout(function() {
-          document.getElementById(id).innerHTML = textarea.value;
+          document.getElementById(id).value = textarea.value;
           document.getElementById(tvID).complete();
           w.documentDirty = false;
           multiFieldsOpenRTEinWindow.close();
-        }, 100);
+        }, 200);
         e.preventDefault();
       }, false);
     }, false);
+  } else {
+    alert('parent.modx not found !');
   }
 }
 
@@ -449,6 +453,7 @@ function multiFieldsChangeThumb(tvID, el)
       a.value = el.value;
       a.setAttribute('value', el.value);
     });
+    document.getElementById(tvID).complete();
   }
 }
 
@@ -478,6 +483,8 @@ function multiFieldsOpenThumbWindow(e, tvID, el)
         multiFieldsChangeThumb(tvID, e.target);
       }
     };
+  } else {
+    alert('parent.modx not found !');
   }
   e.preventDefault();
 }

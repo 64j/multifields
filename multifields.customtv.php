@@ -10,7 +10,7 @@ if (!class_exists('multifields')) {
     <script src="../assets/tvs/<?= $baseDir ?>/js/multifields.js"></script>
     <link rel="stylesheet" type="text/css" href="../assets/tvs/<?= $baseDir ?>/css/style.css">
     <script>
-      if (typeof window.BrowseServer !== 'function' && typeof window.BrowseFileServer !== 'function') {
+      if (typeof BrowseServer !== 'function' && typeof BrowseFileServer !== 'function') {
         var lastImageCtrl;
         var lastFileCtrl;
 
@@ -45,7 +45,7 @@ if (!class_exists('multifields')) {
         }
       }
 
-      if (typeof window.SetUrlChange !== 'function') {
+      if (typeof SetUrlChange !== 'function') {
         function SetUrlChange(el)
         {
           if ('createEvent' in document) {
@@ -58,7 +58,7 @@ if (!class_exists('multifields')) {
         }
       }
 
-      if (typeof window.SetUrl === 'function') {
+      if (typeof SetUrl !== 'function') {
         function SetUrl(url, width, height, alt)
         {
           if (lastFileCtrl) {
@@ -75,7 +75,9 @@ if (!class_exists('multifields')) {
               SetUrlChange(c);
             }
             lastImageCtrl = '';
-          } else { }
+          } else {
+
+          }
         }
       }
 

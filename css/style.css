@@ -37,7 +37,7 @@
 .multifields .input-group { border-collapse: collapse }
 .multifields .input-group-btn { height: 1px }
 .multifields .input-group-btn .btn { height: 100% }
-.multifields .item-thumb { overflow: hidden; width: 5rem; height: 5rem; background: #fff no-repeat 50% 50%; background-size: contain; border: 1px solid #e0e0e0 }
+.multifields .item-thumb { overflow: hidden; width: 6rem; height: 6rem; background: #fff no-repeat 50% 50%; background-size: contain; border: 1px solid #e0e0e0 }
 .multifields .item-thumb ~ .item-cell { padding-left: .25rem; vertical-align: middle }
 .multifields.dragging .item-rows > *:not(.item-section):not(.item-group), .multifields.dragging .item-rows.active:not(.placeholder) { pointer-events: none }
 .multifields.dragging .item-rows { pointer-events: all }
@@ -53,11 +53,11 @@
 .multifields .item-rows.float .mf-move::before { content: "\f047"; }
 .multifields .item-rows.float .item-action { display: block; position: absolute; top: 0; right: 0; width: auto; margin: 0; padding: 0; }
 .multifields .thumb-item-rows { cursor: pointer; }
-.multifields .thumb-item-rows::before { content: "\f055"; position: absolute; top: 50%; left: 50%; width: 4rem; height: 4rem; line-height: 4rem; margin: -2rem 0 0 -2rem; text-align: center; font-size: 4rem; font-family: FontAwesome; color: rgba(0, 0, 0, .6); background-color: #fff; border-radius: 50%; opacity: 0; transition: opacity .4s; pointer-events: none }
+.multifields .thumb-item-rows::before { content: "\f055"; position: absolute; top: 50%; left: 50%; width: 4rem; height: 4rem; line-height: 4rem; margin: -2rem 0 0 -2rem; text-align: center; font-size: 3rem; font-family: FontAwesome; color: rgba(0, 0, 0, .6); background-color: #fff; border-radius: 50%; opacity: 0; transition: opacity .4s; pointer-events: none }
 .multifields .thumb-item-rows:not([style])::before { opacity: .2; }
 .multifields .thumb-item-rows:hover::before { opacity: .6; }
 .multifields .item-thumb > .item-rows { position: absolute; z-index: -9; opacity: 0; visibility: hidden; }
-.multifields .col-item-thumb { display: table-cell; }
+.multifields .col-item-thumb { display: table-cell; width: 10rem; }
 .multifields .col-item-thumb-rows { display: table-cell; padding-left: 1rem; }
 .multifields .col-item-thumb-rows .item-rows { float: none; width: 100%; margin: 0 0 .5rem; border: none; background: none !important }
 .multifields .col-item-thumb-rows .item-row { margin-bottom: .5rem !important }
