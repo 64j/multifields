@@ -15,8 +15,6 @@ var Multifields = (function($, w, d) {
     this.wrap.addEventListener('keyup', function() {
       s.oncomplete();
     });
-    //    this.wrap.addEventListener('change', function() {
-    //    });
     this.wrap.addEventListener('click', function(e) {
       if (e.target.classList.contains('mf-add')) {
         s.add.call(s, e);
@@ -29,15 +27,9 @@ var Multifields = (function($, w, d) {
       }
     });
     this.draggable();
-    //    w.addEventListener('beforeunload', function(e) {
-    //      s.oncomplete();
-    //    }, false);
   };
 
   Multifields.prototype = {
-    init: function() {
-      //this.oncomplete();
-    },
     oncomplete: function() {
       var s = this;
       this.counter = 0;
@@ -133,7 +125,7 @@ var Multifields = (function($, w, d) {
     },
     loadTemplate: function(tpl, callback) {
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', '../assets/tvs/multifields/tv.ajax.php', true);
+      xhr.open('POST', '../assets/tvs/multiFields/tv.ajax.php', true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
@@ -167,7 +159,7 @@ var Multifields = (function($, w, d) {
           b = Object.create(null);
       c = c || 0;
       [].forEach.call(a.children, function(el, i) {
-        var tpl, parent = el.parentNode, _;
+        var tpl, parent = el.parentNode, parentParent, _;
         if (!c && el.classList.contains('group-toolbar')) {
           var elTitle = el.querySelector('.item-group-title');
           if (elTitle.firstElementChild) {
@@ -195,20 +187,16 @@ var Multifields = (function($, w, d) {
           }
         }
         if (el.classList.contains('item-group')) {
-          if (parent.dataset && parent.dataset.tpl) {
-            tpl = parent.dataset.tpl;
+          tpl = parent.dataset && parent.dataset.tpl ? ':' + parent.dataset.tpl : '';
+          if (!b['group' + tpl]) {
+            b['group' + tpl] = {};
           }
-          if (!b.group) {
-            b.group = {tpl: tpl};
-          }
-          $.extend(b.group, s.build(el));
+          $.extend(b['group' + tpl], s.build(el));
         }
         if (el.classList.contains('item-section')) {
-          if (parent.dataset && parent.dataset.tpl) {
-            tpl = parent.dataset.tpl;
-          }
-          if (!b.section) {
-            b.section = {tpl: tpl, rows: s.build(el)};
+          tpl = parent.dataset && parent.dataset.tpl ? ':' + parent.dataset.tpl : '';
+          if (!b['section' + tpl]) {
+            b['section' + tpl] = {rows: s.build(el)};
           }
         }
         if (el.classList.contains('item-row')) {
@@ -224,16 +212,22 @@ var Multifields = (function($, w, d) {
           }
         }
         if (el.classList.contains('item-cell')) {
-          var parentParent = parent.parentNode;
-          if (parentParent && parentParent.dataset.tpl && !parentParent.classList.contains('item-section')) {
-            b.tpl = parentParent.dataset.tpl;
+          parentParent = parent.parentNode;
+          if (parentParent && parentParent.dataset.tpl
+              && !parentParent.classList.contains('item-section')
+              && (el.parentNode.dataset && el.parentNode.dataset.name && el.parentNode.dataset.name !== 'items')
+          ) {
+            //b.tpl = parentParent.dataset.tpl;
+            tpl = ':' + parentParent.dataset.tpl;
+          } else {
+            tpl = '';
           }
           var item = el.querySelector('[name]');
           if (item) {
             var _ = item.name.split('__') || item.id.split('__'),
                 value = item.value,
                 type = _[2].replace('[]', ''),
-                name = _[3].replace('[]', '') || _[1].replace('[]', '');
+                name = (_[3].replace('[]', '') || _[1].replace('[]', '')) + tpl;
             if (item.nodeName === 'DIV') {
               value = item.innerHTML;
             }
@@ -251,8 +245,10 @@ var Multifields = (function($, w, d) {
             }
           }
           if (parent.dataset && parent.dataset.name && parent.dataset.name === 'items') {
-            if (!b.items) {
-              b.items = [];
+            parentParent = parent.parentNode;
+            tpl = parentParent.dataset && parentParent.dataset.tpl && !parentParent.classList.contains('item-section')  ? ':' + parentParent.dataset.tpl : '';
+            if (!b['items' + tpl]) {
+              b['items' + tpl] = [];
             }
             if (el.firstElementChild.classList.contains('item-row')) {
               _ = {'rows': s.build(el)};
@@ -262,7 +258,7 @@ var Multifields = (function($, w, d) {
               _ = Object.create(null);
               _[name] = value;
             }
-            b['items'].push(_);
+            b['items' + tpl].push(_);
           } else {
             if (el.children[1] && el.children[1].classList.contains('item-rows')) {
               b[name] = {'value': el.children[0].value, 'rows': []};
@@ -336,7 +332,6 @@ var Multifields = (function($, w, d) {
                 el = d.elementFromPoint(e.clientX, e.clientY);
                 if (el && el.classList.contains('draggable') && el.parentNode === drag.parentNode) {
                   if (!el.classList.contains('float')) {
-                    console.log('y: ' + y + ', elT: ' + el.offsetTop + ', plH: ' + placeholder.offsetHeight);
                     if (el.offsetTop + (el.offsetHeight / 2) > y + (!drag.classList.contains('float') ? (el.offsetHeight / 2) : 0)) {
                       $(el).before(placeholder);
                     } else {
@@ -382,129 +377,145 @@ var Multifields = (function($, w, d) {
 
           }
       );
+    },
+    openRTEinWindow: function(id, tvID) {
+      var multiFieldsOpenRTEinWindow;
+      var url = '../assets/tvs/multiFields/tv.richtext.php';
+
+      if (parent.modx) {
+        multiFieldsOpenRTEinWindow = parent.modx.popup({
+          url: url,
+          iframe: 'iframe',
+          overlay: 1,
+          hover: 0,
+          hide: 0,
+          width: '95%',
+          height: '95%',
+          margin: 0,
+          resize: 0,
+          draggable: 0,
+          title: 'MultiFields:: RichText'
+        });
+
+        multiFieldsOpenRTEinWindow.frame.addEventListener('load', function() {
+          var w = this.contentWindow;
+          var form = w.document.getElementById('ta_form');
+          var textarea = w.document.getElementById('ta');
+          textarea.value = document.getElementById(id).value;
+          w.tinyMCE.get('ta').remove();
+          w.tinyMCE.execCommand('mceAddEditor', false, 'ta');
+          form.addEventListener('submit', function(e) {
+            textarea = this.querySelector('textarea#ta');
+            setTimeout(function() {
+              document.getElementById(id).value = textarea.value;
+              document.getElementById(tvID).complete();
+              w.documentDirty = false;
+              multiFieldsOpenRTEinWindow.close();
+            }, 200);
+            e.preventDefault();
+          }, false);
+        }, false);
+      } else {
+        alert('parent.modx not found !');
+      }
+    },
+    changeThumbs: function(tvID, el) {
+      if (el.dataset && el.dataset.thumb) {
+        var els = document.querySelectorAll('#thumb' + el.dataset.thumb);
+        [].forEach.call(els, function(a) {
+          if (a.previousElementSibling && a.previousElementSibling.classList.contains('col-item-thumb')) {
+            a = a.previousElementSibling;
+          }
+          if (el.value) {
+            a.style.backgroundImage = 'url(../' + el.value + ')';
+          } else {
+            a.removeAttribute('style');
+          }
+        });
+        els = document.querySelectorAll('#tv' + el.dataset.thumb);
+        [].forEach.call(els, function(a) {
+          a.value = el.value;
+          a.setAttribute('value', el.value);
+        });
+        els = document.querySelectorAll('#' + el.id);
+        [].forEach.call(els, function(a) {
+          a.value = el.value;
+          a.setAttribute('value', el.value);
+        });
+        document.getElementById(tvID).complete();
+      }
+    },
+    changeThumb: function(tvID, el) {
+      if (el.parentNode.dataset && el.parentNode.dataset.type) {
+        if (el.parentNode.dataset.type === 'image') {
+          if (el.value) {
+            el.parentNode.style.backgroundImage = 'url(../' + el.value + ')';
+          } else {
+            el.parentNode.removeAttribute('style');
+          }
+        }/* else if (el.parentNode.dataset.type === 'file') {
+          if (el.value) {
+            var ext = el.value.split('.');
+            ext = ext[ext.length - 1];
+            el.parentNode.style.backgroundImage = 'url(media/browser/mcpuk/themes/oxygen/img/files/big/' + ext + '.png)';
+          } else {
+            el.parentNode.removeAttribute('style');
+          }
+        }*/
+      }
+      document.getElementById(tvID).complete();
+    },
+    openThumbWindow: function(e, tvID, el) {
+      var multiFieldsOpenThumbWindow;
+      if (parent.modx) {
+        multiFieldsOpenThumbWindow = parent.modx.popup({
+          width: '70%',
+          height: 'auto',
+          hide: 0,
+          hover: 0,
+          overlay: 1,
+          overlayclose: 1,
+          content: '<div class="multifields table">' +
+              '<div class="col-item-thumb item-thumb"' + (el.style.backgroundImage ? ' style=\'background-image:' + el.style.backgroundImage + '\'' : '') + '></div>' +
+              '<div class="col-item-thumb-rows" id="' + el.id + '">' + el.innerHTML + '</div>' +
+              '</div>' +
+              '<div class="btn btn-success btn-block" onclick="Multifields.prototype.saveThumbWindow(\'' + el.id + '\',\'' + tvID + '\',this.parentNode.parentNode)">Ok</div>'
+        });
+        multiFieldsOpenThumbWindow.el.onchange = function(e) {
+          if (e.target.dataset && e.target.dataset.thumb) {
+            Multifields.prototype.changeThumbs(tvID, e.target);
+          }
+        };
+        multiFieldsOpenThumbWindow.el.onkeyup = function(e) {
+          if (e.target.dataset && e.target.dataset.thumb) {
+            Multifields.prototype.changeThumbs(tvID, e.target);
+          }
+        };
+      } else {
+        alert('parent.modx not found !');
+      }
+      e.preventDefault();
+    },
+    saveThumbWindow: function(id, tvID, el) {
+      var openThumb = document.querySelector('#' + id + '.col-item-thumb-rows');
+      var inputs = openThumb.querySelectorAll('[name]');
+      var thumb = document.querySelector('#' + id + '.thumb-item-rows');
+      [].forEach.call(inputs, function(a) {
+        var b = thumb.getElementById(a.id);
+        if (b) {
+          b.value = a.value;
+          if (b.nodeName === 'INPUT') {
+            b.setAttribute('value', a.value);
+          } else if (b.nodeName === 'TEXTAREA') {
+            b.innerHTML = a.value;
+          }
+        }
+      });
+      document.getElementById(tvID).complete();
+      el.close();
     }
   };
 
   return Multifields;
 })
 (jQuery, window, document);
-
-function multiFieldsOpenRTEinWindow(id, tvID)
-{
-  if (parent.modx) {
-    var multiFieldsOpenRTEinWindow = parent.modx.popup({
-      url: '../assets/tvs/multifields/tv.richtext.php',
-      iframe: 'iframe',
-      overlay: 1,
-      hover: 0,
-      hide: 0,
-      width: '95%',
-      height: '95%',
-      margin: 0,
-      resize: 0,
-      draggable: 0,
-      title: 'MultiFields:: RichText'
-    });
-
-    multiFieldsOpenRTEinWindow.frame.addEventListener('load', function() {
-      var w = this.contentWindow;
-      var form = w.document.getElementById('ta_form');
-      var textarea = w.document.getElementById('ta');
-      textarea.value = document.getElementById(id).value;
-      w.tinyMCE.get('ta').remove();
-      w.tinyMCE.execCommand("mceAddEditor", false, 'ta');
-      form.addEventListener('submit', function(e) {
-        textarea = this.querySelector('textarea#ta');
-        setTimeout(function() {
-          document.getElementById(id).value = textarea.value;
-          document.getElementById(tvID).complete();
-          w.documentDirty = false;
-          multiFieldsOpenRTEinWindow.close();
-        }, 200);
-        e.preventDefault();
-      }, false);
-    }, false);
-  } else {
-    alert('parent.modx not found !');
-  }
-}
-
-function multiFieldsChangeThumb(tvID, el)
-{
-  if (el.dataset && el.dataset.thumb) {
-    var els = document.querySelectorAll('#thumb' + el.dataset.thumb);
-    [].forEach.call(els, function(a) {
-      if (a.previousElementSibling && a.previousElementSibling.classList.contains('col-item-thumb')) {
-        a = a.previousElementSibling;
-      }
-      if (el.value) {
-        a.style.backgroundImage = 'url(../' + el.value + ')';
-      } else {
-        a.removeAttribute('style');
-      }
-    });
-    els = document.querySelectorAll('#tv' + el.dataset.thumb);
-    [].forEach.call(els, function(a) {
-      a.value = el.value;
-      a.setAttribute('value', el.value);
-    });
-    els = document.querySelectorAll('#' + el.id);
-    [].forEach.call(els, function(a) {
-      a.value = el.value;
-      a.setAttribute('value', el.value);
-    });
-    document.getElementById(tvID).complete();
-  }
-}
-
-function multiFieldsOpenThumbWindow(e, tvID, el)
-{
-  if (parent.modx) {
-    var multiFieldsOpenThumbWindow = parent.modx.popup({
-      width: '70%',
-      height: 'auto',
-      hide: 0,
-      hover: 0,
-      overlay: 1,
-      overlayclose: 1,
-      content: '<div class="multifields table">' +
-          '<div class="col-item-thumb item-thumb"' + (el.style.backgroundImage ? ' style=\'background-image:' + el.style.backgroundImage + '\'' : '') + '></div>' +
-          '<div class="col-item-thumb-rows" id="' + el.id + '">' + el.innerHTML + '</div>' +
-          '</div>' +
-          '<div class="btn btn-success btn-block" onclick="multiFieldsSaveThumbWindow(\'' + el.id + '\',\'' + tvID + '\',this.parentNode.parentNode)">Ok</div>'
-    });
-    multiFieldsOpenThumbWindow.el.onchange = function(e) {
-      if (e.target.dataset && e.target.dataset.thumb) {
-        multiFieldsChangeThumb(tvID, e.target);
-      }
-    };
-    multiFieldsOpenThumbWindow.el.onkeyup = function(e) {
-      if (e.target.dataset && e.target.dataset.thumb) {
-        multiFieldsChangeThumb(tvID, e.target);
-      }
-    };
-  } else {
-    alert('parent.modx not found !');
-  }
-  e.preventDefault();
-}
-
-function multiFieldsSaveThumbWindow(id, tvID, el)
-{
-  var openThumb = document.querySelector('#' + id + '.col-item-thumb-rows');
-  var inputs = openThumb.querySelectorAll('[name]');
-  var thumb = document.querySelector('#' + id + '.thumb-item-rows');
-  [].forEach.call(inputs, function(a) {
-    var b = thumb.getElementById(a.id);
-    if (b) {
-      b.value = a.value;
-      if (b.nodeName === 'INPUT') {
-        b.setAttribute('value', a.value);
-      } else if (b.nodeName === 'TEXTAREA') {
-        b.innerHTML = a.value;
-      }
-    }
-  });
-  document.getElementById(tvID).complete();
-  el.close();
-}

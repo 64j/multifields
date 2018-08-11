@@ -12,6 +12,26 @@ $templates = [
             ]
         ]
     ],
+    'Image' => [
+        'title' => 'Картинка',
+        'view' => 'float',
+        'rows' => [
+            0 => [
+                'Image' => [
+                    'type' => 'thumb',
+                    'rows' => [
+                        0 => [
+                            'image' => [
+                                'type' => 'image',
+                                'thumb' => 'Thumb',
+                                'placeholder' => 'изображение'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
     'Images' => [
         'title' => 'Изображения',
         'rows' => [
@@ -108,6 +128,61 @@ $templates = [
                                 'type' => 'textareamini',
                                 'placeholder' => 'описание'
                             ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'Cols2Left' => [
+        'rows' => [
+            0 => [
+                'items' => [
+                    0 => [
+                        'group' => [
+                            'templates' => false,
+                            'move' => '0',
+                            'title' => 'Col 1',
+                            'novalue' => true,
+                            'width' => '33%',
+                            'rows' => []
+                        ]
+                    ],
+                    1 => [
+                        'group' => [
+                            'move' => '0',
+                            'title' => 'Col 2',
+                            'novalue' => true,
+                            'width' => '67%',
+                            'rows' => []
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'Cols2Right' => [
+        'rows' => [
+            0 => [
+                'items' => [
+                    0 => [
+                        'group' => [
+                            'templates' => 'RichText',
+                            'move' => '0',
+                            'title' => 'Col 1',
+                            'novalue' => true,
+                            'width' => '67%',
+                            'rows' => []
+                        ]
+                    ],
+                    1 => [
+                        'group' => [
+                            'templates' => 'Image',
+                            'move' => '0',
+                            'title' => 'Col 2',
+                            'novalue' => true,
+                            'width' => '33%',
+                            'rows' => []
                         ]
                     ]
                 ]

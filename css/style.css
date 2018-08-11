@@ -52,10 +52,10 @@
 .multifields .item-rows.float .mf-move { left: 0; top: 0; margin: 0; line-height: 1.1rem; }
 .multifields .item-rows.float .mf-move::before { content: "\f047"; }
 .multifields .item-rows.float .item-action { display: block; position: absolute; top: 0; right: 0; width: auto; margin: 0; padding: 0; }
-.multifields .thumb-item-rows { cursor: pointer; }
-.multifields .thumb-item-rows::before { content: "\f055"; position: absolute; top: 50%; left: 50%; width: 4rem; height: 4rem; line-height: 4rem; margin: -2rem 0 0 -2rem; text-align: center; font-size: 3rem; font-family: FontAwesome; color: rgba(0, 0, 0, .6); background-color: #fff; border-radius: 50%; opacity: 0; transition: opacity .4s; pointer-events: none }
-.multifields .thumb-item-rows:not([style])::before { opacity: .2; }
-.multifields .thumb-item-rows:hover::before { opacity: .6; }
+.multifields .thumb-item-rows, .multifields [data-type="image"], .multifields [data-type="file"]  { cursor: pointer; }
+.multifields .thumb-item-rows::before, .multifields [data-type="image"]::before, .multifields [data-type="file"]::before { content: "\f055"; position: absolute; top: 50%; left: 50%; width: 4rem; height: 4rem; line-height: 4rem; margin: -2rem 0 0 -2rem; text-align: center; font-size: 3rem; font-family: FontAwesome; color: rgba(0, 0, 0, .6); background-color: #fff; border-radius: 50%; opacity: 0; transition: opacity .4s; pointer-events: none }
+.multifields .thumb-item-rows:not([style])::before, .multifields [data-type="image"]:not([style])::before, .multifields [data-type="file"]:not([style])::before { opacity: .2; }
+.multifields .thumb-item-rows:hover::before, .multifields [data-type="image"]:hover::before, .multifields [data-type="file"]:hover::before { opacity: .6; }
 .multifields .item-thumb > .item-rows { position: absolute; z-index: -9; opacity: 0; visibility: hidden; }
 .multifields .col-item-thumb { display: table-cell; width: 10rem; }
 .multifields .col-item-thumb-rows { display: table-cell; padding-left: 1rem; }

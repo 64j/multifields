@@ -2,12 +2,12 @@
 
 class multifields
 {
-    private $config;
-    private $thumb;
-    private $view;
-    private $modx;
-    private $tpl;
-    private $DLT;
+    protected $config;
+    protected $thumb;
+    protected $view;
+    protected $modx;
+    protected $tpl;
+    protected $DLT;
 
     function __construct($config = array())
     {
@@ -15,7 +15,7 @@ class multifields
         $this->config = $config;
     }
 
-    private function templates(
+    protected function templates(
         $tpl = '',
         $data = array()
     ) {
@@ -121,14 +121,16 @@ class multifields
         ));
     }
 
-    private function create($data = array())
+    protected function create($data = array())
     {
         $out = '';
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                if (isset($data['tpl'])) {
-                    $this->tpl = $data['tpl'];
+                $_ = explode(':', $key);
+                if (isset($_[1])) {
+                    $this->tpl = $_[1];
+                    $key = $_[0];
                 }
                 if ($key === 'title' || $key === 'placeholder' || $key === 'value') {
                 } elseif ($key === 'tpl') {
@@ -180,7 +182,7 @@ class multifields
         return $out;
     }
 
-    private function toolbar(
+    protected function toolbar(
         $title = '',
         $move = true,
         $templates = ''
@@ -222,7 +224,7 @@ class multifields
         return $this->templates('toolbar', $data);
     }
 
-    private function cols(
+    protected function cols(
         $data = array(),
         $width = array()
     ) {
@@ -247,25 +249,33 @@ class multifields
         return $out;
     }
 
-    private function rows($data = array())
+    protected function rows($data = array())
     {
         $out = '';
 
         foreach ($data as $key => $value) {
+            $name = '';
+            $tpl = '';
+            if (is_array($value)) {
+                reset($value);
+                $name = (string)key($value);
+                $_name = $name;
+                $_ = explode(':', $name);
+                if (isset($_[1])) {
+                    $tpl = $this->tpl = $_[1];
+                    $name = $_[0];
+                } else {
+                    $tpl = $this->tpl;
+                }
+                $value[$name] = $value[$_name];
+                unset($value[$_name]);
+            }
+
             if (isset($value['group'])) {
                 $out .= $this->create($value);
             } elseif (isset($value['section'])) {
                 $out .= $this->create($value);
             } elseif (is_array($value)) {
-                if (isset($value['tpl'])) {
-                    $tpl = $this->tpl = $value['tpl'];
-                } else {
-                    $tpl = $this->tpl;
-                }
-                unset($value['tpl']);
-                reset($value);
-                $name = (string)key($value);
-
                 if ($this->config['render']) {
                     if (isset($this->config['elements'][$tpl]['rows'][0][$name]) && isset($value[$name])) {
                         if (is_array($value[$name])) {
@@ -294,11 +304,15 @@ class multifields
                             }
                         }
                     } else {
-                        $value[$name] = array(
-                            'tpl' => $tpl,
-                            'value' => $value[$name],
-                            'name' => $name
-                        );
+                        if ($name == 'items') {
+                            $value[$name] = array();
+                        } else {
+                            $value[$name] = array(
+                                'tpl' => $tpl,
+                                'value' => $value[$name],
+                                'name' => $name
+                            );
+                        }
                         if (isset($this->config['elements'][$tpl]['rows'][0][$name])) {
                             $value[$name] += $this->config['elements'][$tpl]['rows'][0][$name];
                         }
@@ -323,7 +337,7 @@ class multifields
         return $out;
     }
 
-    private function items($data = array())
+    protected function items($data = array())
     {
         $out = '';
 
@@ -342,7 +356,7 @@ class multifields
         return $out;
     }
 
-    private function _items(
+    protected function _items(
         $key,
         $value
     ) {
@@ -381,13 +395,10 @@ class multifields
         return $out;
     }
 
-    private function group($data = array())
+    protected function group($data = array())
     {
         $out = '';
 
-        if (!empty($data['tpl'])) {
-            $this->tpl = $data['tpl'];
-        }
         if (isset($this->config['elements'][$this->tpl]['group'])) {
             $data += $this->config['elements'][$this->tpl]['group'];
         }
@@ -415,14 +426,10 @@ class multifields
         return $out;
     }
 
-    private function section($data = array())
+    protected function section($data = array())
     {
         $out = '';
         $data = $this->fillData($data);
-
-        if (!empty($data['tpl'])) {
-            $this->tpl = $data['tpl'];
-        }
 
         if (isset($this->config['elements'][$this->tpl]['section'])) {
             $data = array_replace_recursive($data, $this->config['elements'][$this->tpl]['section']);
@@ -442,7 +449,7 @@ class multifields
         return $out;
     }
 
-    private function row($data = array())
+    protected function row($data = array())
     {
         $out = '';
 
@@ -455,7 +462,7 @@ class multifields
         return $out;
     }
 
-    private function item($data = array())
+    protected function item($data = array())
     {
         $out = '';
         $type = !empty($data['type']) ? $data['type'] : 'text';
@@ -487,6 +494,7 @@ class multifields
             $placeholder = !empty($data['placeholder']) ? $data['placeholder'] : '';
             $title = !empty($data['title']) ? $data['title'] : '';
             $thumb = !empty($data['thumb']) ? $data['thumb'] : '';
+            $inputAttributes = '';
 
             switch ($type) {
                 case 'richtext':
@@ -515,9 +523,26 @@ class multifields
                         $style = ' style="' . $style . '"';
                     }
                     if ($rows) {
-                        $attributes .= ' onclick="multiFieldsOpenThumbWindow(event,\'tv' . $this->config['id'] . '\',this);"';
-                        $class = ' thumb-item-rows';
-                        $rows = $this->rows($rows);
+                        if (count($rows) == 1 && isset($rows[0])) {
+                            $_ = reset($rows[0]);
+                            if (isset($_['type'])) {
+                                if ($_['type'] == 'image') {
+                                    $attributes .= ' data-type="image" onclick="BrowseServer(\'tv' . $id
+                                        . '\');"';
+                                    $inputAttributes = ' onchange="Multifields.prototype.changeThumb(\'tv' .
+                                        $this->config['id'] . '\',this)"';
+                                } elseif ($_['type'] == 'file') {
+                                    $attributes .= ' data-type="file" onclick="BrowseFileServer(\'tv' . $id . '\');"';
+                                    $inputAttributes = ' onchange="Multifields.prototype.changeThumb(\'tv' .
+                                        $this->config['id'] . '\',this)"';
+                                }
+                            }
+                            $rows = '';
+                        } else {
+                            $attributes .= ' onclick="Multifields.prototype.openThumbWindow(event,\'tv' . $this->config['id'] . '\',this);"';
+                            $class = ' thumb-item-rows';
+                            $rows = $this->rows($rows);
+                        }
                     }
                     $item = $this->templates('thumb', array(
                         'id' => $id,
@@ -526,7 +551,8 @@ class multifields
                         'style' => $style,
                         'attr' => $attributes,
                         'class' => $class,
-                        'rows' => $rows
+                        'rows' => $rows,
+                        'input.attr' => $inputAttributes
                     ));
                     break;
 
@@ -543,7 +569,7 @@ class multifields
                     $item = preg_replace('~<script[^>]*>.*?</script>~si', '', $item);
                     //$item = str_replace('onclick="BrowseServer(\'tv' . $id . '\')"', 'onclick="BrowseServer(this.previousElementSibling.id)"', $item);
                     if ($forThumb) {
-                        $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){multiFieldsChangeThumb(\'tv' . $this->config['id'] . '\',this)}, false);</script>';
+                        $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){Multifields.prototype.changeThumbs(\'tv' . $this->config['id'] . '\',this)}, false);</script>';
                         $this->thumb = '';
                     }
                     break;
@@ -590,7 +616,7 @@ class multifields
         return $out;
     }
 
-    private function fillData(&$data = array())
+    protected function fillData(&$data = array())
     {
         foreach ($data as $key => &$value) {
             if (is_numeric($key) || $key === 'rows' || $key === 'group' || $key === 'section' || $key === 'items' || $key === 'tpl' || $key === 'col' || $key === 'title' || $key === 'value') {
@@ -609,7 +635,7 @@ class multifields
         return $data;
     }
 
-    private function renderData($data = array())
+    protected function renderData($data = array())
     {
         $out = array();
 
