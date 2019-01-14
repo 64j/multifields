@@ -568,6 +568,8 @@ class multifields
                     if ($forThumb) {
                         $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){Multifields.prototype.changeThumbs(\'tv' . $this->config['id'] . '\',this)}, false);</script>';
                         $this->thumb = '';
+                    } else {
+                        $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){document.getElementById(\'tv' . $this->config['id'] . '\').complete()}, false);</script>';
                     }
                     break;
 
