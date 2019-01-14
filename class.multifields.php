@@ -70,9 +70,13 @@ class multifields
                     break;
 
                 default:
+                    $tpl = null;
+                    break;
             }
 
-            $tpl = $this->DLT->parseChunk($tpl, $data);
+            if (!is_null($tpl)) {
+                $tpl = $this->modx->parseText($this->modx->getTpl($tpl), $data);
+            }
         } else {
             if (file_exists(__DIR__ . '/tpl/' . $tpl . '.tpl')) {
                 $tpl = file_get_contents(__DIR__ . '/tpl/' . $tpl . '.tpl');
@@ -89,12 +93,6 @@ class multifields
 
     public function render()
     {
-        include_once MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLTemplate.class.php';
-
-        $this->DLT = DLTemplate::getInstance($this->modx);
-        $this->DLT->setTemplateExtension($this->config['templateExtension']);
-        $this->DLT->setTemplatePath($this->config['templatePath']);
-
         if ($out = $this->create($this->config['value'])) {
             $out = $this->templates('wrap', array(
                 'wrap' => $out
@@ -130,7 +128,6 @@ class multifields
     protected function create($data = array())
     {
         $out = '';
-
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 $_ = explode(':', $key);
@@ -152,10 +149,14 @@ class multifields
                 } elseif ($key === 'section') {
                     $out .= $this->section($value);
                 } elseif ($key === 'items') {
-                    $out .= $this->templates('row', array(
-                        'name' => $key,
-                        'row' => $this->items($value)
-                    ));
+                    if ($this->config['render']) {
+                        $out .= $this->templates('row', $this->items($value));
+                    } else {
+                        $out .= $this->templates('row', array(
+                            'name' => $key,
+                            'row' => $this->items($value)
+                        ));
+                    }
                 } else {
                     if (is_array($value)) {
                         if ($this->config['render']) {
@@ -291,6 +292,10 @@ class multifields
                             $value = $this->config['elements'][$tpl]['rows'][0];
                             $value[$name]['value'] = $_;
                         }
+                    } elseif (isset($value['items'])) {
+                        //$out .= $this->create($value);
+                        //$out .= $this->create($this->fillData($value['items']));
+                        //$this->dbug($this->create($this->fillData($value['items'])), 1);
                     }
                 } else {
                     if (is_array($value[$name])) {
@@ -337,6 +342,8 @@ class multifields
                     'tpl' => $tpl,
                     'rows' => $this->create($value)
                 ));
+            } else {
+                // nope
             }
         }
 
@@ -346,11 +353,22 @@ class multifields
     protected function items($data = array())
     {
         $out = '';
-
         foreach ($data as $key => $value) {
             if (is_numeric($key)) {
-                foreach ($value as $k => $v) {
-                    $out .= $this->_items($k, $v);
+                if ($this->config['render']) {
+                    $__out = [];
+                    foreach ($data as $k => $v) {
+                        foreach ($v as $key => $val) {
+                            $__out[$key] = $val;
+                        }
+                    }
+                    $out = $__out;
+                    //$out .= $this->templates('row', $__out);
+                    break;
+                } else {
+                    foreach ($value as $k => $v) {
+                        $out .= $this->_items($k, $v);
+                    }
                 }
             } else {
                 $out .= $this->_items($key, $value);
@@ -367,7 +385,6 @@ class multifields
         $value
     ) {
         $out = '';
-
         if ($key === 'rows') {
             if ($this->config['render']) {
                 $out .= $this->templates('item', $this->renderData($value));
@@ -380,9 +397,9 @@ class multifields
                 ));
             }
         } elseif ($key === 'group') {
-            if (is_array($value)) {
+            //if (is_array($value)) {
                 $value['name'] = $key;
-            }
+            //}
             $out .= $this->templates('item', array(
                 'class' => '',
                 'width' => !empty($value['width']) ? ' style="width:' . $value['width'] . '"' : '',
@@ -392,10 +409,12 @@ class multifields
         } else {
             if (is_array($value)) {
                 $value['name'] = $key;
+                $out .= $this->templates('items', array(
+                    'items' => $this->item($value)
+                ));
+            } else {
+                //$out .= $value;
             }
-            $out .= $this->templates('items', array(
-                'items' => $this->item($value)
-            ));
         }
 
         return $out;
@@ -404,6 +423,13 @@ class multifields
     protected function group($data = array())
     {
         $out = '';
+
+        if ($this->config['render']) {
+            return $this->templates('group', array(
+                'value' => !empty($data['value']) ? $data['value'] : '',
+                'group' => !empty($data) ? $this->create($data) : ''
+            ));
+        }
 
         if (isset($this->config['elements'][$this->tpl]['group'])) {
             $data += $this->config['elements'][$this->tpl]['group'];

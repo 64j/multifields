@@ -2,7 +2,9 @@
  * @author 64j
  * @type {Multifields|*}
  */
-var Multifields = (function($, w, d) {
+var Multifields = (function(w, d) {
+  'use strict';
+
   Multifields = function(a) {
     if (!a) {
       return;
@@ -160,7 +162,7 @@ var Multifields = (function($, w, d) {
     },
     build: function(a, c) {
       var s = this,
-          b = Object.create(null);
+          b = {};
       c = c || 0;
       [].forEach.call(a.children, function(el, i) {
         var tpl, parent = el.parentNode, parentParent, _;
@@ -195,7 +197,7 @@ var Multifields = (function($, w, d) {
           if (!b['group' + tpl]) {
             b['group' + tpl] = {};
           }
-          $.extend(b['group' + tpl], s.build(el));
+          s.extend(b['group' + tpl], s.build(el));
         }
         if (el.classList.contains('item-section')) {
           tpl = parent.dataset && parent.dataset.tpl ? ':' + parent.dataset.tpl : '';
@@ -335,17 +337,17 @@ var Multifields = (function($, w, d) {
                 drag.style.pointerEvents = 'none';
                 el = d.elementFromPoint(e.clientX, e.clientY);
                 if (el && el.classList.contains('draggable') && el.parentNode === drag.parentNode) {
-                  if (!el.classList.contains('float')) {
-                    if (el.offsetTop + (el.offsetHeight / 2) > y + (!drag.classList.contains('float') ? (el.offsetHeight / 2) : 0)) {
-                      $(el).before(placeholder);
+                  if (el.classList.contains('float')) {
+                    if (el.offsetLeft + (el.offsetWidth / 2) > x) {
+                      el.parentNode.insertBefore(placeholder, el);
                     } else {
-                      $(el).after(placeholder);
+                      el.parentNode.insertBefore(placeholder, el.nextSibling);
                     }
                   } else {
-                    if (el.offsetLeft + (el.offsetWidth / 2) > x) {
-                      $(el).before(placeholder);
+                    if (el.offsetTop + (el.offsetHeight / 2) > y + (!drag.classList.contains('float') ? (el.offsetHeight / 2) : 0)) {
+                      el.parentNode.insertBefore(placeholder, el);
                     } else {
-                      $(el).after(placeholder);
+                      el.parentNode.insertBefore(placeholder, el.nextSibling);
                     }
                   }
                 }
@@ -363,22 +365,17 @@ var Multifields = (function($, w, d) {
               d.removeEventListener('mouseup', onmouseup);
               d.removeEventListener('mousedown', disableSelection);
               w.removeEventListener('blur', onmouseup);
-              $(drag).animate({
-                top: placeholder.offsetTop - marginTop,
-                left: placeholder.offsetLeft
-              }, 100, function() {
-                placeholder.parentNode.insertBefore(drag, placeholder);
-                placeholder.parentNode.removeChild(placeholder);
-                s.oncomplete();
-                drag.classList.remove('active');
-                drag.removeAttribute('style');
-                $('.hover', s.wrap).removeClass('hover');
-                s.wrap.classList.remove('dragging');
-              });
+              drag.style.top = placeholder.offsetTop - marginTop + 'px';
+              drag.style.left = placeholder.offsetLeft + 'px';
+              placeholder.parentNode.insertBefore(drag, placeholder);
+              placeholder.parentNode.removeChild(placeholder);
+              s.oncomplete();
+              drag.classList.remove('active');
+              drag.removeAttribute('style');
+              s.wrap.classList.remove('dragging');
               e.preventDefault();
               e.stopPropagation();
             }
-
           }
       );
     },
@@ -517,9 +514,59 @@ var Multifields = (function($, w, d) {
       });
       document.getElementById(tvID).complete();
       el.close();
+    },
+    extend: function() {
+      for (var i = 1; i < arguments.length; i++) {
+        for (var key in arguments[i]) {
+          if (arguments[i].hasOwnProperty(key)) {
+            arguments[0][key] = arguments[i][key];
+          }
+        }
+      }
+      return arguments[0];
+    },
+    animate: function(el, options, duration, callback) {
+      if (!el || !options || typeof options !== 'object') return;
+      var unit = 'px';
+      if (typeof duration === 'function') {
+        callback = duration;
+        duration = null;
+      }
+      duration = duration || 100;
+      callback = typeof callback !== 'function' ? function() { } : callback;
+      var style = getComputedStyle(el);
+      for (var key in options) {
+        if (options.hasOwnProperty(key)) {
+          if (key === 'opacity') {
+            unit = '';
+          }
+          options[key] = {
+            start: parseInt(style[key]),
+            end: options[key],
+            unit: unit
+          };
+        }
+      }
+      var start = performance.now();
+      requestAnimationFrame(function animate(time) {
+        var timeFraction = (start > time ? start - time : time - start) / duration;
+        if (timeFraction > 1) {
+          timeFraction = 1;
+        }
+        for (var key in options) {
+          if (options.hasOwnProperty(key)) {
+            var value = (options[key]['start']) + ((options[key]['end'] - options[key]['start'] * timeFraction));
+            el.style[key] = value + options[key]['unit'];
+          }
+        }
+        if (timeFraction < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          callback.call(el);
+        }
+      });
     }
   };
 
   return Multifields;
-})
-(jQuery, window, document);
+})(window, document);

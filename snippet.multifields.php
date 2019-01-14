@@ -34,20 +34,19 @@ if (!empty($tv)) {
     }
 
     if (!empty($modx->documentObject[$config['tv']])) {
-        $sql = $modx->db->query('
-        SELECT tv.*
-        FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS tv
-        WHERE tv.name="' . $config['tv'] . '" AND tv.locked=0
-        LIMIT 1');
-
-        while ($row = $modx->db->getRow($sql)) {
-            if (!empty($row['elements'])) {
-                $templates = json_decode($row['elements'], true);
-                $config['schema'] = !empty($templates['schema']) ? $templates['schema'] : '';
-                $config['templates'] = !empty($templates['templates']) ? $templates['templates'] : array();
-            }
-            $config['field_id'] = $row['id'];
-        }
+//        $sql = $modx->db->query('
+//        SELECT tv.*
+//        FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS tv
+//        WHERE tv.name="' . $config['tv'] . '" AND tv.locked=0
+//        LIMIT 1');
+//
+//        while ($row = $modx->db->getRow($sql)) {
+//            if (!empty($row['elements'])) {
+//                $templates = json_decode($row['elements'], true);
+//                $config['templates'] = $templates;
+//            }
+//            $config['field_id'] = $row['id'];
+//        }
 
         $config['value'] = json_decode($modx->documentObject[$config['tv']][1], true);
     } else {
@@ -72,7 +71,7 @@ if (!empty($tv)) {
     }
 
     require_once 'class.multifields.php';
-    $controller = new customTvMultifields($config, $modx);
+    $mf = new multifields($config);
 
-    echo $controller->render();
+    return $mf->render();
 }
