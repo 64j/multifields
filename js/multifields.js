@@ -1,35 +1,36 @@
 var Multifields = (function($, w, d) {
-  Multifields = function(a) {
-    if (!a) {
-      return;
-    }
-    this.id = a.id;
-    this.field_id = a.field_id;
-    this.field_name = a.field_name;
-    this.el = document.getElementById(this.field_id);
-    this.el.complete = function() {
-      s.oncomplete();
-    };
-    var s = this;
-    this.wrap = document.getElementById('multifields_' + this.field_id);
-    this.wrap.addEventListener('keyup', function() {
-      s.oncomplete();
-    });
-    this.wrap.addEventListener('click', function(e) {
-      if (e.target.classList.contains('mf-add')) {
-        s.add.call(s, e);
-      }
-      if (e.target.classList.contains('mf-del')) {
-        s.del.call(s, e);
-      }
-      if (typeof e.target.name !== 'undefined') {
-        s.oncomplete();
-      }
-    });
-    this.draggable();
-  };
+  Multifields = function() { };
 
   Multifields.prototype = {
+    init: function(a) {
+      if (!a) {
+        return;
+      }
+      this.id = a.id;
+      this.field_id = a.field_id;
+      this.field_name = a.field_name;
+      this.el = document.getElementById(this.field_id);
+      this.el.complete = function() {
+        s.oncomplete();
+      };
+      var s = this;
+      this.wrap = document.getElementById('multifields_' + this.field_id);
+      this.wrap.addEventListener('keyup', function() {
+        s.oncomplete();
+      });
+      this.wrap.addEventListener('click', function(e) {
+        if (e.target.classList.contains('mf-add')) {
+          s.add.call(s, e);
+        }
+        if (e.target.classList.contains('mf-del')) {
+          s.del.call(s, e);
+        }
+        if (typeof e.target.name !== 'undefined') {
+          s.oncomplete();
+        }
+      });
+      this.draggable();
+    },
     oncomplete: function() {
       var s = this;
       this.counter = 0;

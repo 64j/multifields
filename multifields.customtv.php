@@ -10,6 +10,8 @@ if (!class_exists('multifields')) {
     <script src="../assets/tvs/<?= $baseDir ?>/js/multifields.js"></script>
     <link rel="stylesheet" type="text/css" href="../assets/tvs/<?= $baseDir ?>/css/style.css">
     <script>
+      var multifields = new Multifields();
+
       if (typeof BrowseServer !== 'function' && typeof BrowseFileServer !== 'function') {
         var lastImageCtrl;
         var lastFileCtrl;
@@ -100,10 +102,9 @@ if (!empty($row['elements'])) {
 $mf = new multifields($row);
 echo $mf->run();
 ?>
-<textarea name="tv<?= $row['id'] ?>" id="tv<?= $row['id'] ?>" style="display: block;height: 500px;"><?= $value
-    ?></textarea>
+<textarea name="tv<?= $row['id'] ?>" id="tv<?= $row['id'] ?>" style="display: block;height: 500px;"><?= $value ?></textarea>
 <script>
-  new Multifields({
+  multifields.init({
     id: '<?= $row['id'] ?>',
     field_id: 'tv<?= $row['id'] ?>',
     field_name: '<?= $row['name'] ?>'
