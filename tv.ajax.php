@@ -1,4 +1,9 @@
 <?php
+/**
+ * multifields ajax
+ * @author 64j
+ */
+
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 

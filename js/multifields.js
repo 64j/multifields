@@ -1,3 +1,7 @@
+/**
+ * @author 64j
+ * @type {Multifields|*}
+ */
 var Multifields = (function($, w, d) {
   Multifields = function(a) {
     if (!a) {
