@@ -12,7 +12,7 @@ if (!empty($tv)) {
     $config = array();
     $config['tv'] = $tv;
     $config['id'] = !empty($id) ? $id : $modx->documentIdentifier;
-    $config['tpl'] = !empty($tpl) ? $tpl : '@CODE:[+value+]';
+    //$config['tpl'] = !empty($tpl) ? $tpl : '@CODE:[+value+]';
     $config['tplWrap'] = !empty($tplWrap) ? $tplWrap : '@CODE:[+wrap+]';
     $config['tplGroup'] = !empty($tplGroup) ? $tplGroup : '@CODE:<div class="group">[+group+]</div>';
     $config['tplSection'] = !empty($tplSection) ? $tplSection : '@CODE:<div class="section">[+section+]</div>';
@@ -21,9 +21,10 @@ if (!empty($tv)) {
     $config['tplItems'] = !empty($tplItems) ? $tplItems : '@CODE:[+items+]';
     $config['tplThumb'] = !empty($tplThumb) ? $tplThumb : '@CODE:[+thumb+]';
     $config['noneTPL'] = !empty($noneTPL) ? $noneTPL : '';
-    $config['templateExtension'] = !empty($templateExtension) ? $templateExtension : '';
-    $config['templatePath'] = !empty($templatePath) ? $templatePath : '';
-    $config['schema'] = '';
+    //$config['templateExtension'] = !empty($templateExtension) ? $templateExtension : '';
+    //$config['templatePath'] = !empty($templatePath) ? $templatePath : '';
+    //$config['schema'] = '';
+    $config['prepare'] = '';
     $config['render'] = true;
     $config['value'] = array();
 
@@ -41,11 +42,8 @@ if (!empty($tv)) {
 //        LIMIT 1');
 //
 //        while ($row = $modx->db->getRow($sql)) {
-//            if (!empty($row['elements'])) {
-//                $templates = json_decode($row['elements'], true);
-//                $config['templates'] = $templates;
-//            }
 //            $config['field_id'] = $row['id'];
+//            $config['templates'] = !empty($row['elements']) ? json_decode($row['elements'], true) : array();
 //        }
 
         $config['value'] = json_decode($modx->documentObject[$config['tv']][1], true);
@@ -58,15 +56,9 @@ if (!empty($tv)) {
         LIMIT 1');
 
         while ($row = $modx->db->getRow($sql)) {
-            if (!empty($row['elements'])) {
-                $templates = json_decode($row['elements'], true);
-                $config['schema'] = !empty($templates['schema']) ? $templates['schema'] : '';
-                $config['templates'] = !empty($templates['templates']) ? $templates['templates'] : array();
-            }
-            if (!empty($row['value'])) {
-                $config['value'] = json_decode($row['value'], true);
-            }
             $config['field_id'] = $row['id'];
+            $config['templates'] = !empty($row['elements']) ? json_decode($row['elements'], true) : array();
+            $config['value'] = !empty($row['value']) ? json_decode($row['value'], true) : array();
         }
     }
 

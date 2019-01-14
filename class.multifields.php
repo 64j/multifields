@@ -13,14 +13,22 @@ class multifields
     protected $view;
     protected $modx;
     protected $tpl;
-    protected $DLT;
 
+    /**
+     * multifields constructor.
+     * @param array $config
+     */
     function __construct($config = array())
     {
         $this->modx = evolutionCMS();
         $this->config = $config;
     }
 
+    /**
+     * @param string $tpl
+     * @param array $data
+     * @return mixed
+     */
     protected function templates(
         $tpl = '',
         $data = array()
@@ -28,69 +36,75 @@ class multifields
         if (!empty($this->config['render'])) {
             switch ($tpl) {
                 case 'wrap':
-                    $tpl = $this->config['tplWrap'];
+                    $out = $this->config['tplWrap'];
                     break;
 
                 case 'group':
-                    $tpl = isset($this->config['tplGroup' . $this->tpl]) ? $this->config['tplGroup' . $this->tpl] : $this->config['tplGroup'];
+                    $out = isset($this->config['tplGroup' . $this->tpl]) ? $this->config['tplGroup' . $this->tpl] : $this->config['tplGroup'];
                     break;
 
                 case 'section':
-                    $tpl = isset($this->config['tplSection' . $this->tpl]) ? $this->config['tplSection' . $this->tpl] : $this->config['tplSection'];
+                    $out = isset($this->config['tplSection' . $this->tpl]) ? $this->config['tplSection' . $this->tpl] : $this->config['tplSection'];
                     break;
 
                 case 'rows':
-                    $tpl = isset($this->config['tplRows' . $this->tpl]) ? $this->config['tplRows' . $this->tpl] : $this->config['tplRows'];
+                    $out = isset($this->config['tplRows' . $this->tpl]) ? $this->config['tplRows' . $this->tpl] : $this->config['tplRows'];
                     break;
 
                 case 'row':
-                    $tpl = isset($this->config['tplRow' . $this->tpl]) ? $this->config['tplRow' . $this->tpl] : $this->config['tplRow'];
+                    $out = isset($this->config['tplRow' . $this->tpl]) ? $this->config['tplRow' . $this->tpl] : $this->config['tplRow'];
                     break;
 
                 case 'items':
-                    $tpl = isset($this->config['tplItems' . $this->tpl]) ? $this->config['tplItems' . $this->tpl] : $this->config['tplItems'];
+                    $out = isset($this->config['tplItems' . $this->tpl]) ? $this->config['tplItems' . $this->tpl] : $this->config['tplItems'];
                     break;
 
                 case 'thumb':
-                    $tpl = isset($this->config['tplThumb' . $this->tpl]) ? $this->config['tplThumb' . $this->tpl] : $this->config['tplThumb'];
+                    $out = isset($this->config['tplThumb' . $this->tpl]) ? $this->config['tplThumb' . $this->tpl] : $this->config['tplThumb'];
                     break;
 
                 case 'none':
-                    $tpl = $this->config['noneTPL'];
+                    $out = $this->config['noneTPL'];
                     break;
 
-                case 'item':
-                    if (isset($data['tpl']) && isset($this->config['tpl' . $data['tpl']])) {
-                        $tpl = $this->config['tpl' . $data['tpl']];
-                    } elseif (isset($this->config['tpl' . $this->tpl])) {
-                        $tpl = $this->config['tpl' . $this->tpl];
-                    } else {
-                        $tpl = $this->config['tpl'];
-                    }
-                    break;
+                //                case 'item':
+                //                    if (isset($data['tpl']) && isset($this->config['tpl' . $data['tpl']])) {
+                //                        $out = $this->config['tpl' . $data['tpl']];
+                //                    } elseif (isset($this->config['tpl' . $this->tpl])) {
+                //                        $out = $this->config['tpl' . $this->tpl];
+                //                    } else {
+                //                        $out = $this->config['tpl'];
+                //                    }
+                //                    break;
 
                 default:
-                    $tpl = null;
+                    $out = null;
                     break;
             }
 
-            if (!is_null($tpl)) {
-                $tpl = $this->modx->parseText($this->modx->getTpl($tpl), $data);
+            if (!is_null($out)) {
+                if ($tpl == 'row') {
+                    $data = $this->prepare($this->config['prepare'], $data);
+                }
+                $out = $this->modx->parseText($this->modx->getTpl($out), $data);
             }
         } else {
             if (file_exists(__DIR__ . '/tpl/' . $tpl . '.tpl')) {
-                $tpl = file_get_contents(__DIR__ . '/tpl/' . $tpl . '.tpl');
+                $out = file_get_contents(__DIR__ . '/tpl/' . $tpl . '.tpl');
             } else {
-                $tpl = 'File not found.';
+                $out = 'File not found.';
             }
             foreach ($data as $key => $value) {
-                $tpl = str_replace('[+' . $key . '+]', $value, $tpl);
+                $out = str_replace('[+' . $key . '+]', $value, $out);
             }
         }
 
-        return $tpl;
+        return $out;
     }
 
+    /**
+     * @return mixed|string
+     */
     public function render()
     {
         if ($out = $this->create($this->config['value'])) {
@@ -104,6 +118,9 @@ class multifields
         return $out;
     }
 
+    /**
+     * @return string
+     */
     public function template()
     {
         $out = '';
@@ -116,6 +133,9 @@ class multifields
         return $out;
     }
 
+    /**
+     * @return mixed
+     */
     public function run()
     {
         return $this->templates('wrap', array(
@@ -125,6 +145,10 @@ class multifields
         ));
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
     protected function create($data = array())
     {
         $out = '';
@@ -189,6 +213,12 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param string $title
+     * @param bool $move
+     * @param string $templates
+     * @return mixed
+     */
     protected function toolbar(
         $title = '',
         $move = true,
@@ -231,6 +261,11 @@ class multifields
         return $this->templates('toolbar', $data);
     }
 
+    /**
+     * @param array $data
+     * @param array $width
+     * @return string
+     */
     protected function cols(
         $data = array(),
         $width = array()
@@ -256,6 +291,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
     protected function rows($data = array())
     {
         $out = '';
@@ -350,6 +389,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return array|string
+     */
     protected function items($data = array())
     {
         $out = '';
@@ -380,6 +423,11 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return string
+     */
     protected function _items(
         $key,
         $value
@@ -398,7 +446,7 @@ class multifields
             }
         } elseif ($key === 'group') {
             //if (is_array($value)) {
-                $value['name'] = $key;
+            $value['name'] = $key;
             //}
             $out .= $this->templates('item', array(
                 'class' => '',
@@ -420,6 +468,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return mixed|string
+     */
     protected function group($data = array())
     {
         $out = '';
@@ -458,6 +510,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
     protected function section($data = array())
     {
         $out = '';
@@ -481,6 +537,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
     protected function row($data = array())
     {
         $out = '';
@@ -494,6 +554,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
     protected function item($data = array())
     {
         $out = '';
@@ -647,6 +711,10 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     protected function fillData(&$data = array())
     {
         foreach ($data as $key => &$value) {
@@ -666,6 +734,10 @@ class multifields
         return $data;
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     protected function renderData($data = array())
     {
         $out = array();
@@ -679,6 +751,34 @@ class multifields
         return $out;
     }
 
+    /**
+     * @param string $name
+     * @param array $data
+     * @return array|mixed|string
+     */
+    protected function prepare($name = '', $data = [])
+    {
+        if (!empty($name)) {
+            $params = [
+                'data' => $data,
+                'modx' => $this->modx,
+                '_MultiFields' => $this
+            ];
+
+            if ((is_object($name)) || is_callable($name)) {
+                $data = call_user_func_array($name, $params);
+            } else {
+                $data = $this->modx->runSnippet($name, $params);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $str
+     * @param bool $exit
+     */
     public function dbug(
         $str = '',
         $exit = false

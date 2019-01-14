@@ -335,7 +335,7 @@ var Multifields = (function(w, d) {
                 var x = (e.pageX - posX) + drag.position.left - marginLeft,
                     y = (e.pageY - posY) + drag.position.top - marginTop;
                 drag.style.pointerEvents = 'none';
-                el = d.elementFromPoint(e.clientX, e.clientY);
+                el = d.elementFromPoint(e.clientX + marginLeft, e.clientY);
                 if (el && el.classList.contains('draggable') && el.parentNode === drag.parentNode) {
                   if (el.classList.contains('float')) {
                     if (el.offsetLeft + (el.offsetWidth / 2) > x) {
