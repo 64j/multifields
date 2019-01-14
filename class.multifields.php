@@ -527,14 +527,11 @@ class multifields
                             $_ = reset($rows[0]);
                             if (isset($_['type'])) {
                                 if ($_['type'] == 'image') {
-                                    $attributes .= ' data-type="image" onclick="BrowseServer(\'tv' . $id
-                                        . '\');"';
-                                    $inputAttributes = ' onchange="Multifields.prototype.changeThumb(\'tv' .
-                                        $this->config['id'] . '\',this)"';
+                                    $attributes .= ' data-type="image" onclick="BrowseServer(\'tv' . $id . '\');"';
+                                    $inputAttributes = ' onchange="Multifields.prototype.changeThumb(\'tv' . $this->config['id'] . '\',this)"';
                                 } elseif ($_['type'] == 'file') {
                                     $attributes .= ' data-type="file" onclick="BrowseFileServer(\'tv' . $id . '\');"';
-                                    $inputAttributes = ' onchange="Multifields.prototype.changeThumb(\'tv' .
-                                        $this->config['id'] . '\',this)"';
+                                    $inputAttributes = ' onchange="Multifields.prototype.changeThumb(\'tv' . $this->config['id'] . '\',this)"';
                                 }
                             }
                             $rows = '';

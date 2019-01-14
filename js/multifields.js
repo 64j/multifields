@@ -50,7 +50,7 @@ var Multifields = (function($, w, d) {
       var s = this, el = e.target, row, toolbar, group, tpl;
       if (el.parentNode.parentNode.classList.contains('group-toolbar')) {
         toolbar = el.parentNode.parentNode;
-        tpl = toolbar.querySelector('select') || toolbar.querySelector('input');
+        tpl = toolbar.querySelector('select') || toolbar.querySelector('input[type="hidden"]');
         group = toolbar.parentNode;
         if (tpl && tpl.value) {
           this.loadTemplate(tpl.value, function(data) {
