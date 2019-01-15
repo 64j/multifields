@@ -131,7 +131,7 @@ var Multifields = (function(w, d) {
     },
     loadTemplate: function(tpl, callback) {
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', '../assets/tvs/multiFields/tv.ajax.php', true);
+      xhr.open('POST', '../assets/tvs/multifields/tv.ajax.php', true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
@@ -381,7 +381,7 @@ var Multifields = (function(w, d) {
     },
     openRTEinWindow: function(id, tvID) {
       var multiFieldsOpenRTEinWindow;
-      var url = '../assets/tvs/multiFields/tv.richtext.php';
+      var url = '../assets/tvs/multifields/tv.richtext.php';
 
       if (parent.modx) {
         multiFieldsOpenRTEinWindow = parent.modx.popup({
