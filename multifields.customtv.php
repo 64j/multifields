@@ -105,7 +105,8 @@ if (!empty($row['elements'])) {
 $mf = new multifields($row);
 echo $mf->run();
 ?>
-<textarea name="tv<?= $row['id'] ?>" id="tv<?= $row['id'] ?>" style="display: block;height: 500px;"><?= $value ?></textarea>
+<textarea name="tv<?= $row['id'] ?>" id="tv<?= $row['id'] ?>" style="display: none;height: 500px;"><?= $value
+    ?></textarea>
 <script>
   new Multifields({
     id: '<?= $row['id'] ?>',
