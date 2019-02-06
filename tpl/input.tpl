@@ -1,1 +1,1 @@
-<input type="[+type+]" class="form-control" value="[+value+]" placeholder="[+placeholder+]" />
+<input type="[+type+]" class="form-control" value="[+value+]" placeholder="[+placeholder+]" [+attr+] />

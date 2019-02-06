@@ -12,8 +12,8 @@ $baseDir = str_replace(dirname(__DIR__) . DIRECTORY_SEPARATOR, '', __DIR__);
 if (!class_exists('multifields')) {
     include 'class.multifields.php';
     ?>
-    <script src="../assets/tvs/<?= $baseDir ?>/js/multifields.js"></script>
     <link rel="stylesheet" type="text/css" href="../assets/tvs/<?= $baseDir ?>/css/style.css">
+    <script src="../assets/tvs/<?= $baseDir ?>/js/multifields.js"></script>
     <script>
       if (typeof BrowseServer !== 'function' && typeof BrowseFileServer !== 'function') {
         var lastImageCtrl;
@@ -38,7 +38,9 @@ if (!class_exists('multifields')) {
           lastImageCtrl = ctrl;
           var w = screen.width * 0.5;
           var h = screen.height * 0.5;
-          OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=images', w, h);
+          OpenServerBrowser(
+              '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browser.php?Type=images', w,
+              h);
         }
 
         function BrowseFileServer(ctrl)
@@ -46,7 +48,9 @@ if (!class_exists('multifields')) {
           lastFileCtrl = ctrl;
           var w = screen.width * 0.5;
           var h = screen.height * 0.5;
-          OpenServerBrowser('<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browser.php?Type=files', w, h);
+          OpenServerBrowser(
+              '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browser.php?Type=files', w,
+              h);
         }
       }
 
@@ -63,26 +67,24 @@ if (!class_exists('multifields')) {
         }
       }
 
-      if (typeof SetUrl !== 'function') {
-        function SetUrl(url, width, height, alt)
-        {
-          if (lastFileCtrl) {
-            var c = document.getElementById(lastFileCtrl);
-            if (c && c.value !== url) {
-              c.value = url;
-              SetUrlChange(c);
-            }
-            lastFileCtrl = '';
-          } else if (lastImageCtrl) {
-            var c = document.getElementById(lastImageCtrl);
-            if (c && c.value !== url) {
-              c.value = url;
-              SetUrlChange(c);
-            }
-            lastImageCtrl = '';
-          } else {
-
+      function SetUrl(url, width, height, alt)
+      {
+        if (lastFileCtrl) {
+          var c = typeof lastFileCtrl === 'object' ? lastFileCtrl : document.getElementById(lastFileCtrl);
+          if (c && c.value !== url) {
+            c.value = url;
+            SetUrlChange(c);
           }
+          lastFileCtrl = '';
+        } else if (lastImageCtrl) {
+          var c = typeof lastImageCtrl === 'object' ? lastImageCtrl : document.getElementById(lastImageCtrl);
+          if (c && c.value !== url) {
+            c.value = url;
+            SetUrlChange(c);
+          }
+          lastImageCtrl = '';
+        } else {
+
         }
       }
 
@@ -93,11 +95,11 @@ $value = $row['value'];
 $row['value'] = !empty($value) ? json_decode($value, true) : array();
 
 if (!empty($row['elements'])) {
-    $row['elements'] = json_decode($row['elements'], true);
+    $row['templates'] = json_decode($row['elements'], true);
 } elseif (file_exists(MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $row['name'] . '.config.inc.php')) {
     $templates = array();
     include_once MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $row['name'] . '.config.inc.php';
-    $row['elements'] = $templates;
+    $row['templates'] = $templates;
 } else {
     return;
 }
@@ -105,12 +107,10 @@ if (!empty($row['elements'])) {
 $mf = new multifields($row);
 echo $mf->run();
 ?>
-<textarea name="tv<?= $row['id'] ?>" id="tv<?= $row['id'] ?>" style="display: none;height: 500px;"><?= $value
-    ?></textarea>
+<textarea name="tv<?= $row['id'] ?>" id="tv<?= $row['id'] ?>" style="display: none;height: 500px;"><?= $value ?></textarea>
 <script>
   new Multifields({
-    id: '<?= $row['id'] ?>',
-    field_id: 'tv<?= $row['id'] ?>',
-    field_name: '<?= $row['name'] ?>'
+    name: '<?= $row['name'] ?>',
+    id: '<?= $row['id'] ?>'
   });
 </script>

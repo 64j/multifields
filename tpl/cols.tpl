@@ -1,1 +1,1 @@
-<div class="item item-cols">[+cols+]</div>
+<div class="mf-cols">[+cols+]</div>

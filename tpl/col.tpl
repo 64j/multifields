@@ -1,1 +1,1 @@
-<div class="item-col"[+width+]>[+title+]</div>
+<div class="mf-col"[+width+]>[+title+]</div>

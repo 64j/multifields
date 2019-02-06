@@ -1,1 +1,3 @@
-<select class="mf-tpl form-control">[+options+]</select>
+<div class="mf-select col-auto">
+    <select class="form-control">[+options+]</select>
+</div>

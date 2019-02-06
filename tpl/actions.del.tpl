@@ -1,0 +1,1 @@
+<i class="mf-del fa fa-minus-circle fa-fw text-danger" title="[+title+]"></i>

@@ -1,1 +1,4 @@
-<div class="item item-row" data-name="[+name+]">[+row+]</div>
+<div class="mf-row row[+class+]" data-tpl="[+tpl+]">
+    [+actions+]
+    [+row+]
+</div>

@@ -1,71 +1,95 @@
 /* multifields */
-.multifields.table { display: table; width: 100%; }
-.multifields::after { content: ""; display: table; width: 100%; }
-.multifields .item-group { padding: .5rem .5rem 0; }
-.multifields .item-rows { border: 1px solid #e0e0e0; transition: background-color .15s; }
-.multifields .item-rows { display: table; width: calc(100% - 1rem); margin-left: 1rem; }
-.multifields .item-section > .item-rows { width: calc(100% - .5rem); margin-left: .5rem; }
-.multifields .group-toolbar, .multifields > .item-rows, .multifields .item-row, .multifields .item-cols { display: table; width: 100%; margin: 0 }
-.multifields .item-cell, .multifields .item-group-title, .multifields .item-group-select, .multifields .item-action, .multifields .item-title, .multifields .item-thumb { display: table-cell }
-.multifields .item-cell, .multifields .item-group-title { padding-right: .25rem; vertical-align: top; }
-.multifields .item-group-title, .multifields > .group-toolbar > .item-group-title { vertical-align: middle; font-weight: 700; }
-.multifields .item-group-title input { font-weight: normal }
-.multifields .item-cell:last-child { padding-right: 0; }
-.multifields .item-title { vertical-align: middle; }
-.multifields .item-title:first-child { padding-left: 0; }
-.multifields .item-group-select, .multifields .item-action { width: .01%; vertical-align: middle; white-space: nowrap; }
-.multifields .item-action { padding: 0 .5rem; font-size: 1rem; }
-.multifields .item-action i { opacity: .7; }
-.multifields .item-action i:hover { opacity: 1; }
-.multifields .group-toolbar { margin-bottom: .5rem }
-.multifields .group-toolbar > .item-action { padding-right: 0 }
-.multifields .item-group-select select { width: auto }
-.multifields .item-rows { margin-bottom: .5rem; }
-.multifields .item-rows, .multifields .item-section > .item-rows, .multifields .item-section > .item-row { position: relative; vertical-align: middle; }
-.multifields .item-rows:not(.float) + .item-rows:not(.float) { margin-top: -1px }
-.multifields .item-row { width: calc(100% - .5rem); margin: .5rem 0 .5rem .5rem; }
-.multifields .item-row + .item-row { margin-top: 0 }
-.multifields .item-row:first-child { margin-top: 0 }
-.multifields .item-row:last-child { margin-bottom: 0 }
-.multifields .item-cell > .item-row { margin-left: 0; width: 100%; }
-.multifields .item-rows:hover { background-color: #f5f5f9; }
-.multifields .item-rows.active { z-index: 9; background-color: #fff8e1; border-color: #ffc107; opacity: .75; }
-.multifields .item-rows.hover { background-color: #fff8e1; border-color: #ffc107; }
-.multifields .mf-move { position: absolute; left: -1.2rem; top: 50%; height: 1rem; margin-top: -.5rem; font-size: 1rem; color: #000; opacity: .5; }
-.multifields .item-section > .item-row-group > .item-group > .group-toolbar > .mf-move { display: none; }
-.multifields .item-rows.active > .mf-move, .multifields .item-rows.active > .item-group > .group-toolbar > .mf-move, .multifields .mf-move:hover { opacity: 1; }
+.multifields { position: relative; z-index: 1; display: flex; align-items: flex-start; flex-wrap: wrap; margin-left: -200px; background-color: #f9f9f9 }
+.multifields label { margin: 0; cursor: default }
+.multifields select, .multifields select[size="1"]:not(.unstyled) { width: 100% }
+.multifields .row { display: flex; flex-wrap: wrap; margin: 0 -.25rem }
+.multifields > .row { margin: 0 }
+.multifields .col-1, .multifields .col-2, .multifields .col-3, .multifields .col-4, .multifields .col-5, .multifields .col-6, .multifields .col-7, .multifields .col-8, .multifields .col-9, .multifields .col-10, .multifields .col-11, .multifields .col-12, .multifields .col, .multifields .col-auto { position: relative; width: 100%; min-height: 0; padding-left: .25rem; padding-right: .25rem }
+.multifields .col { flex-basis: 0; flex-grow: 1; max-width: 100%; }
+.multifields .col-auto { -ms-flex: 0 0 auto; flex: 0 0 auto; width: auto; max-width: none; }
+.multifields .col-1 { -ms-flex: 0 0 8.333333%; flex: 0 0 8.333333%; max-width: 8.333333%; }
+.multifields .col-2 { -ms-flex: 0 0 16.666667%; flex: 0 0 16.666667%; max-width: 16.666667%; }
+.multifields .col-3 { -ms-flex: 0 0 25%; flex: 0 0 25%; max-width: 25%; }
+.multifields .col-4 { -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%; }
+.multifields .col-5 { -ms-flex: 0 0 41.666667%; flex: 0 0 41.666667%; max-width: 41.666667%; }
+.multifields .col-6 { -ms-flex: 0 0 50%; flex: 0 0 50%; max-width: 50%; }
+.multifields .col-7 { -ms-flex: 0 0 58.333333%; flex: 0 0 58.333333%; max-width: 58.333333%; }
+.multifields .col-8 { -ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%; }
+.multifields .col-9 { -ms-flex: 0 0 75%; flex: 0 0 75%; max-width: 75%; }
+.multifields .col-10 { -ms-flex: 0 0 83.333333%; flex: 0 0 83.333333%; max-width: 83.333333%; }
+.multifields .col-11 { -ms-flex: 0 0 91.666667%; flex: 0 0 91.666667%; max-width: 91.666667%; }
+.multifields .col-12 { -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; }
+.multifields .mf-row { position: relative; align-content: flex-start; margin: 0 0 .5rem; padding: .5rem .25rem 0 }
+.multifields > .mf-row { padding: .5rem .5rem 0 }
+.multifields .mf-row-move { padding: .5rem 3.25rem 0 1.25rem; border-right-width: 1rem }
+.multifields .mf-row.mf-group { padding: .5rem .5rem 0 }
+.multifields .mf-row.mf-group > .mf-toolbar > .mf-group-title, .multifields .mf-row.mf-group > .mf-toolbar > .mf-select { padding-top: 0; padding-bottom: 0 }
+.multifields .mf-row.col { display: flex; flex-wrap: wrap }
+.multifields .mf-row.no-actions { padding-right: .25rem }
+.multifields .mf-col { padding: .5rem }
+.multifields .mf-item { display: flex; flex-wrap: wrap; margin: 0; padding: 0 .25rem .5rem }
+.multifields .mf-item.mf-group { align-content: flex-start; align-items: flex-start; min-height: 2.5rem; margin-bottom: .5rem; padding: .5rem .5rem 0 }
+.multifields .mf-item.mf-group.mf-row-move { padding: .5rem .5rem 0; }
+.multifields .mf-item.mf-group::after, .multifields .mf-row::after { position: absolute; z-index: -1; display: block; content: ""; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid #d4d4d4 }
+.multifields .mf-item input[type="text"], .multifields .mf-item input[type="number"] { flex-basis: 0; flex-grow: 1; width: 100%; max-width: 100%; }
+.multifields .mf-item input, .multifields .mf-item button, .multifields .mf-item select { flex: 0 0 auto; width: auto; max-width: none; margin: auto !important }
+.multifields .mf-select { margin-left: -1px; padding: .25rem 0 }
+.multifields .mf-row-move.active { z-index: 99; opacity: .75; }
+.multifields input[type="text"] + input[type="button"] { margin-left: -1px !important }
+.multifields input:focus { z-index: 9 !important }
 .multifields .form-control-richtext { overflow: hidden; height: 1.9rem; min-height: 1.9rem; }
-.multifields .item-cell > select { width: 100% !important }
 .multifields .input-group { border-collapse: collapse }
 .multifields .input-group-btn { height: 1px }
 .multifields .input-group-btn .btn { height: 100% }
-.multifields .item-thumb { overflow: hidden; width: 6rem; height: 6rem; background: #fff no-repeat 50% 50%; background-size: contain; border: 1px solid #e0e0e0 }
-.multifields .item-thumb ~ .item-cell { padding-left: .25rem; vertical-align: middle }
-.multifields.dragging .item-rows > *:not(.item-section):not(.item-group), .multifields.dragging .item-rows.active:not(.placeholder) { pointer-events: none }
-.multifields.dragging .item-rows { pointer-events: all }
-.multifields.dragging > .item-rows::before { content: ""; position: absolute; z-index: 99; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none }
-.multifields .placeholder { z-index: 8 !important; display: block; border: 1px dashed; opacity: .5; visibility: visible !important; }
-.multifields .placeholder > i, .multifields .placeholder > div * { visibility: hidden }
-/* view */
-.multifields .item-rows.float { float: left; display: block; width: auto; height: auto; margin: 0 .5rem .5rem 0; }
-.multifields .item-rows.float ~ .item-rows:not(.float) { float: left; margin-bottom: .5rem; }
-.multifields .item-rows.float .item-row { width: 100%; margin: 0; }
-.multifields .item-rows.float .item-row .item-thumb { border: none; }
-.multifields .item-rows.float .mf-move { left: 0; top: 0; margin: 0; line-height: 1.1rem; }
-.multifields .item-rows.float .mf-move::before { content: "\f047"; }
-.multifields .item-rows.float .item-action { display: block; position: absolute; top: 0; right: 0; width: auto; margin: 0; padding: 0; }
-.multifields .thumb-item-rows, .multifields [data-type="image"], .multifields [data-type="file"]  { cursor: pointer; }
-.multifields .thumb-item-rows::before, .multifields [data-type="image"]::before, .multifields [data-type="file"]::before { content: "\f055"; position: absolute; top: 50%; left: 50%; width: 4rem; height: 4rem; line-height: 4rem; margin: -2rem 0 0 -2rem; text-align: center; font-size: 3rem; font-family: FontAwesome; color: rgba(0, 0, 0, .6); background-color: #fff; border-radius: 50%; opacity: 0; transition: opacity .4s; pointer-events: none }
-.multifields .thumb-item-rows:not([style])::before, .multifields [data-type="image"]:not([style])::before, .multifields [data-type="file"]:not([style])::before { opacity: .2; }
-.multifields .thumb-item-rows:hover::before, .multifields [data-type="image"]:hover::before, .multifields [data-type="file"]:hover::before { opacity: .6; }
-.multifields .item-thumb > .item-rows { position: absolute; z-index: -9; opacity: 0; visibility: hidden; }
-.multifields .col-item-thumb { display: table-cell; width: 10rem; }
-.multifields .col-item-thumb-rows { display: table-cell; padding-left: 1rem; }
-.multifields .col-item-thumb-rows .item-rows { float: none; width: 100%; margin: 0 0 .5rem; border: none; background: none !important }
-.multifields .col-item-thumb-rows .item-row { margin-bottom: .5rem !important }
-.multifields .col-item-thumb-rows .mf-move + .item-row, .multifields .col-item-thumb-rows .item-rows:last-child { margin-bottom: 0 !important }
-.multifields .col-item-thumb-rows .mf-move, .multifields .col-item-thumb-rows .item-action { display: none !important }
-.multifields input[name^=tv] + input[type=button] { z-index: 5; float: right; margin-top: -2.30769em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0; }
-@media (max-width: 640px) {
-.multifields .col-item-thumb, .multifields .col-item-thumb-rows { width: 100% }
-}
+/* thumb */
+.multifields .mf-thumb { position: relative; z-index: 1; overflow: hidden; min-width: 6rem; padding: 0; justify-content: flex-end; align-items: flex-start; font: normal normal normal 14px/1 FontAwesome; text-align: center; border-right: .5rem solid transparent !important; background: 50% 50% no-repeat; background-size: contain; cursor: pointer }
+.multifields .mf-thumb::before { display: block; content: ""; padding-top: 100%; width: 100%; border: 1px solid #d4d4d4 }
+.multifields .mf-thumb:hover::before { border-color: #ababab }
+.multifields .mf-thumb::after { position: absolute; display: block; content: "\f055"; left: 50%; top: 50%; width: 3rem; height: 3rem; margin: -1.5rem 0 0 -1.5rem; border: none; font-size: 3rem; line-height: 3rem; opacity: .1 }
+.multifields .mf-thumb[data-type="image"][style^="background-image"]::after { display: none }
+.multifields .mf-thumb:hover::after { opacity: .2 }
+.multifields .mf-thumb[data-type="file"][style^="background-image"]::after { content: "\f15b"; opacity: .5 }
+.multifields .mf-thumb .mf-move { position: absolute; align-self: flex-start; left: 0; bottom: auto; cursor: move; }
+.multifields .mf-thumb .mf-move::before { content: "\f047" }
+.multifields .mf-thumb .mf-add, .multifields .mf-thumb .mf-del { margin-top: -100% }
+.multifields .mf-thumb .mf-row, .multifields .mf-thumb .mf-group-title, .multifields .mf-thumb .mf-select, .multifields.table i, .multifields.table .mf-actions { display: none }
+.multifields.table { margin: .75rem 0 0 }
+.multifields.table .mf-row { padding: .5rem .25rem 0; border-width: 1px; }
+#actions.multifields.actions { position: absolute !important; top: 0; right: 0 }
+/* selected */
+.multifields .mf-row.placeholder.active::after, .multifields .mf-row-move.active::after, .multifields .mf-thumb.active::before { border-color: #ffc107; background-color: #fff8e1 }
+.multifields .placeholder { visibility: visible !important; background-image: none !important }
+.multifields .mf-thumb.placeholder::after { display: none }
+.multifields .mf-row.mf-selected::after, .multifields .mf-item.mf-group.mf-selected::after { border-color: rgba(0, 0, 0, 0.25) }
+/* toolbar */
+.multifields .mf-toolbar { position: static; align-items: center; align-self: flex-start; min-height: 2.5rem; margin: -.5rem 0 .5rem; padding: 0 0 0 1rem }
+.multifields .mf-toolbar::after { position: absolute; z-index: -1; display: block; content: ""; left: 0; top: 0; right: 0; height: 2.5rem; border: 1px solid #d4d4d4; background-color: #ecf0f1;}
+.multifields > .mf-toolbar { flex-basis: 0; flex-grow: 1; max-width: 100%; margin: 0 0 .5rem; padding: 0 .5rem; }
+.multifields .mf-toolbar .mf-select, .multifields .mf-toolbar .mf-del, .multifields .mf-toolbar .mf-add { margin-left: auto }
+.multifields .mf-toolbar .mf-select ~ .mf-del, .multifields .mf-toolbar .mf-select ~ .mf-add, .multifields .mf-toolbar .mf-del + .mf-add { margin-left: .25rem }
+.multifields .mf-item.mf-group > .mf-toolbar { }
+.multifields .mf-select { margin: 0 0 0 auto; min-width: 12rem }
+.multifields .mf-group-title { padding: 0; margin-right: -1px }
+.multifields > .mf-toolbar .mf-group-title { padding: 0 .5rem }
+/* actions buttons */
+.multifields .mf-actions { position: absolute; z-index: 0; display: flex; left: 0; top: 0; right: .5rem; bottom: .5rem; flex-wrap: wrap; justify-content: flex-end }
+.multifields > .mf-actions { position: relative; width: 2.75rem; padding: .25rem .25rem 0 0 }
+.multifields .mf-actions i, .multifields .mf-toolbar i, .multifields .mf-thumb > i { float: right; clear: both; width: 1.25rem; font-size: 1rem; opacity: .7; cursor: pointer; }
+.multifields .mf-actions i { margin-top: auto; margin-bottom: auto; margin-left: .25rem }
+.multifields .mf-actions i:hover, .multifields .mf-toolbar i:hover, .multifields .mf-thumb > i:hover { opacity: 1 }
+.multifields .mf-actions .mf-move { position: absolute; display: flex; left: 0; top: 0; bottom: -.5rem; width: 1rem; align-items: center; justify-content: center; margin: 0; background-color: rgba(0, 0, 0, 0.05); cursor: n-resize }
+.multifields .mf-selected > .mf-actions .mf-move { display: block }
+.multifields .mf-toolbar .mf-move { position: absolute; left: 0; top: 0; margin: 0; padding: .7rem 0; width: 1rem; height: 2.5rem; background-color: rgba(0, 0, 0, 0.05); cursor: n-resize; }
+.multifields .mf-row-move.active > .mf-actions .mf-move { background-color: #ffc107 }
+.ghost { opacity: .4;}
+/* lightness */
+.light .multifields, .lightness .multifields { background-color: #fff }
+/* darkness */
+.darkness .multifields { background-color: #282c34 }
+.darkness .multifields .mf-item.mf-group::after, .darkness .multifields .mf-row::after, .darkness .multifields .mf-row.mf-selected::after, .darkness .multifields .mf-item.mf-group.mf-selected::after, .darkness .multifields .mf-thumb::before { border-color: #414449 }
+.darkness .multifields .placeholder.active::after, .darkness .multifields .mf-row-move.active::after, .multifields .mf-row.placeholder.active::after, .darkness .multifields .mf-row-move.active::after, .darkness .multifields .mf-thumb.active::before { border-color: rgba(255, 193, 7, 0.31); background-color: #282c34 }
+.darkness .multifields .mf-row-move.active > .mf-actions .mf-move, .darkness .multifields .mf-row-move.active::after, .darkness .multifields .mf-thumb.active::before { background-color: rgba(255, 193, 7, 0.3) }
+.darkness .multifields .mf-toolbar::after { border-color: #414449; background-color: #282c34; }
+.darkness .multifields .mf-actions .mf-move, .darkness .multifields .mf-toolbar .mf-move { background-color: #414449 }
+.darkness .multifields .mf-thumb:hover::before { border-color: #686b6f; }
+.darkness .evo-popup.alert { background-color: #282c34; }
