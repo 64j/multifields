@@ -21,7 +21,9 @@
 .multifields .col-12 { -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; }
 .multifields .mf-row { position: relative; align-content: flex-start; margin: 0 0 .5rem; padding: .5rem .25rem 0 }
 .multifields > .mf-row { padding: .5rem .5rem 0 }
-.multifields .mf-row-move { padding: .5rem 3.25rem 0 1.25rem; border-right-width: 1rem }
+.multifields .mf-row-move { padding: .5rem .5rem 0 1.25rem; border-right-width: 1rem }
+.multifields .mf-row.mf-row-add, .multifields .mf-row.mf-row-del { padding-right: 1.75rem }
+.multifields .mf-row.mf-row-add.mf-row-del { padding-right: 3.25rem }
 .multifields .mf-row.mf-group { padding: .5rem .5rem 0 }
 .multifields .mf-row.mf-group > .mf-toolbar > .mf-group-title, .multifields .mf-row.mf-group > .mf-toolbar > .mf-select { padding-top: 0; padding-bottom: 0 }
 .multifields .mf-row.col { display: flex; flex-wrap: wrap }
