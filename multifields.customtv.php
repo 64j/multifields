@@ -97,9 +97,7 @@ $row['value'] = !empty($value) ? json_decode($value, true) : array();
 if (!empty($row['elements'])) {
     $row['templates'] = json_decode($row['elements'], true);
 } elseif (file_exists(MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $row['name'] . '.config.inc.php')) {
-    $templates = array();
-    include_once MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $row['name'] . '.config.inc.php';
-    $row['templates'] = $templates;
+    $row['templates'] = include_once MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $row['name'] . '.config.inc.php';
 } else {
     return;
 }

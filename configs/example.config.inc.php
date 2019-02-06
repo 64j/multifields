@@ -1,6 +1,6 @@
 <?php
 
-$templates = [
+return [
 
     [
         'type' => 'text',

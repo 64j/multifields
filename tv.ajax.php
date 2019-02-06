@@ -38,8 +38,8 @@ if (isset($_REQUEST['template_name']) && is_scalar($_REQUEST['template_name']) &
     if ($templates = $modx->db->getValue('SELECT elements FROM ' . $modx->getFullTableName('site_tmplvars') . ' WHERE id=' . $config['id'])) {
         $config['templates'] = json_decode($templates, true);
     } elseif (file_exists(MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $config['name'] . '.config.inc.php')) {
-        include_once MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $config['name'] . '.config.inc.php';
-        $config['templates'] = $templates;
+        $config['templates'] = include_once MODX_BASE_PATH . 'assets/tvs/' . $baseDir . '/configs/' . $config['name'] .
+            '.config.inc.php';
     } else {
         return;
     }
