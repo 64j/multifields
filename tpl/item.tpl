@@ -1,1 +1,1 @@
-<div class="item item-cell[+class+]"[+width+]>[+title+][+value+]</div>
+<div class="mf-item[+class+]">[+title+][+value+]</div>

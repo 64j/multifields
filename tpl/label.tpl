@@ -1,1 +1,1 @@
-<label class="item-title" for="[+id+]">[+title+]</label>
+<label class="mf-title col-12" for="[+id+]">[+title+]</label>

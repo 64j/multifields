@@ -1,0 +1,1 @@
+<i class="mf-add fa fa-plus-circle fa-fw text-success" title="[+title+]"></i>

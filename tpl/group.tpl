@@ -1,6 +1,5 @@
-<div class="item item-rows item-row-group draggable" data-tpl="[+tpl+]">
-    <div class="item item-group">
-        [+toolbar+]
-        [+group+]
-    </div>
+<div class="mf-item mf-group row[+class+]" [+attr+]>
+    [+toolbar+]
+    <div class="col-12"></div>
+    [+group+]
 </div>

@@ -1,644 +1,697 @@
 <?php
+/**
+ * Class multifields
+ *
+ * @version 1.2.1
+ * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
+ * @author 64j
+ */
 
-class customTvMultifields
+class multifields
 {
-    private $config;
-    private $thumb;
-    private $view;
-    private $modx;
-    private $tpl;
-    private $DLT;
+    protected $config;
+    protected $actions;
 
-    function __construct($config = array(), $modx = array())
+    /**
+     * multifields constructor.
+     * @param array $config
+     */
+    function __construct($config = [])
     {
         $this->config = $config;
-        $this->modx = $modx;
-        require_once(MODX_MANAGER_PATH . 'includes/tmplvars.inc.php');
-        require_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-
-        // :TODO multitv
-        //        if ($this->config['schema'] == 'mtv') {
-        //            $settings = array();
-        //            $tvName = $this->modx->db->getValue('SELECT name FROM ' . $modx->getFullTableName('site_tmplvars') . ' WHERE id=' . $this->config['field_id']);
-        //            require_once MODX_BASE_PATH . 'assets/tvs/multitv/configs/' . $tvName . '.config.inc.php';
-        //
-        //            if (!empty($this->config['value']) && !empty($this->config['value']['fieldValue'])) {
-        //                $values = $this->config['value'];
-        //                $this->config['value'] = array();
-        //                foreach ($values['fieldValue'] as $key => $value) {
-        //                    $i = 0;
-        //                    $this->config['value']['rows'][$key]['tpl'] = $tvName . '__0';
-        //                    foreach ($value as $k => $v) {
-        //                        $items = $settings['fields'][$k];
-        //                        $items['value'] = $v;
-        //                        if (isset($items['caption'])) {
-        //                            $items['title'] = $items['caption'];
-        //                            unset($items['caption']);
-        //                        }
-        //                        $this->config['value']['rows'][$key]['row'][$i]['items'][] = $items;
-        //                        $i++;
-        //                    }
-        //                }
-        //            }
-        //
-        //            foreach ($settings['fields'] as $key => $value) {
-        //                $this->config['templates'][$tvName]['rows'][0]['row'][$key]['items'][] = $value;
-        //            }
-        //        }
+        $this->actions = [
+            'move' => $this->tpl('actions.move', [
+                'title' => 'Переместить'
+            ]),
+            'del' => $this->tpl('actions.del', [
+                'title' => 'Удалить'
+            ]),
+            'add' => $this->tpl('actions.add', [
+                'title' => 'Добавить'
+            ])
+        ];
     }
 
-    private function templates($tpl = '', $data = array())
+    /**
+     * @param $name
+     * @param $args
+     */
+    public function __call($name, $args)
     {
-        if ($this->config['render']) {
-            switch ($tpl) {
-                case 'wrap':
-                    $tpl = $this->config['tplWrap'];
-                    break;
-
-                case 'group':
-                    $tpl = isset($this->config['tplGroup' . $this->tpl]) ? $this->config['tplGroup' . $this->tpl] : $this->config['tplGroup'];
-                    break;
-
-                case 'section':
-                    $tpl = isset($this->config['tplSection' . $this->tpl]) ? $this->config['tplSection' . $this->tpl] : $this->config['tplSection'];
-                    break;
-
-                case 'rows':
-                    $tpl = isset($this->config['tplRows' . $this->tpl]) ? $this->config['tplRows' . $this->tpl] : $this->config['tplRows'];
-                    break;
-
-                case 'row':
-                    $tpl = isset($this->config['tplRow' . $this->tpl]) ? $this->config['tplRow' . $this->tpl] : $this->config['tplRow'];
-                    break;
-
-                case 'items':
-                    $tpl = isset($this->config['tplItems' . $this->tpl]) ? $this->config['tplItems' . $this->tpl] : $this->config['tplItems'];
-                    break;
-
-                case 'thumb':
-                    $tpl = isset($this->config['tplThumb' . $this->tpl]) ? $this->config['tplThumb' . $this->tpl] : $this->config['tplThumb'];
-                    break;
-
-                case 'none':
-                    $tpl = $this->config['noneTPL'];
-                    break;
-
-                case 'item':
-                    if (isset($data['tpl']) && isset($this->config['tpl' . $data['tpl']])) {
-                        $tpl = $this->config['tpl' . $data['tpl']];
-                    } else if (isset($this->config['tpl' . $this->tpl])) {
-                        $tpl = $this->config['tpl' . $this->tpl];
-                    } else {
-                        $tpl = $this->config['tpl'];
-                    }
-                    break;
-
-                default:
-            }
-
-            $tpl = $this->DLT->parseChunk($tpl, $data);
-        } else {
-            if (file_exists(__DIR__ . '/tpl/' . $tpl . '.tpl')) {
-                $tpl = file_get_contents(__DIR__ . '/tpl/' . $tpl . '.tpl');
-            } else {
-                $tpl = 'File not found.';
-            }
-            foreach ($data as $key => $value) {
-                $tpl = str_replace('[+' . $key . '+]', $value, $tpl);
-            }
-        }
-
-        return $tpl;
+        // ...
     }
 
-    public function render()
-    {
-        include_once MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLTemplate.class.php';
-
-        $this->DLT = DLTemplate::getInstance($this->modx);
-        $this->DLT->setTemplateExtension($this->config['templateExtension']);
-        $this->DLT->setTemplatePath($this->config['templatePath']);
-
-        if ($out = $this->create($this->config['value'])) {
-            $out = $this->templates('wrap', array(
-                'wrap' => $out
-            ));
-        } else {
-            $out = $this->templates('none', array());
-        }
-
-        return $out;
-    }
-
-    public function template()
-    {
-        $out = '';
-        $this->tpl = $this->config['template_name'];
-
-        if (isset($this->config['templates'][$this->tpl])) {
-            $out = $this->create($this->config['templates'][$this->tpl]);
-        }
-
-        return $out;
-    }
-
+    /**
+     * @return mixed
+     */
     public function run()
     {
-        return $this->templates('wrap', array(
-            'field_id' => $this->config['field_id'],
-            'toolbar' => $this->toolbar($this->config['title'], false),
-            'wrap' => $this->create($this->config['value'])
-        ));
+        return $this->tpl('wrap', [
+            'field_id' => $this->config['id'],
+            'toolbar' => $this->toolbar([
+                'title' => $this->config['caption'],
+                'actions' => $this->actions(['add', 'del'])['out']
+            ]),
+            'wrap' => $this->create($this->config['value'], true),
+
+        ]);
     }
 
-    private function create($data = array())
-    {
-        $out = '';
-
-        if (is_array($data)) {
-            foreach ($data as $key => $value) {
-                if (isset($data['tpl'])) {
-                    $this->tpl = $data['tpl'];
-                }
-                if ($key === 'title' || $key === 'placeholder' || $key === 'value') {
-                } else if ($key === 'tpl') {
-                    $this->tpl = $value;
-                } else if ($key === 'view') {
-                    $this->view = $value;
-                } else if ($key === 'cols') {
-                    $out .= $this->cols($value);
-                } else if ($key === 'group') {
-                    $out .= $this->group($value);
-                } else if ($key === 'rows') {
-                    $out .= $this->rows($value);
-                } else if ($key === 'section') {
-                    $out .= $this->section($value);
-                } else if ($key === 'items') {
-                    $out .= $this->templates('row', array(
-                        'name' => $key,
-                        'row' => $this->items($value)
-                    ));
-                } else {
-                    if (is_array($value)) {
-                        if ($this->config['render']) {
-                            if (isset($value['rows'])) {
-                                $out .= $this->templates('row', array(
-                                    'name' => $key,
-                                    'row' => $this->item($value)
-                                ));
-                            } else {
-                                $out .= $this->templates('item', array(
-                                    $key => isset($value['value']) ? $value['value'] : ''
-                                ));
-                            }
-                        } else {
-                            if (isset($value['group'])) {
-
-                            } else {
-                                $value['name'] = $key;
-                                $out .= $this->templates('row', array(
-                                    'name' => $key,
-                                    'row' => $this->item($value)
-                                ));
-                            }
-                        }
-                    }
-                }
-            }
+    /**
+     * @param string $tpl
+     * @param array $data
+     * @return mixed
+     */
+    protected function tpl(
+        $tpl = '',
+        $data = []
+    ) {
+        if (file_exists(__DIR__ . '/tpl/' . $tpl . '.tpl')) {
+            $out = file_get_contents(__DIR__ . '/tpl/' . $tpl . '.tpl');
+        } else {
+            $out = 'File "' . $tpl . '" not found.';
         }
-
-        return $out;
-    }
-
-    private function toolbar($title = '', $move = true, $templates = '')
-    {
-        $data = array(
-            'title' => $title,
-            'move' => $move ? $this->templates('move') : '',
-            'select' => ''
-        );
-
-        if (!empty($this->config['templates']) && is_array($this->config['templates'])) {
-            $options = '';
-            $template = '';
-            $templates = $templates ? explode(',', $templates) : array();
-            $i = 0;
-
-            foreach ($this->config['templates'] as $key => $value) {
-                if ((empty($value['hidden']) && empty($templates)) || ($templates && in_array($key, $templates))) {
-                    $options .= $this->templates('option', array(
-                        'value' => $key,
-                        'title' => (isset($value['title']) ? $value['title'] : $key)
-                    ));
-                    $template = $key;
-                    $i++;
-                }
-            }
-
-            if ($i > 1) {
-                $data['select'] = $this->templates('select', array('options' => $options));
-            } else {
-                $data['select'] = $this->templates('input', array(
-                    'type' => 'hidden',
-                    'value' => $template,
-                    'placeholder' => ''
-                ));
-            }
-        }
-
-        return $this->templates('toolbar', $data);
-    }
-
-    private function cols($data = array(), $width = array())
-    {
-        $out = '';
-
         if (!empty($data)) {
-            $cols = '';
-
-            foreach ($data as $k => $col) {
-                $col_width = !empty($width[$k]) ? ' style="width:' . $width[$k] . '"' : '';
-                $cols .= $this->templates('col', array(
-                    'title' => $col,
-                    'width' => $col_width
-                ));
-            }
-
-            $out .= $this->templates('cols', array(
-                'cols' => $cols
-            ));
-        }
-
-        return $out;
-    }
-
-    private function rows($data = array())
-    {
-        $out = '';
-
-        foreach ($data as $key => $value) {
-            if (isset($value['group'])) {
-                $out .= $this->create($value);
-            } else if (isset($value['section'])) {
-                $out .= $this->create($value);
-            } else if (is_array($value)) {
-                if (isset($value['tpl'])) {
-                    $tpl = $this->tpl = $value['tpl'];
-                } else {
-                    $tpl = $this->tpl;
-                }
-                unset($value['tpl']);
-                reset($value);
-                $name = (string)key($value);
-
-                if ($this->config['render']) {
-                    if (isset($this->config['templates'][$tpl]['rows'][0][$name]) && isset($value[$name])) {
-                        if (is_array($value[$name])) {
-                            $value[$name] += $this->config['templates'][$tpl]['rows'][0][$name];
-                        } else {
-                            $_ = isset($value[$name]) ? $value[$name] : '';
-                            $value = $this->config['templates'][$tpl]['rows'][0];
-                            $value[$name]['value'] = $_;
-                        }
-                    }
-                } else {
-                    if (is_array($value[$name])) {
-                        if (isset($value['items'])) {
-                            $value['items'] = $this->fillData($value['items']);
-                        }
-                        if (isset($value[$name]['rows'])) {
-                            $value[$name]['rows'] = $this->fillData($value[$name]['rows']);
-                        }
-                        if (isset($this->config['templates'][$tpl]['rows'][0][$name])) {
-                            $_ = isset($value[$name]['value']) ? $value[$name]['value'] : '';
-                            $value[$name] = array_replace_recursive($value[$name], $this->config['templates'][$tpl]['rows'][0][$name]);
-                            if ($_) {
-                                $value[$name]['value'] = $_;
-                            }
-                        }
-                    } else {
-                        $value[$name] = array(
-                            'tpl' => $tpl,
-                            'value' => $value[$name],
-                            'name' => $name
-                        );
-                        if (isset($this->config['templates'][$tpl]['rows'][0][$name])) {
-                            $value[$name] += $this->config['templates'][$tpl]['rows'][0][$name];
-                        }
-                    }
-                    $this->tpl = '';
-                }
-
-                if (!empty($this->config['templates'][$tpl]['view'])) {
-                    $this->view = $this->config['templates'][$tpl]['view'];
-                } else {
-                    $this->view = '';
-                }
-
-                $out .= $this->templates('rows', array(
-                    'view' => $this->view,
-                    'tpl' => $tpl,
-                    'rows' => $this->create($value)
-                ));
-            }
-        }
-
-        return $out;
-    }
-
-    private function items($data = array())
-    {
-        $out = '';
-
-        foreach ($data as $key => $value) {
-            if (is_numeric($key)) {
-                foreach ($value as $k => $v) {
-                    if ($k === 'rows') {
-                        if ($this->config['render']) {
-                            $out .= $this->templates('item', $this->renderData($v));
-                        } else {
-                            $out .= $this->templates('item', array(
-                                'class' => '',
-                                'width' => '',
-                                'title' => '',
-                                'value' => $this->row($v)
-                            ));
-                        }
-                    } else if ($k === 'group') {
-                        if (is_array($v)) {
-                            $v['name'] = $k;
-                        }
-                        $out .= $this->templates('item', array(
-                            'class' => '',
-                            'width' => !empty($v['width']) ? ' style="width:' . $v['width'] . '"' : '',
-                            'title' => '',
-                            'value' => $this->group($v)
-                        ));
-                    } else {
-                        if (is_array($v)) {
-                            $v['name'] = $k;
-                        }
-                        $out .= $this->templates('items', array(
-                            'items' => $this->item($v)
-                        ));
-                    }
-                }
-            } else {
-                if (is_array($value)) {
-                    $value['name'] = $key;
-                }
-                $out .= $this->templates('items', array(
-                    'items' => $this->item($value)
-                ));
-            }
-        }
-
-        $this->tpl = '';
-
-        return $out;
-    }
-
-    private function group($data = array())
-    {
-        $out = '';
-
-        if (!empty($data['tpl'])) {
-            $this->tpl = $data['tpl'];
-        }
-        if (isset($this->config['templates'][$this->tpl]['group'])) {
-            $data += $this->config['templates'][$this->tpl]['group'];
-        }
-        if (!empty($data['novalue'])) {
-            $title = !empty($data['title']) ? $data['title'] : '';
-        } else {
-            $title = $this->templates('input', array(
-                'type' => 'text',
-                'value' => !empty($data['value']) ? $data['value'] : '',
-                'placeholder' => !empty($data['placeholder']) ? $data['placeholder'] : ''
-            ));
-        }
-
-        $move = isset($data['move']) ? $data['move'] : 1;
-        $templates = empty($data['templates']) ? '' : $data['templates'];
-        $out .= $this->templates('group', array(
-            'toolbar' => $this->toolbar($title, $move, $templates),
-            'tpl' => $this->tpl,
-            'title' => '',
-            'group' => !empty($data) ? $this->create($data) : ''
-        ));
-
-        $this->tpl = '';
-
-        return $out;
-    }
-
-    private function section($data = array())
-    {
-        $out = '';
-        $data = $this->fillData($data);
-
-        if (!empty($data['tpl'])) {
-            $this->tpl = $data['tpl'];
-        }
-
-        if (isset($this->config['templates'][$this->tpl]['section'])) {
-            $data = array_replace_recursive($data, $this->config['templates'][$this->tpl]['section']);
-        }
-
-        $out .= $this->templates('rows', array(
-            'view' => '',
-            'tpl' => $this->tpl,
-            'rows' => $this->templates('section', array(
-                'tpl' => $this->tpl,
-                'section' => $this->row($data['rows'])
-            ))
-        ));
-
-        $this->tpl = '';
-
-        return $out;
-    }
-
-    private function row($data = array())
-    {
-        $out = '';
-
-        if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $out .= $this->create($value);
+                if (!is_array($value)) {
+                    $out = str_replace('[+' . $key . '+]', $value, $out);
+                }
             }
+            $out = preg_replace('~\[\+(.*?)\+\]~', '', $out);
         }
 
         return $out;
     }
 
-    private function item($data = array())
+    /**
+     * @return string
+     */
+    public function getTpl()
     {
         $out = '';
-        $type = !empty($data['type']) ? $data['type'] : 'text';
-        $rows = !empty($data['rows']) ? $data['rows'] : '';
-        $default = !empty($data['default']) ? $data['default'] : '';
-        $elements = !empty($data['elements']) ? $data['elements'] : '';
-        $value = isset($data['value']) ? $data['value'] : ($default ? $default : '');
-
-        if ($this->config['render']) {
-            if (is_array($data)) {
-                if ($type == 'thumb') {
-                    if ($rows) {
-                        $data = $this->renderData($rows);
-                    }
-                    $out .= $this->templates('thumb', array(
-                        'thumb' => $this->templates('item', $data)
-                    ));
-                } else {
-                    $out .= $this->templates('item', $data);
-                }
-            }
-        } else {
-            $name = !empty($data['name']) ? $data['name'] : $type;
-            $attributes = !empty($data['attr']) ? ' ' . $data['attr'] : '';
-            $guid = md5(time() . rand(0, 99999));
-            $id = $this->config['field_id'] . '__' . $guid . '__' . $type . '__' . $name;
-            $width = !empty($data['width']) ? ' style="width:' . $data['width'] . '"' : '';
-            $class = '';
-            $placeholder = !empty($data['placeholder']) ? $data['placeholder'] : '';
-            $title = !empty($data['title']) ? $data['title'] : '';
-            $thumb = !empty($data['thumb']) ? $data['thumb'] : '';
-
-            switch ($type) {
-                case 'richtext':
-                case 'htmlarea':
-                    //$class .= ' richtext';
-                    $item = $this->templates('richtext', array(
-                        'id' => $id,
-                        'field_id' => 'tv' . $this->config['field_id'],
-                        'value' => $value,
-                        'placeholder' => $placeholder,
-                        'title' => $title
-                    ));
-                    break;
-
-                case 'thumb':
-                    $this->thumb = $id;
-                    $style = '';
-                    $class = '';
-                    if (!empty($data['width'])) {
-                        $style .= 'width:' . $data['width'];
-                    }
-                    if (!empty($value)) {
-                        $style .= 'background-image:url(../' . $value . ')';
-                    }
-                    if ($style) {
-                        $style = ' style="' . $style . '"';
-                    }
-                    if ($rows) {
-                        $attributes .= ' onclick="multiFieldsOpenThumbWindow(event,\'tv' . $this->config['field_id'] . '\',this);"';
-                        $class = ' thumb-item-rows';
-                        $rows = $this->rows($rows);
-                    }
-                    $item = $this->templates('thumb', array(
-                        'id' => $id,
-                        'name' => $id,
-                        'value' => $value,
-                        'style' => $style,
-                        'attr' => $attributes,
-                        'class' => $class,
-                        'rows' => $rows
-                    ));
-                    break;
-
-                case 'image':
-                    $forThumb = '';
-                    if (!empty($this->thumb)) {
-                        $_ = explode('__', $this->thumb);
-                        if (!empty($_[3]) && $_[3] == $thumb) {
-                            $forThumb = true;
-                            $attributes .= ' data-thumb="' . $this->thumb . '"';
-                        }
-                    }
-                    $item = renderFormElement($type, $id, $default, $elements, $value, $attributes, $data, $data);
-                    $item = preg_replace('~<script[^>]*>.*?</script>~si', '', $item);
-                    //$item = str_replace('onclick="BrowseServer(\'tv' . $id . '\')"', 'onclick="BrowseServer(this.previousElementSibling.id)"', $item);
-                    if ($forThumb) {
-                        $item .= '<script>document.getElementById(\'tv' . $id . '\').addEventListener(\'change\',function(){multiFieldsChangeThumb(\'tv' . $this->config['field_id'] . '\',this)}, false);</script>';
-                        $this->thumb = '';
-                    }
-                    break;
-
-                case 'file':
-                    $item = renderFormElement($type, $id, $default, $elements, $value, $attributes, $data, $data);
-                    $item = preg_replace('~<script[^>]*>.*?</script>~si', '', $item);
-                    //$item = str_replace('onclick="BrowseFileServer(\'tv' . $id . '\')"', 'onclick="BrowseFileServer(this.previousElementSibling.id)"', $item);
-                    break;
-
-                case 'date':
-                    $item = renderFormElement($type, $id, $default, $elements, $value, $attributes, $data, $data);
-                    $item = str_replace('onclick="document.forms[\'mutate\'].elements[\'tv' . $id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $id . '\'].onblur(); return true;"', 'onclick="document.forms[\'mutate\'].elements[this.previousElementSibling.id].value=\'\';document.forms[\'mutate\'].elements[this.previousElementSibling.id].onblur(); return true;"', $item);
-                    break;
-
-                default:
-                    $item = renderFormElement($type, $id, $default, $elements, $value, $attributes, $data, $data);
-                    break;
-
-            }
-
-            if ($placeholder) {
-                $item = str_replace('<input', '<input placeholder="' . $placeholder . '"', $item);
-                $item = str_replace('<textarea', '<textarea placeholder="' . $placeholder . '"', $item);
-            }
-
-            if ($type == 'thumb') {
-                $out .= $item;
-            } else {
-                $out .= $this->templates('item', array(
-                    'value' => $item,
-                    'class' => $class,
-                    'width' => $width,
-                    'title' => $title ? $this->templates('label', array(
-                        'id' => $id,
-                        'title' => $title
-                    )) : ''
-                ));
-            }
+        $tpl = $this->config['template_name'];
+        if (isset($this->config['templates'][$tpl])) {
+            $data = $this->config['templates'][$tpl];
+            $data['tpl'] = $tpl;
+            $out = $this->create($data, true);
         }
 
         return $out;
     }
 
-    private function fillData(&$data = array())
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function setTpl($data = [])
     {
-        foreach ($data as $key => &$value) {
-            if (is_numeric($key) || $key === 'rows' || $key === 'group' || $key === 'section' || $key === 'items' || $key === 'tpl' || $key === 'col' || $key === 'title' || $key === 'value') {
-                if (is_array($value)) {
-                    $this->fillData($value);
-                }
-            } else {
-                if (is_string($value) && $value !== '') {
-                    $value = array(
-                        'value' => $value
-                    );
-                }
-            }
-        }
+        $data = array_replace_recursive($this->config['templates'][$data['tpl']], $data);
 
         return $data;
     }
 
-    private function renderData($data = array())
+    /**
+     * @param array $data
+     * @param bool $first
+     * @return mixed|string
+     */
+    protected function create($data = [], $first = false)
     {
-        $out = array();
-
-        foreach ($data as $item) {
-            foreach ($item as $key => $value) {
-                $out[$key] = $value;
+        $out = '';
+        if (!empty($data)) {
+            if (isset($data['tpl'])) {
+                $data = $this->setTpl($data);
             }
+
+            if (!isset($data['actions'])) {
+                $data['actions'] = true;
+            }
+
+            if (isset($data['type'])) {
+                switch ($data['type']) {
+                    case 'group':
+                    case 'items':
+                    case 'thumb':
+                        $out .= $this->{$data['type']}($data);
+                        break;
+
+                    case 'richtext':
+                    case 'image':
+                    case 'file':
+                        $out .= $this->{$data['type']}($data);
+                        if (!empty($first)) {
+                            $out = $this->_row($out, $data);
+                        }
+                        break;
+
+                    default:
+                        $out .= $this->_default($data);
+                        if (!empty($first)) {
+                            $out = $this->_row($out, $data);
+                        }
+                        break;
+                }
+            } else {
+                $out .= $this->rows($data);
+            }
+        }
+
+        unset($data);
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function toolbar($data = [])
+    {
+        $out = '';
+
+        foreach ($data as $k => $v) {
+            if (!in_array($k, ['value', 'title', 'templates', 'actions'])) {
+                unset($data[$k]);
+            }
+        }
+
+        if (isset($data['value'])) {
+            if (!is_bool($data['value']) || (is_bool($data['value']) && !empty($data['value']))) {
+                $data['title'] = $this->tpl('input', [
+                    'type' => 'text',
+                    'value' => is_bool($data['value']) ? '' : $data['value'],
+                    'placeholder' => isset($data['placeholder']) ? $data['placeholder'] : $data['title'],
+                    'attr' => ' ' . $this->attributes($data)
+                ]);
+                $data['title'] = $this->tpl('toolbar.title', [
+                    'title' => $data['title']
+                ]);
+            }
+        }
+
+        if (isset($data['templates']) && empty($data['templates'])) {
+            unset($data['templates']);
+        } else {
+            $data['templates'] = !empty($data['templates']) ? $data['templates'] : [];
+            if (is_string($data['templates'])) {
+                $data['templates'] = array_map('trim', explode(',', $data['templates']));
+            }
+            if (!empty($this->config['templates'])) {
+                $options = '';
+                $template = '';
+                $i = 0;
+                foreach ($this->config['templates'] as $k => $v) {
+                    if ((empty($v['hidden']) && empty($data['templates'])) || (in_array($k, $data['templates']))) {
+                        $tplTitle = $k;
+                        if (!empty($v['tplTitle'])) {
+                            $tplTitle = $v['tplTitle'];
+                        } elseif (!empty($v['title'])) {
+                            $tplTitle = $v['title'];
+                        }
+                        $options .= $this->tpl('option', [
+                            'value' => $k,
+                            'title' => $tplTitle
+                        ]);
+                        $template = $k;
+                        $i++;
+                    }
+                }
+
+                if ($i > 1) {
+                    $data['select'] = $this->tpl('select', ['options' => $options]);
+                } else {
+                    $data['select'] = $this->tpl('input', [
+                        'type' => 'hidden',
+                        'value' => $template,
+                        'placeholder' => ''
+                    ]);
+                }
+            }
+            unset($data['templates']);
+        }
+
+        if (empty($data['actions'])) {
+            unset($data['actions']);
+        }
+
+        if (!empty($data)) {
+            $out = $this->tpl('toolbar', $data);
         }
 
         return $out;
     }
 
-    public function dbug($str = '', $exit = false)
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function group($data = [])
     {
+        $group = [];
+        if (isset($data[0])) {
+            foreach ($data as $k => $v) {
+                if (is_string($k)) {
+                    continue;
+                }
+                if (!empty($v)) {
+                    $group[$k] = $v;
+                    unset($data[$k]);
+                }
+            }
+        }
+
+        $tpl = 'group';
+        $data['group'] = !empty($group) ? $this->create($group) : '';
+        $data['class'] = !empty($data['cols']) ? $data['cols'] : 'col-12';
+        $data['actions'] = $this->actions($data['actions']);
+        $data['class'] .= $data['actions']['class'];
+        if (isset($data['actions']['actions']['move'])) {
+            $tpl = 'group_row';
+        }
+        $data['actions'] = $data['actions']['out'];
+        $data['toolbar'] = $this->toolbar($data);
+        $data['class'] = ' ' . trim($data['class']);
+
+        $out = $this->tpl($tpl, $data);
+
+        unset($data);
+        unset($group);
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function thumb($data = [])
+    {
+        $group = [];
+        $type = [];
+        if (isset($data[0])) {
+            foreach ($data as $k => $v) {
+                if (is_string($k)) {
+                    continue;
+                }
+                if (!empty($v)) {
+                    if (isset($v[0])) {
+                        $v = array_replace($v, $v[0]);
+                        unset($v[0]);
+                    }
+                    $group[$k] = $v;
+                    unset($data[$k]);
+                    // search type image or file
+                    if (empty($type) && !empty($v['type']) && in_array($v['type'], ['image', 'file'])) {
+                        $type[$v['type']] = empty($v['value']) ? '' : $v['value'];
+                    }
+                }
+            }
+        }
+
+        $data['id'] = 'thumb_' . $this->guid();
+        $data['group'] = '';
+        $data['attr'] = [];
+        if (!empty($group)) {
+            $data['group'] = $this->create($group);
+            if (key($type) == 'image') {
+                $data['attr'][] = 'data-type="image"';
+                if ($type['image'] != '') {
+                    $data['attr'][] = 'style="background-image: url(\'../' . $type['image'] . '\')"';
+                }
+            } else {
+                $data['attr'][] = 'data-type="file"';
+                if ($type['file'] != '') {
+                    $data['attr'][] = 'style="background-image: url()"';
+                }
+            }
+            if (count($group) == 1) {
+                if (key($type) == 'image') {
+                    $data['attr'][] = 'onclick="Multifields.openBrowseServer(event, this, \'image\', \'tv' . $this->config['id'] . '\');"';
+                } else {
+                    $data['attr'][] = 'onclick="Multifields.openBrowseServer(event, this, \'file\', \'tv' . $this->config['id'] . '\');"';
+                }
+            } else {
+                $data['attr'][] = 'onclick="Multifields.openThumbWindow(event, this, \'tv' . $this->config['id'] . '\');"';
+            }
+        }
+        $data['attr'] = implode(' ', $data['attr']);
+
+        $data['class'] = !empty($data['cols']) ? $data['cols'] : 'col-1';
+
+        $data['actions'] = $this->actions($data['actions']);
+        $data['class'] .= $data['actions']['class'];
+        $data['actions'] = $data['actions']['out'];
+
+        $data['class'] = ' ' . trim($data['class']);
+
+        $out = $this->tpl('group_thumb', $data);
+
+        unset($data);
+        unset($group);
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    protected function rows($data = [])
+    {
+        $out = '';
+        foreach ($data as $k => $v) {
+            if (!is_numeric($k)) {
+                continue;
+            }
+            if (!empty($v)) {
+                if (isset($v['tpl'])) {
+                    $v = $this->setTpl($v);
+                }
+                if (in_array($v['type'], ['group', 'items', 'thumb'])) {
+                    $out .= $this->create($v);
+                } else {
+                    if (isset($v[0])) {
+                        $v = array_replace($v, $v[0]);
+                        unset($v[0]);
+                    }
+                    $out .= $this->_row($this->create($v), $v);
+                }
+            }
+        }
+
+        unset($data);
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return mixed|string
+     */
+    protected function row($data = [])
+    {
+        $out = '';
+        foreach ($data as $k => $v) {
+            if (!is_numeric($k)) {
+                continue;
+            }
+            if (!empty($v)) {
+                $out .= $this->create($v);
+            }
+        }
+        if (!empty($out)) {
+            $out = $this->_row($out, $data);
+        }
+
+        unset($data);
+
+        return $out;
+    }
+
+    /**
+     * @param string $out
+     * @param array $data
+     * @return mixed|string
+     */
+    protected function _row($out = '', $data = [])
+    {
+        if (!empty($out)) {
+            $data['row'] = $out;
+            $data['class'] = !empty($data['cols']) ? $data['cols'] : 'col-12';
+            $data['actions'] = $this->actions($data['actions']);
+            $data['class'] .= $data['actions']['class'];
+            $data['actions'] = $data['actions']['out'];
+            if (!empty($data['actions'])) {
+                $data['actions'] = $this->tpl('actions', [
+                    'actions' => $data['actions']
+                ]);
+            }
+
+            $data['class'] = ' ' . trim($data['class']);
+            $out = $this->tpl('row', $data);
+        }
+
+        unset($data);
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return mixed|string
+     */
+    protected function items($data = [])
+    {
+        $out = '';
+        foreach ($data as $k => $v) {
+            if (!is_numeric($k)) {
+                continue;
+            }
+            if (!empty($v)) {
+                $out .= $this->create($v);
+            }
+        }
+
+        if (!empty($out)) {
+            $out = $this->_row($out, $data);
+        }
+
+        unset($data);
+
+        return $out;
+    }
+
+    /**
+     * @deprecated
+     * @param array $data
+     * @return mixed|string
+     */
+    protected function cols($data = [])
+    {
+        $out = '';
+        foreach ($data as $k => $v) {
+            if (!is_numeric($k)) {
+                continue;
+            }
+            if (!empty($v)) {
+                $out .= $this->create($v);
+            }
+        }
+
+        if (!empty($out)) {
+            $out = $this->tpl('cols', [
+                'cols' => $out
+            ]);
+        }
+
+        unset($data);
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function item($data = [])
+    {
+        if (!empty($data['title'])) {
+            $data['title'] = $this->tpl('label', $data);
+        }
+
+        return $this->tpl('item', $data);
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function data($data = [])
+    {
+        $guid = $this->guid();
+        $data['attr'] = $this->attributes($data);
+        $data['type'] = !empty($data['type']) ? $data['type'] : 'text';
+        $data['name'] = !empty($data['name']) ? $data['name'] : $data['type'];
+        $data['title'] = isset($data['title']) ? $data['title'] : '';
+        $data['placeholder'] = isset($data['placeholder']) ? $data['placeholder'] : '';
+        $data['elements'] = !empty($data['elements']) ? $data['elements'] : '';
+        $data['default'] = isset($data['default']) ? $data['default'] : '';
+        $data['value'] = isset($data['value']) ? $data['value'] : (isset($data['default']) ? $data['default'] : '');
+        $data['id'] = $this->config['id'] . '__' . $guid . '__' . $data['type'] . '__' . $data['name'];
+        $data['class'] = ' ' . (!empty($data['item.col']) ? trim($data['item.col']) : 'col');
+
+        return $data;
+    }
+
+    /**
+     * @return string
+     */
+    protected function guid()
+    {
+        return md5(time() . rand(0, 99999));
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function richtext($data = [])
+    {
+        $data = $this->data($data);
+        if (!empty($data['elements'])) {
+            if (is_array($data['elements'])) {
+                $data['elements'] = json_encode($data['elements'], JSON_UNESCAPED_UNICODE);
+            }
+            $data['elements'] = base64_encode($data['elements']);
+        }
+        $data['value'] = $this->tpl('richtext', [
+            'id' => $data['id'],
+            'field_id' => 'tv' . $this->config['id'],
+            'value' => htmlspecialchars($data['value']),
+            'placeholder' => $data['placeholder'],
+            'title' => $data['title'],
+            'options' => $data['elements']
+        ]);
+
+        return $this->item($data);
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function image($data = [])
+    {
+        $data = $this->data($data);
+        $data['value'] = $this->renderFormElement($data);
+        $data['value'] = preg_replace('~<script[^>]*>.*?</script>~si', '', $data['value']);
+        $data['value'] = str_replace('onchange="',
+            'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').oncomplete();', $data['value']);
+        $data['value'] = preg_replace('/BrowseServer\(.*\)/', 'BrowseServer(this.previousElementSibling)',
+            $data['value']);
+
+        return $this->item($data);
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function file($data = [])
+    {
+        $data = $this->data($data);
+        $data['value'] = $this->renderFormElement($data);
+        $data['value'] = preg_replace('~<script[^>]*>.*?</script>~si', '', $data['value']);
+        $data['value'] = str_replace('onchange="',
+            'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').oncomplete();', $data['value']);
+        $data['value'] = preg_replace('/BrowseFileServer\(.*\)/', 'BrowseFileServer(this.previousElementSibling)',
+            $data['value']);
+
+        return $this->item($data);
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    protected function _default($data = [])
+    {
+        $data = $this->data($data);
+        $data['value'] = $this->renderFormElement($data);
+
+        return $this->item($data);
+    }
+
+    /**
+     * @param array $data
+     * @return mixed|string
+     */
+    protected function renderFormElement($data = [])
+    {
+        $item = renderFormElement($data['type'], $data['id'], $data['default'], $data['elements'], $data['value'],
+            $data['attr']);
+
+        if ($data['placeholder'] != '') {
+            $item = str_replace('<input', '<input placeholder="' . $data['placeholder'] . '"', $item);
+            $item = str_replace('<textarea', '<textarea placeholder="' . $data['placeholder'] . '"', $item);
+        }
+
+        $item = str_replace(' name=', ' data-name="' . $data['id'] . '" tvname="' . $data['type'] . '" name=', $item);
+
+        unset($data);
+
+        return $item;
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    protected function attributes($data = [])
+    {
+        $attr = '';
+        if (!empty($data)) {
+            $attr = [];
+
+            if (!empty($data['required'])) {
+                $attr[] = 'required';
+            }
+
+            if (!empty($data['readonly'])) {
+                $attr[] = 'readonly';
+            }
+
+            $attr = implode(' ', $attr);
+            unset($data);
+        }
+
+        return $attr;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function actions($data = [])
+    {
+        if (is_array($data)) {
+            if (is_string($data)) {
+                $data = array_map('trim', explode(',', $data));
+            }
+            $data = array_flip($data);
+            $data = array_intersect_key($this->actions, $data);
+        } else {
+            if (is_null($data) || $data === true) {
+                $data = $this->actions;
+            } else {
+                $data = '';
+            }
+        }
+
+        $class = '';
+        if (isset($data['move'])) {
+            $class .= ' mf-row-move';
+        }
+        if (isset($data['add'])) {
+            $class .= ' mf-row-add';
+        }
+        if (isset($data['del'])) {
+            $class .= ' mf-row-del';
+        }
+
+        $data = [
+            'actions' => $data,
+            'class' => $class,
+            'out' => !empty($data) ? implode($data) : ''
+        ];
+
+        return $data;
+    }
+
+    public function dd(
+        $str = '',
+        $exit = false
+    ) {
         print('<pre>');
         print_r($str);
         print('</pre>');
@@ -646,5 +699,4 @@ class customTvMultifields
             exit;
         }
     }
-
 }
