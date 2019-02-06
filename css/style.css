@@ -69,6 +69,7 @@
 .multifields .mf-toolbar .mf-select ~ .mf-del, .multifields .mf-toolbar .mf-select ~ .mf-add, .multifields .mf-toolbar .mf-del + .mf-add { margin-left: .25rem }
 .multifields .mf-item.mf-group > .mf-toolbar { }
 .multifields .mf-select { margin: 0 0 0 auto; min-width: 12rem }
+.multifields .mf-select select { width: 100% }
 .multifields .mf-group-title { padding: 0; margin-right: -1px }
 .multifields > .mf-toolbar .mf-group-title { padding: 0 .5rem }
 /* actions buttons */

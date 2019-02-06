@@ -122,9 +122,9 @@ class multifields
                 $data = $this->setTpl($data);
             }
 
-            //            if (!isset($data['actions'])) {
-            //                $data['actions'] = true;
-            //            }
+            if (!isset($data['actions'])) {
+                $data['actions'] = true;
+            }
 
             if (isset($data['type'])) {
                 switch ($data['type']) {
@@ -417,7 +417,6 @@ class multifields
         if (!empty($out)) {
             $data['row'] = $out;
             $data['class'] = !empty($data['cols']) ? $data['cols'] : 'col-12';
-            $data['actions'] = !empty($data['actions']) ? $data['actions'] : [];
             $data['actions'] = $this->actions($data['actions']);
             $data['class'] .= $data['actions']['class'];
             $data['actions'] = $data['actions']['out'];
@@ -654,18 +653,18 @@ class multifields
      */
     protected function actions($data = [])
     {
-        if (empty($data)) {
-            if (!is_null($data)) {
-                $data = '';
-            } else {
-                $data = $this->actions;
-            }
-        } else {
+        if (is_array($data)) {
             if (is_string($data)) {
                 $data = array_map('trim', explode(',', $data));
             }
             $data = array_flip($data);
             $data = array_intersect_key($this->actions, $data);
+        } else {
+            if (is_null($data) || $data === true) {
+                $data = $this->actions;
+            } else {
+                $data = '';
+            }
         }
 
         $class = '';

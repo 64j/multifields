@@ -25,7 +25,7 @@ var Multifields = (function(a) {
       _this.on.call(_this, e);
     });
 
-    this.draggable('.multifields, .mf-row-move.mf-group');
+    this.draggable('.multifields, .mf-row-move.mf-group, .mf-item.mf-group');
   };
 
   __.prototype.on = function(e) {
@@ -60,8 +60,8 @@ var Multifields = (function(a) {
         this.loadTemplate(function(data) {
           if (data) {
             group.insertAdjacentHTML('beforeend', data);
-            if (group.lastElementChild.classList.contains('mf-row-move') && group.lastElementChild.classList.contains('mf-group')) {
-              this.draggable(group.lastElementChild);
+            if (group.classList.contains('mf-group')) {
+              this.draggable(group);
             }
             this.oncomplete();
           }

@@ -15,7 +15,7 @@ if (empty($modx->config)) {
     $modx->getSettings();
 }
 
-if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest' || $_SERVER['REQUEST_METHOD'] != 'POST') {
+if (!isset($_SESSION['mgrValidated'])) {
     $modx->sendErrorPage();
 }
 
