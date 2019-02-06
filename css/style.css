@@ -68,7 +68,7 @@
 .multifields .mf-toolbar::after { position: absolute; z-index: -1; display: block; content: ""; left: 0; top: 0; right: 0; height: 2.5rem; border: 1px solid #d4d4d4; background-color: #ecf0f1;}
 .multifields > .mf-toolbar { flex-basis: 0; flex-grow: 1; max-width: 100%; margin: 0 0 .5rem; padding: 0 .5rem; }
 .multifields .mf-toolbar .mf-select, .multifields .mf-toolbar .mf-del, .multifields .mf-toolbar .mf-add { margin-left: auto }
-.multifields .mf-toolbar .mf-select ~ .mf-del, .multifields .mf-toolbar .mf-select ~ .mf-add, .multifields .mf-toolbar .mf-del + .mf-add { margin-left: .25rem }
+.multifields .mf-toolbar .mf-group-title ~ .mf-del, .multifields .mf-toolbar .mf-select ~ .mf-del, .multifields .mf-toolbar .mf-select ~ .mf-add, .multifields .mf-toolbar .mf-del + .mf-add { margin-left: .25rem }
 .multifields .mf-item.mf-group > .mf-toolbar { }
 .multifields .mf-select { margin: 0 0 0 auto; min-width: 12rem }
 .multifields .mf-select select { width: 100% }
