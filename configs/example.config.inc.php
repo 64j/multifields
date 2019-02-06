@@ -1,63 +1,52 @@
 <?php
 
 return [
-
     [
-        'type' => 'text',
-        'name' => 'text',
-        'tplTitle' => 'Text',
-        'placeholder' => 'Text',
-        'draggable' => true
-    ],
-
-    [
-        'type' => 'textareamini',
-        'name' => 'textareamini',
-        'title' => 'Textarea mini',
-        'placeholder' => 'Textarea mini'
-    ],
-
-    [
-        'type' => 'image',
-        'name' => 'image',
-        'title' => 'Image',
-        'placeholder' => 'Image'
-    ],
-
-    [
-        'type' => 'group',
-        'title' => 'Group: text & image',
-        'value' => true,
-        ///'templates' => [4]
-    ],
-
-    [
+        'tplTitle' => 'Текст и картинка',
         'type' => 'items',
-        'hidden' => true,
         [
             'type' => 'text',
-            'name' => 'text',
-            'placeholder' => 'Text',
+            'name' => 'alt',
+            'placeholder' => 'Название изображения',
             'item.col' => 'col-4'
         ],
         [
             'type' => 'image',
             'name' => 'image',
-            'placeholder' => 'Image',
+            'placeholder' => 'Изображение',
             'item.col' => 'col-8'
         ]
     ],
 
-
     [
-        'title' => 'Thumb Image',
+        'tplTitle' => 'Текст и картинка 2',
         'type' => 'thumb',
+        [
+            'type' => 'text',
+            'name' => 'alt',
+            'placeholder' => 'Название изображения'
+        ],
         [
             'type' => 'image',
             'name' => 'image',
-            'title' => 'Image',
-            'placeholder' => 'Image'
+            'placeholder' => 'Изображение'
         ]
+    ],
+
+    [
+        'tplTitle' => 'Визуальный редактор',
+        'type' => 'richtext',
+        'placeholder' => 'Визуальный редактор',
+        'elements' => [
+            'theme' => 'mini'
+        ]
+    ],
+
+    [
+        'type' => 'group',
+        'title' => 'Group',
+        'value' => true,
+        'templates' => [0]
     ],
 
 ];

@@ -24,7 +24,7 @@
 .multifields .mf-row-move { padding: .5rem .5rem 0 1.25rem; border-right-width: 1rem }
 .multifields .mf-row.mf-row-add, .multifields .mf-row.mf-row-del { padding-right: 1.75rem }
 .multifields .mf-row.mf-row-add.mf-row-del { padding-right: 3.25rem }
-.multifields .mf-row.mf-group { padding: .5rem .5rem 0 }
+.multifields .mf-row.mf-group { padding: .5rem .5rem 0 !important }
 .multifields .mf-row.mf-group > .mf-toolbar > .mf-group-title, .multifields .mf-row.mf-group > .mf-toolbar > .mf-select { padding-top: 0; padding-bottom: 0 }
 .multifields .mf-row.col { display: flex; flex-wrap: wrap }
 .multifields .mf-row.no-actions { padding-right: .25rem }
@@ -44,7 +44,7 @@
 .multifields .input-group-btn { height: 1px }
 .multifields .input-group-btn .btn { height: 100% }
 /* thumb */
-.multifields .mf-thumb { position: relative; z-index: 1; overflow: hidden; min-width: 6rem; padding: 0; justify-content: flex-end; align-items: flex-start; font: normal normal normal 14px/1 FontAwesome; text-align: center; border-right: .5rem solid transparent !important; background: 50% 50% no-repeat; background-size: contain; cursor: pointer }
+.multifields .mf-thumb { position: relative; z-index: 1; overflow: hidden; min-width: 6rem; padding: 0 !important; justify-content: flex-end; align-items: flex-start; font: normal normal normal 14px/1 FontAwesome; text-align: center; border-right: .5rem solid transparent !important; background: 50% 50% no-repeat; background-size: contain; cursor: pointer }
 .multifields .mf-thumb::before { display: block; content: ""; padding-top: 100%; width: 100%; border: 1px solid #d4d4d4 }
 .multifields .mf-thumb:hover::before { border-color: #ababab }
 .multifields .mf-thumb::after { position: absolute; display: block; content: "\f055"; left: 50%; top: 50%; width: 3rem; height: 3rem; margin: -1.5rem 0 0 -1.5rem; border: none; font-size: 3rem; line-height: 3rem; opacity: .1 }
@@ -56,7 +56,7 @@
 .multifields .mf-thumb .mf-add, .multifields .mf-thumb .mf-del { margin-top: -100% }
 .multifields .mf-thumb .mf-row, .multifields .mf-thumb .mf-group-title, .multifields .mf-thumb .mf-select, .multifields.table i, .multifields.table .mf-actions { display: none }
 .multifields.table { margin: .75rem 0 0 }
-.multifields.table .mf-row { padding: .5rem .25rem 0; border-width: 1px; }
+.multifields.table .mf-row { padding: .5rem .25rem 0 !important; border-width: 1px; }
 #actions.multifields.actions { position: absolute !important; top: 0; right: 0 }
 /* selected */
 .multifields .mf-row.placeholder.active::after, .multifields .mf-row-move.active::after, .multifields .mf-thumb.active::before { border-color: #ffc107; background-color: #fff8e1 }
