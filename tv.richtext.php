@@ -1,4 +1,9 @@
 <?php
+/**
+ * multifields richtext
+ * @author 64j
+ */
+
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
@@ -10,12 +15,9 @@ if (empty($modx->config)) {
     $modx->getSettings();
 }
 
-if (!isset($_SESSION['mgrValidated'])/* || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')*/) {
+if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest' || $_SERVER['REQUEST_METHOD'] != 'POST') {
     $modx->sendErrorPage();
 }
-
-//$modx->sid = session_id();
-//$modx->loadExtension("ManagerAPI");
 
 $_lang = [];
 include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
@@ -23,7 +25,8 @@ if ($modx->config['manager_language'] != 'english') {
     include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
 }
 include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
-$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+
+$mxla = !empty($modx_lang_attribute) ? $modx_lang_attribute : 'en';
 
 $which_editor = $modx->config['which_editor'];
 if (!empty($_POST['which_editor'])) {

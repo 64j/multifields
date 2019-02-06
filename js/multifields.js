@@ -332,8 +332,8 @@ Multifields.openRTEinWindow = function(id, tvID, options) {
       var textarea = w.document.getElementById('ta');
       textarea.value = document.getElementById(id).value;
       if (typeof w.tinymce !== 'undefined') {
-        w.tinyMCE.get('ta').remove();
-        w.tinyMCE.execCommand('mceAddEditor', false, 'ta');
+        w.tinymce.get('ta').remove();
+        w.tinymce.execCommand('mceAddEditor', false, 'ta');
       }
       form.addEventListener('submit', function(e) {
         textarea = this.querySelector('textarea#ta');

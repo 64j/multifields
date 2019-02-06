@@ -72,7 +72,9 @@ class multifields
         }
         if (!empty($data)) {
             foreach ($data as $key => $value) {
-                $out = str_replace('[+' . $key . '+]', $value, $out);
+                if (!is_array($value)) {
+                    $out = str_replace('[+' . $key . '+]', $value, $out);
+                }
             }
             $out = preg_replace('~\[\+(.*?)\+\]~', '', $out);
         }
@@ -415,7 +417,7 @@ class multifields
         if (!empty($out)) {
             $data['row'] = $out;
             $data['class'] = !empty($data['cols']) ? $data['cols'] : 'col-12';
-
+            $data['actions'] = !empty($data['actions']) ? $data['actions'] : [];
             $data['actions'] = $this->actions($data['actions']);
             $data['class'] .= $data['actions']['class'];
             $data['actions'] = $data['actions']['out'];
@@ -537,6 +539,9 @@ class multifields
     {
         $data = $this->data($data);
         if (!empty($data['elements'])) {
+            if (is_array($data['elements'])) {
+                $data['elements'] = json_encode($data['elements'], JSON_UNESCAPED_UNICODE);
+            }
             $data['elements'] = base64_encode($data['elements']);
         }
         $data['value'] = $this->tpl('richtext', [
@@ -628,11 +633,11 @@ class multifields
         if (!empty($data)) {
             $attr = [];
 
-            if ($data['required']) {
+            if (!empty($data['required'])) {
                 $attr[] = 'required';
             }
 
-            if ($data['readonly']) {
+            if (!empty($data['readonly'])) {
                 $attr[] = 'readonly';
             }
 

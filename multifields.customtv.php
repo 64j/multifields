@@ -92,7 +92,7 @@ if (!class_exists('multifields')) {
     <?php
 }
 $value = $row['value'];
-$row['value'] = !empty($value) ? json_decode($value, true) : array();
+$row['value'] = !empty($value) ? json_decode($value, true) : [];
 
 if (!empty($row['elements'])) {
     $row['templates'] = json_decode($row['elements'], true);

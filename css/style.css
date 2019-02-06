@@ -37,7 +37,7 @@
 .multifields .mf-row-move.active { z-index: 99; opacity: .75; }
 .multifields input[type="text"] + input[type="button"] { margin-left: -1px !important }
 .multifields input:focus { z-index: 9 !important }
-.multifields .form-control-richtext { overflow: hidden; height: 1.9rem; min-height: 1.9rem; }
+.multifields .form-control-richtext { overflow: hidden; height: 2rem; min-height: 2rem; resize: vertical }
 .multifields .input-group { border-collapse: collapse }
 .multifields .input-group-btn { height: 1px }
 .multifields .input-group-btn .btn { height: 100% }
