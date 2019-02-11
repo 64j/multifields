@@ -2,7 +2,7 @@
 /**
  * Class multifields
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author 64j
  */
