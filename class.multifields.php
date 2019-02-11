@@ -567,8 +567,8 @@ class multifields
         $data['value'] = preg_replace('~<script[^>]*>.*?</script>~si', '', $data['value']);
         $data['value'] = str_replace('onchange="',
             'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').oncomplete();', $data['value']);
-        $data['value'] = preg_replace('/BrowseServer\(.*\)/', 'Multifields.BrowseServer(this.previousElementSibling)',
-            $data['value']);
+        $data['value'] = preg_replace('/BrowseServer\(.*\)/',
+            'Multifields.BrowseServer(this.previousElementSibling, \'images\')', $data['value']);
 
         return $this->item($data);
     }
@@ -584,8 +584,8 @@ class multifields
         $data['value'] = preg_replace('~<script[^>]*>.*?</script>~si', '', $data['value']);
         $data['value'] = str_replace('onchange="',
             'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').oncomplete();', $data['value']);
-        $data['value'] = preg_replace('/BrowseFileServer\(.*\)/', 'Multifields.BrowseFileServer(this.previousElementSibling)',
-            $data['value']);
+        $data['value'] = preg_replace('/BrowseFileServer\(.*\)/',
+            'Multifields.BrowseServer(this.previousElementSibling, \'files\')', $data['value']);
 
         return $this->item($data);
     }
