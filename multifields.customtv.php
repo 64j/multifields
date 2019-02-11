@@ -15,78 +15,85 @@ if (!class_exists('multifields')) {
     <link rel="stylesheet" type="text/css" href="../assets/tvs/<?= $baseDir ?>/css/style.css">
     <script src="../assets/tvs/<?= $baseDir ?>/js/multifields.js"></script>
     <script>
-      if (typeof BrowseServer !== 'function' && typeof BrowseFileServer !== 'function') {
-        var lastImageCtrl;
-        var lastFileCtrl;
+      Multifields.lastImageCtrl = null;
+      Multifields.lastFileCtrl = null;
 
-        function OpenServerBrowser(url, width, height)
-        {
-          var iLeft = (screen.width - width) / 2;
-          var iTop = (screen.height - height) / 2;
+      Multifields.OpenServerBrowser = function(url, width, height) {
+        var iLeft = (screen.width - width) / 2;
+        var iTop = (screen.height - height) / 2;
 
-          var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes';
-          sOptions += ',width=' + width;
-          sOptions += ',height=' + height;
-          sOptions += ',left=' + iLeft;
-          sOptions += ',top=' + iTop;
+        var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes';
+        sOptions += ',width=' + width;
+        sOptions += ',height=' + height;
+        sOptions += ',left=' + iLeft;
+        sOptions += ',top=' + iTop;
 
-          var oWindow = window.open(url, 'FCKBrowseWindow', sOptions);
-        }
+        var oWindow = window.open(url, 'FCKBrowseWindow', sOptions);
 
-        function BrowseServer(ctrl)
-        {
-          lastImageCtrl = ctrl;
-          var w = screen.width * 0.5;
-          var h = screen.height * 0.5;
-          OpenServerBrowser(
-              '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browser.php?Type=images', w,
-              h);
-        }
-
-        function BrowseFileServer(ctrl)
-        {
-          lastFileCtrl = ctrl;
-          var w = screen.width * 0.5;
-          var h = screen.height * 0.5;
-          OpenServerBrowser(
-              '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browser.php?Type=files', w,
-              h);
-        }
-      }
-
-      if (typeof SetUrlChange !== 'function') {
-        function SetUrlChange(el)
-        {
-          if ('createEvent' in document) {
-            var evt = document.createEvent('HTMLEvents');
-            evt.initEvent('change', false, true);
-            el.dispatchEvent(evt);
-          } else {
-            el.fireEvent('onchange');
+        var mf_setCallback = setInterval(function() {
+          if (typeof window.KCFinder !== 'undefined') {
+            clearInterval(mf_setCallback);
+            window.KCFinder.callBack = Multifields.SetUrl;
+            window.KCFinder.callBackMultiple = function(files) {
+              Multifields.SetUrl(files[0]);
+//              for (var i = 1; i < files.length; i++) {
+//                // callBackMultiple
+//              }
+            };
           }
-        }
-      }
+        }, 100);
+      };
 
-      function SetUrl(url, width, height, alt)
-      {
-        if (lastFileCtrl) {
-          var c = typeof lastFileCtrl === 'object' ? lastFileCtrl : document.getElementById(lastFileCtrl);
+      Multifields.BrowseServer = function(ctrl) {
+        Multifields.lastImageCtrl = ctrl;
+        var w = screen.width * 0.5;
+        var h = screen.height * 0.5;
+        Multifields.OpenServerBrowser(
+            '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browser.php?type=images', w,
+            h);
+      };
+
+      Multifields.BrowseFileServer = function(ctrl) {
+        Multifields.lastFileCtrl = ctrl;
+        var w = screen.width * 0.5;
+        var h = screen.height * 0.5;
+        Multifields.OpenServerBrowser(
+            '<?= MODX_MANAGER_URL ?>media/browser/<?= $modx->config['which_browser'] ?>/browser.php?type=files', w,
+            h);
+      };
+
+      Multifields.SetUrlChange = function(el) {
+        if ('createEvent' in document) {
+          var evt = document.createEvent('HTMLEvents');
+          evt.initEvent('change', false, true);
+          el.dispatchEvent(evt);
+        } else {
+          el.fireEvent('onchange');
+        }
+      };
+
+      Multifields.SetUrl = function(url) {
+        var c;
+        if (Multifields.lastFileCtrl) {
+          c = typeof Multifields.lastFileCtrl === 'object' ? Multifields.lastFileCtrl : document.getElementById(
+              Multifields.lastFileCtrl);
           if (c && c.value !== url) {
             c.value = url;
-            SetUrlChange(c);
+            Multifields.SetUrlChange(c);
           }
-          lastFileCtrl = '';
-        } else if (lastImageCtrl) {
-          var c = typeof lastImageCtrl === 'object' ? lastImageCtrl : document.getElementById(lastImageCtrl);
+          Multifields.lastFileCtrl = '';
+        } else if (Multifields.lastImageCtrl) {
+          c = typeof Multifields.lastImageCtrl === 'object' ? Multifields.lastImageCtrl : document.getElementById(
+              Multifields.lastImageCtrl);
           if (c && c.value !== url) {
             c.value = url;
-            SetUrlChange(c);
+            Multifields.SetUrlChange(c);
           }
-          lastImageCtrl = '';
+          Multifields.lastImageCtrl = '';
         } else {
 
         }
-      }
+      };
 
     </script>
     <?php

@@ -291,12 +291,12 @@ Multifields.openBrowseServer = function(event, el, type, tvID) {
   switch (type) {
     case 'image':
       target = el.querySelector('[tvname="image"]');
-      BrowseServer(target.id);
+      Multifields.BrowseServer(target.id);
       break;
 
     case 'file':
       target = el.querySelector('[tvname="file"]');
-      BrowseFileServer(target.id);
+      Multifields.BrowseFileServer(target.id);
       break;
   }
   target.onchange = function() {
