@@ -271,6 +271,12 @@ class multifields
         $data['actions'] = $data['actions']['out'];
         $data['toolbar'] = $this->toolbar($data);
         $data['class'] = ' ' . trim($data['class']);
+        if (isset($data['ghost']) && isset($this->config['templates'][$data['ghost']]) && $this->config['templates'][$data['ghost']]['type'] == 'thumb') {
+            $ghost = $this->config['templates'][$data['ghost']];
+            $ghost['ghost'] = true;
+            $ghost['tpl'] = $data['ghost'];
+            $data['group'] .= $this->create($ghost);
+        }
 
         $out = $this->tpl($tpl, $data);
 
@@ -326,18 +332,23 @@ class multifields
             }
             if (count($group) == 1) {
                 if (key($type) == 'image') {
-                    $data['attr'][] = 'onclick="Multifields.openBrowseServer(event, this, \'image\', \'tv' . $this->config['id'] . '\');"';
+                    //                    $data['attr'][] = 'onclick="Multifields.openBrowseServer(event, this, \'image\', \'tv' . $this->config['id'] . '\');"';
                 } else {
-                    $data['attr'][] = 'onclick="Multifields.openBrowseServer(event, this, \'file\', \'tv' . $this->config['id'] . '\');"';
+                    //                    $data['attr'][] = 'onclick="Multifields.openBrowseServer(event, this, \'file\', \'tv' . $this->config['id'] . '\');"';
                 }
             } else {
-                $data['attr'][] = 'onclick="Multifields.openThumbWindow(event, this, \'tv' . $this->config['id'] . '\');"';
+                $data['attr'][] = 'data-mf="multi"';
+                //$data['attr'][] = 'onclick="Multifields.openThumbWindow(event, this, \'tv' . $this->config['id'] .
+                // '\');"';
             }
         }
         $data['attr'] = implode(' ', $data['attr']);
 
         $data['class'] = !empty($data['cols']) ? $data['cols'] : 'col-1';
 
+        if (!empty($data['ghost'])) {
+            $data['class'] .= ' mf-ghost';
+        }
         $data['actions'] = $this->actions($data['actions']);
         $data['class'] .= $data['actions']['class'];
         $data['actions'] = $data['actions']['out'];
@@ -411,9 +422,10 @@ class multifields
     /**
      * @param string $out
      * @param array $data
+     * @param bool $items
      * @return mixed|string
      */
-    protected function _row($out = '', $data = [])
+    protected function _row($out = '', $data = [], $items = false)
     {
         if (!empty($out)) {
             $data['row'] = $out;
@@ -425,6 +437,9 @@ class multifields
                 $data['actions'] = $this->tpl('actions', [
                     'actions' => $data['actions']
                 ]);
+            }
+            if ($items) {
+                $data['class'] .= ' row-items';
             }
 
             $data['class'] = ' ' . trim($data['class']);
@@ -453,7 +468,7 @@ class multifields
         }
 
         if (!empty($out)) {
-            $out = $this->_row($out, $data);
+            $out = $this->_row($out, $data, true);
         }
 
         unset($data);
@@ -566,9 +581,10 @@ class multifields
         $data['value'] = $this->renderFormElement($data);
         $data['value'] = preg_replace('~<script[^>]*>.*?</script>~si', '', $data['value']);
         $data['value'] = str_replace('onchange="',
-            'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').oncomplete();', $data['value']);
+            'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').mf.oncomplete();', $data['value']);
         $data['value'] = preg_replace('/BrowseServer\(.*\)/',
-            'Multifields.BrowseServer(this.previousElementSibling, \'images\')', $data['value']);
+            'document.getElementById(\'tv' . $this->config['id'] . '\').mf.BrowseServer(this.previousElementSibling.id, \'images\');',
+            $data['value']);
 
         return $this->item($data);
     }
@@ -583,9 +599,10 @@ class multifields
         $data['value'] = $this->renderFormElement($data);
         $data['value'] = preg_replace('~<script[^>]*>.*?</script>~si', '', $data['value']);
         $data['value'] = str_replace('onchange="',
-            'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').oncomplete();', $data['value']);
+            'onchange="document.getElementById(\'tv' . $this->config['id'] . '\').mf.oncomplete();', $data['value']);
         $data['value'] = preg_replace('/BrowseFileServer\(.*\)/',
-            'Multifields.BrowseServer(this.previousElementSibling, \'files\')', $data['value']);
+            'document.getElementById(\'tv' . $this->config['id'] . '\').mf.BrowseServer(this.previousElementSibling.id, \'files\');',
+            $data['value']);
 
         return $this->item($data);
     }
@@ -616,7 +633,7 @@ class multifields
             $item = str_replace('<textarea', '<textarea placeholder="' . $data['placeholder'] . '"', $item);
         }
 
-        $item = str_replace(' name=', ' data-name="' . $data['id'] . '" tvname="' . $data['type'] . '" name=', $item);
+        $item = str_replace(' name=', ' tvname="' . $data['type'] . '" name=', $item);
 
         unset($data);
 
@@ -677,6 +694,9 @@ class multifields
         }
         if (isset($data['del'])) {
             $class .= ' mf-row-del';
+        }
+        if (!$class) {
+            $class = ' mf-no-actions';
         }
 
         $data = [

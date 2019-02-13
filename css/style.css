@@ -1,5 +1,5 @@
 /* multifields */
-.multifields { position: relative; z-index: 1; display: flex; align-items: flex-start; flex-wrap: wrap; margin-left: -200px; background-color: #f9f9f9 }
+.multifields { position: relative; z-index: 1; display: flex; align-items: flex-start; flex-wrap: wrap; margin-left: 0; background-color: #f9f9f9 }
 .multifields label { margin: 0; cursor: default }
 .multifields select, .multifields select[size="1"]:not(.unstyled) { width: 100% }
 .multifields .row { display: flex; flex-wrap: wrap; margin: 0 -.25rem }
@@ -27,12 +27,13 @@
 .multifields .mf-row.mf-group { padding: .5rem .5rem 0 !important }
 .multifields .mf-row.mf-group > .mf-toolbar > .mf-group-title, .multifields .mf-row.mf-group > .mf-toolbar > .mf-select { padding-top: 0; padding-bottom: 0 }
 .multifields .mf-row.col { display: flex; flex-wrap: wrap }
-.multifields .mf-row.no-actions { padding-right: .25rem }
 .multifields .mf-col { padding: .5rem }
 .multifields .mf-item { display: flex; flex-wrap: wrap; margin: 0; padding: 0 .25rem .5rem }
-.multifields .mf-item.mf-group { align-content: flex-start; align-items: flex-start; min-height: 2.5rem; margin-bottom: .5rem; padding: .5rem .5rem 0 }
+.multifields .mf-item.mf-group { align-content: flex-start; align-items: flex-start; min-height: 2.5rem; margin: 0 0 .5rem; padding: .5rem .5rem 0 }
 .multifields .mf-item.mf-group.mf-row-move { padding: .5rem .5rem 0; }
 .multifields .mf-item.mf-group::after, .multifields .mf-row::after { position: absolute; z-index: -1; display: block; content: ""; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid #d4d4d4 }
+.multifields .mf-item.mf-group.mf-no-actions { padding:0 .25rem; margin-bottom: 0 }
+.multifields .mf-item.mf-group.mf-no-actions::after { border-color: transparent }
 .multifields .mf-item input[type="text"], .multifields .mf-item input[type="number"] { flex-basis: 0; flex-grow: 1; width: 100%; max-width: 100%; }
 .multifields .mf-item input, .multifields .mf-item button, .multifields .mf-item select { flex: 0 0 auto; width: auto; max-width: none; margin: auto !important }
 .multifields .mf-select { margin-left: -1px; padding: .25rem 0 }
@@ -45,6 +46,7 @@
 .multifields .input-group-btn .btn { height: 100% }
 /* thumb */
 .multifields .mf-thumb { position: relative; z-index: 1; overflow: hidden; min-width: 6rem; padding: 0 !important; justify-content: flex-end; align-items: flex-start; font: normal normal normal 14px/1 FontAwesome; text-align: center; border-right: .5rem solid transparent !important; background: 50% 50% no-repeat; background-size: contain; cursor: pointer }
+.multifields .row-items > .mf-thumb { border-left: .25rem solid transparent !important; border-right: .25rem solid transparent !important; }
 .multifields .mf-thumb::before { display: block; content: ""; padding-top: 100%; width: 100%; border: 1px solid #d4d4d4 }
 .multifields .mf-thumb:hover::before { border-color: #ababab }
 .multifields .mf-thumb::after { position: absolute; display: block; content: "\f055"; left: 50%; top: 50%; width: 3rem; height: 3rem; margin: -1.5rem 0 0 -1.5rem; border: none; font-size: 3rem; line-height: 3rem; opacity: .1 }
@@ -84,6 +86,7 @@
 .multifields .mf-selected > .mf-actions .mf-move { display: block }
 .multifields .mf-toolbar .mf-move { position: absolute; left: 0; top: 0; margin: 0; padding: .7rem 0; width: 1rem; height: 2.5rem; background-color: rgba(0, 0, 0, 0.05); cursor: n-resize; }
 .multifields .mf-row-move.active > .mf-actions .mf-move { background-color: #ffc107 }
+.multifields .mf-ghost > .fa { display: none }
 .ghost { opacity: .4;}
 /* lightness */
 .light .multifields, .lightness .multifields { background-color: #fff }

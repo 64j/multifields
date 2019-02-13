@@ -19,11 +19,6 @@ if (!isset($_SESSION['mgrValidated'])) {
     $modx->sendErrorPage();
 }
 
-$_lang = [];
-include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
-if ($modx->config['manager_language'] != 'english') {
-    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
-}
 include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 
 $mxla = !empty($modx_lang_attribute) ? $modx_lang_attribute : 'en';
@@ -50,6 +45,14 @@ if (!empty($_REQUEST['options']) && is_scalar($_REQUEST['options'])) {
         $which_editor_config['options']['ta'] = array_merge($which_editor_config['options']['ta'], $options);
     }
 }
+$body_class = '';
+$theme_modes = array('', 'lightness', 'light', 'dark', 'darkness');
+$theme_mode = isset($_COOKIE['MODX_themeMode']) ? $_COOKIE['MODX_themeMode'] : '';
+if (!empty($theme_modes[$theme_mode])) {
+    $body_class .= ' ' . $theme_modes[$theme_mode];
+} elseif (!empty($theme_modes[$modx->config['manager_theme_mode']])) {
+    $body_class .= ' ' . $theme_modes[$modx->config['manager_theme_mode']];
+}
 ?>
 <!doctype html>
 <html lang="<?= $mxla ?>">
@@ -60,14 +63,16 @@ if (!empty($_REQUEST['options']) && is_scalar($_REQUEST['options'])) {
     <title>MultiFields:: RichText</title>
     <link rel="stylesheet" href="<?= MODX_BASE_URL . MGR_DIR ?>/media/style/<?= $modx->config['manager_theme'] ?>/style.css">
     <style>
-        html, body, body > form { position: relative; margin: 0; padding: 0; height: 100%; }
+        html, body, body > form { position: relative; margin: 0; padding: 0; height: 100%; background: none }
         #table-layout { position: relative; width: 100%; height: 100%; padding: 0; border: none; border-collapse: collapse; }
         #table-layout > tfoot > tr { height: 2rem; }
+        #table-layout > tbody > tr > td { padding: 0 }
         #table-layout > tbody > tr > td > .mce-tinymce { height: 100% !important; border: none !important; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body { display: table !important; width: 100%; height: 100%; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body > div { display: table-row !important; height: 1%; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body > div.mce-edit-area { height: auto }
         textarea, textarea + div { height: 100% !important; border: none !important; }
+        #actions { display: flex }
     </style>
     <script>
       if (!parent.modx) {
@@ -77,12 +82,11 @@ if (!empty($_REQUEST['options']) && is_scalar($_REQUEST['options'])) {
       }
     </script>
 </head>
-<body>
+<body class="<?= $body_class ?>">
 <form id="ta_form" name="ta_form" method="post">
     <input type="hidden" name="editor" id="editor" value="">
     <div id="actions">
-        <div class="btn-group">
-            <!--<div class="btn-group dropdown">
+        <!--<div class="btn-group dropdown">
                 <? /*= $_lang['which_editor_title'] */ ?>
                 <select class="form-control form-control-sm" size="1"
                     name="which_editor"
@@ -90,19 +94,19 @@ if (!empty($_REQUEST['options']) && is_scalar($_REQUEST['options'])) {
                     <option value="none"><? /*= $_lang['none'] */ ?></option>
                     <option value="Codemirror"<? /*= ($which_editor == 'Codemirror' ? ' selected="selected"' : '') */ ?>>Codemirror</option>
                     <?php
-            /*                    // invoke OnRichTextEditorRegister event
-                                $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-                                if (is_array($evtOut)) {
-                                    for ($i = 0; $i < count($evtOut); $i++) {
-                                        $editor = $evtOut[$i];
-                                        echo '<option value="' . $editor . '"' . ($which_editor == $editor ? ' selected="selected"' : '') . '>' . $editor . "</option>";
-                                    }
+        /*                    // invoke OnRichTextEditorRegister event
+                            $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+                            if (is_array($evtOut)) {
+                                for ($i = 0; $i < count($evtOut); $i++) {
+                                    $editor = $evtOut[$i];
+                                    echo '<option value="' . $editor . '"' . ($which_editor == $editor ? ' selected="selected"' : '') . '>' . $editor . "</option>";
                                 }
-                                */ ?>
+                            }
+                            */ ?>
                 </select>
             </div>-->
-            <button type="submit" class="btn btn-success btn-sm"><?= $_lang['save'] ?></button>
-        </div>
+        <button type="submit" class="btn btn-sm btn-success btn-save"><i class="fa fa-floppy-o show"></i></button>
+        <span class="btn btn-sm btn-danger btn-close"><i class="fa fa-times-circle show"></i></span>
     </div>
     <table id="table-layout">
         <tbody>
