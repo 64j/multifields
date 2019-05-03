@@ -11,14 +11,17 @@ class MultiFieldsFront
     protected $basePath;
     protected $params;
     protected $data;
+    protected $config;
 
     /**
      * MultiFieldsFront constructor.
      * @param DocumentParser $evo
+     * @param array $params
      */
-    protected function __construct(\DocumentParser $evo)
+    public function __construct(\DocumentParser $evo, $params = [])
     {
         $this->evo = $evo;
+        $this->setParams($params);
         $this->basePath = MODX_BASE_PATH . 'assets/plugins/multifields/';
     }
 
@@ -30,7 +33,7 @@ class MultiFieldsFront
     static function getInstance($evo, $params = [])
     {
         if (self::$instance === null) {
-            self::$instance = new static($evo);
+            self::$instance = new static($evo, $params);
         }
 
         return self::$instance->setParams($params)
@@ -45,7 +48,7 @@ class MultiFieldsFront
         $out = '';
         if (!empty($this->params['tvid'])) {
             if (!empty($this->getData())) {
-                $out = $this->renderData();
+                $out = $this->renderData(0, 0, $this->getConfig());
                 $out['mf.type'] = 'wrap';
                 $out = $this->tpl('tpl', $out);
                 $out = $this->tpl('wrap', [
@@ -73,6 +76,28 @@ class MultiFieldsFront
         }
 
         return $this->data;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    protected function getConfig()
+    {
+        $this->config = [];
+
+        if (file_exists($this->basePath . 'config/' . $this->params['tvid'] . '.php')) {
+            $this->config = require_once $this->basePath . 'config/' . $this->params['tvid'] . '.php';
+        }
+
+        if (is_array($this->config)) {
+            foreach ($this->config as $k => &$v) {
+                if (!isset($v['title'])) {
+                    $v['title'] = $k;
+                }
+            }
+        }
+
+        return $this->config;
     }
 
     /**
@@ -116,9 +141,10 @@ class MultiFieldsFront
     /**
      * @param int $parent
      * @param int $level
+     * @param array $config
      * @return array
      */
-    protected function renderData($parent = 0, $level = 0)
+    protected function renderData($parent = 0, $level = 0, $config = [])
     {
         $out = [];
         $level++;
@@ -128,9 +154,12 @@ class MultiFieldsFront
             $v['mf.parent'] = $v['parent'];
             $v['mf.name'] = $v['name'];
             $v['mf.level'] = $level;
+
             unset($v['parent']);
             unset($v['name']);
+
             $prepare = strtolower('prepare_' . $v['mf.name']);
+            $tpl = strtolower('tpl_' . $v['mf.name']);
 
             if ($parent == $v['mf.parent']) {
                 $v['mf.iteration'] = $i++;
@@ -138,20 +167,31 @@ class MultiFieldsFront
                     $v['mf.items'] = $v['items'];
                 }
 
-                if ($_ = $this->renderData($k, $level)) {
+                $this->findData($v['mf.name'], $config, $result);
+
+                if (isset($this->config[$v['name']])) {
+                    $result = $this->config[$v['name']];
+                }
+
+                if (!empty($this->params[$prepare])) {
+                    $v = $this->prepare($this->params[$prepare], $v);
+                } elseif (isset($result['prepare'])) {
+                    $v = $this->prepare($result['prepare'], $v);
+                }
+
+                if (empty($this->params[$tpl]) && !empty($result['tpl'])) {
+                    $this->params[$tpl] = $result['tpl'];
+                }
+
+                if ($_ = $this->renderData($k, $level, $result)) {
                     $v = array_merge($v, $_);
-                    if ($this->params['prepare']) {
-                        $v = $this->prepare($this->params['prepare'], $v);
-                    }
-                    if (!empty($this->params[$prepare])) {
-                        $v = $this->prepare($this->params[$prepare], $v);
-                    }
-                    $out[] = $this->tpl('tpl_' . $v['mf.name'], $v);
+                    $out[] = $this->tpl($tpl, $v);
                 } else {
                     if (!isset($out[$v['mf.name']])) {
                         $out[$v['mf.name']] = '';
                     }
-                    $out[$v['mf.name']] .= $this->tpl('tpl_' . $v['mf.name'], $v);
+
+                    $out[$v['mf.name']] .= $this->tpl($tpl, $v);
                 }
             }
         }
@@ -165,6 +205,25 @@ class MultiFieldsFront
         }
 
         return $out;
+    }
+
+    /**
+     * @param $searchKey
+     * @param $arr
+     * @param $result
+     */
+    protected function findData($searchKey, $arr, &$result)
+    {
+        if (isset($arr[$searchKey])) {
+            $result = $arr[$searchKey];
+
+            return;
+        }
+        foreach ($arr as $key => $param) {
+            if ($key == 'items') {
+                $this->findData($searchKey, $param, $result);
+            }
+        }
     }
 
     /**
