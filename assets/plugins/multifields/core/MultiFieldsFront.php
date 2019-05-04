@@ -15,12 +15,11 @@ class MultiFieldsFront
 
     /**
      * MultiFieldsFront constructor.
-     * @param DocumentParser $evo
      * @param array $params
      */
-    public function __construct(\DocumentParser $evo, $params = [])
+    public function __construct($params = [])
     {
-        $this->evo = $evo;
+        $this->evo = evolutionCMS();
         $this->setParams($params);
         $this->basePath = MODX_BASE_PATH . 'assets/plugins/multifields/';
     }
@@ -30,10 +29,10 @@ class MultiFieldsFront
      * @param array $params
      * @return array|string
      */
-    static function getInstance($evo, $params = [])
+    static function getInstance($params = [])
     {
         if (self::$instance === null) {
-            self::$instance = new static($evo, $params);
+            self::$instance = new static($params);
         }
 
         return self::$instance->setParams($params)
@@ -169,8 +168,8 @@ class MultiFieldsFront
 
                 $this->findData($v['mf.name'], $config, $result);
 
-                if (isset($this->config[$v['name']])) {
-                    $result = $this->config[$v['name']];
+                if (isset($this->config[$v['mf.name']])) {
+                    $result = $this->config[$v['mf.name']];
                 }
 
                 if (!empty($this->params[$prepare])) {
