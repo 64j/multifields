@@ -424,6 +424,8 @@ class MultiFields
         $data['id'] = $this->uniqid();
         $data['tvId'] = $this->params['tv']['id'];
         $data['value'] = isset($data['value']) ? $data['value'] : '';
+        $data['style'] = isset($data['style']) ? $data['style'] : '';
+        $data['attr'] = isset($data['attr']) ? $data['attr'] : '';
 
         switch ($tpl) {
             case 'section':
@@ -460,7 +462,14 @@ class MultiFields
                 $title = isset($data['title']) ? '<div class="' . $data['title.class'] . ' p-0 pr-1">' . $data['title'] . '</div>' : '';
                 $data['thumb'] = isset($data['thumb']) ? $data['thumb'] : '';
 
-                $data['element'] = renderFormElement($type, $data['id'], $data['default'], $data['elements'], $data['value'], $data['attr']);
+                if (!empty($data['image'])) {
+                    $data['attr'] .= ' data-image="' . $data['image'] . '"';
+                }
+                if (!empty($data['thumb'])) {
+                    $data['attr'] .= ' data-thumb="' . $data['thumb'] . '"';
+                }
+
+                $data['element'] = renderFormElement($type, $data['id'], $data['default'], $data['elements'], $data['value'], $data['style']);
 
                 switch ($type) {
                     case 'thumb':
@@ -468,10 +477,10 @@ class MultiFields
                         $tpl = $type;
                         $class = 'col-auto';
                         $data['thumb_value'] = $this->checkThumbImage($data['value']);
-                        if (empty($data['image'])) {
-                            $data = $this->setActions($data, $this->params['actions'][$data['type']]);
-                        } else {
+                        if (!empty($data['image'])) {
                             $data = $this->setActions($data);
+                        } else {
+                            $data = $this->setActions($data, $this->params['actions'][$data['type']]);
                         }
                         break;
 

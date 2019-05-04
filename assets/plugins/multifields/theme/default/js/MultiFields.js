@@ -82,6 +82,9 @@
           });
         }
       });
+      el.querySelectorAll('[data-thumb]').forEach(function(item) {
+        item.onchange = self.setThumbImage;
+      });
       self.draggable(el.querySelectorAll('.mf-section, .mf-group, .mf-row'));
     },
     build: function() {
@@ -254,13 +257,7 @@
       window.open(MultiFields_urlBrowseServer + '?type=' + type, 'FCKBrowseWindow', o);
       window.KCFinder = {};
       if (thumb !== '') {
-        var el = document.getElementById(last);
-        el.onchange = function() {
-          var parent = document.getElementById(last).closest('.mf-parent');
-          el = parent.querySelector('[data-name="' + thumb + '"] [data-value]');
-          el.value = this.value;
-          el.parentElement.style.backgroundImage = 'url(/' + el.value + ')';
-        };
+        document.getElementById(last).onchange = self.setThumbImage;
       }
       if (multi !== '') {
         var _interval = setInterval(function() {
@@ -284,12 +281,14 @@
                     if (thumbEl) {
                       thumbEl.style.backgroundImage = 'url(/' + files[k] + ')';
                     }
+                    document.getElementById(n).onchange = self.setThumbImage;
                   }
                   if (thumb !== '') {
                     thumbEl = document.getElementById(n).closest('.mf-parent');
                     el = thumbEl.querySelector('[data-name="' + thumb + '"] [data-value]');
                     el.value = files[k];
                     el.parentElement.style.backgroundImage = 'url(/' + el.value + ')';
+                    document.getElementById(n).onchange = self.setThumbImage;
                   }
                   last = n;
                 }
@@ -297,6 +296,14 @@
             };
           }
         }, 100);
+      }
+    },
+    setThumbImage: function(e) {
+      var parent = this.closest('.mf-parent'),
+          el = parent.querySelector('[data-name="' + e.target.parentElement.getAttribute('data-thumb') + '"] [data-value]') || null;
+      if (el) {
+        el.value = e.target.value;
+        el.parentElement.style.backgroundImage = 'url(/' + el.value + ')';
       }
     },
     SetUrlChange: function(el) {
