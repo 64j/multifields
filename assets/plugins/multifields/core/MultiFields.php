@@ -464,7 +464,7 @@ class MultiFields
                     case 'thumb_image':
                         $tpl = $type;
                         $class = 'col-auto';
-                        $data['thumb_value'] = '/' . $data['value'];
+                        $data['thumb_value'] = $this->checkThumbImage($data['value']);
                         if (empty($data['image'])) {
                             $data = $this->setActions($data, $this->params['actions'][$data['type']]);
                         } else {
@@ -551,6 +551,19 @@ class MultiFields
         unset($data);
 
         return $out;
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected function checkThumbImage($value = '')
+    {
+        if (is_readable(MODX_BASE_PATH . $value)) {
+            $value = MODX_BASE_URL . $value;
+        }
+
+        return $value;
     }
 
     /**
