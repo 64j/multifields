@@ -48,6 +48,15 @@
           };
           self.BrowseServer(el.id, 'images', parent.getAttribute('data-multi'));
         }
+        if (target.classList.contains('mf-toolbar-add')) {
+          var _t = target.previousElementSibling.getBoundingClientRect().top,
+              _h = target.previousElementSibling.offsetHeight;
+          if (_t - _h < 70) {
+            target.parentElement.classList.remove('mf-toolbar-wrap-top');
+          } else if (!target.parentElement.classList.contains('mf-toolbar-wrap-top') && _t + _h > 70) {
+            target.parentElement.classList.add('mf-toolbar-wrap-top');
+          }
+        }
         if (target.classList.contains('mf-option')) {
           self.getTemplate(id, target.getAttribute('data-id'), function(data) {
             data = JSON.parse(data);

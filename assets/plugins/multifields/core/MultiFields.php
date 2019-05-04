@@ -92,13 +92,15 @@ class MultiFields
                 $out = 'Not found config file for TV id=' . $this->params['tv']['id'];
             }
         } else {
-            $out = $this->view('wrap', [
-                'toolbar' => $this->getToolbar(),
+            $data = [
+                'id' => $this->uniqid(),
                 'items' => $this->replaceData($this->fillData(), $this->config),
-                'id' => $this->params['id'],
+                'docid' => $this->params['id'],
                 'tvId' => $this->params['tv']['id'],
                 'value' => !empty($this->data) ? json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : ''
-            ]);
+            ];
+            $data['toolbar'] = $this->getToolbar($data);
+            $out = $this->view('wrap', $data);
         }
 
         return $out;
@@ -339,7 +341,10 @@ class MultiFields
 
             if (!empty($out)) {
                 $out = $this->view('toolbar', [
-                    'data' => $out
+                    'data' => $out,
+                    'tvId' => $data['tvId'],
+                    'docid' => $this->params['id'],
+                    'id' => $data['id']
                 ]);
             }
         }
@@ -757,25 +762,25 @@ class MultiFields
     }
 
     /**
-     * @param $tpl
-     * @param array $data
+     * @param $__tpl
+     * @param array $__data
      * @return false|string
      */
-    protected function view($tpl, $data = [])
+    protected function view($__tpl, $__data = [])
     {
-        $tpl = trim($tpl, '/');
-        $tpl = $this->basePath . 'theme/' . $this->params['theme'] . '/view/' . $tpl . '.php';
-        if (file_exists($tpl)) {
-            extract($data);
+        $__tpl = trim($__tpl, '/');
+        $__tpl = $this->basePath . 'theme/' . $this->params['theme'] . '/view/' . $__tpl . '.php';
+        if (file_exists($__tpl)) {
+            extract($__data);
             ob_start();
-            require($tpl);
-            $out = ob_get_contents();
+            require($__tpl);
+            $__out = ob_get_contents();
             ob_end_clean();
         } else {
-            $out = 'Error: Could not load template ' . $tpl . '!<br>';
+            $__out = 'Error: Could not load template ' . $__tpl . '!<br>';
         }
 
-        return $out;
+        return $__out;
     }
 
     /**
