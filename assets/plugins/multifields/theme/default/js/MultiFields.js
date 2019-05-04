@@ -56,6 +56,9 @@
           } else if (!target.parentElement.classList.contains('mf-toolbar-wrap-top') && _t + _h > 70) {
             target.parentElement.classList.add('mf-toolbar-wrap-top');
           }
+          if (target.previousElementSibling.childElementCount === 1) {
+            target.previousElementSibling.firstElementChild.click();
+          }
         }
         if (target.classList.contains('mf-option')) {
           self.getTemplate(id, target.getAttribute('data-id'), function(data) {

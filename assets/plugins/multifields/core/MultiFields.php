@@ -329,6 +329,7 @@ class MultiFields
         $out = '';
 
         if (!isset($data['templates']) || (isset($data['templates']) && count($data['templates']))) {
+            $i = 0;
             foreach ($this->config as $k => $v) {
                 if ((empty($v['hidden']) && empty($data['templates'])) || (!empty($data['templates']) && in_array($k, $data['templates']))) {
                     $out .= $this->view('element', [
@@ -336,6 +337,7 @@ class MultiFields
                         'data' => $v['title'],
                         'attr' => 'data-id="' . $k . '"'
                     ]);
+                    $i++;
                 }
             }
 
@@ -344,7 +346,8 @@ class MultiFields
                     'data' => $out,
                     'tvId' => $data['tvId'],
                     'docid' => $this->params['id'],
-                    'id' => $data['id']
+                    'id' => $data['id'],
+                    'class' => $i > 1 ? '' : ' mf-hidden'
                 ]);
             }
         }
