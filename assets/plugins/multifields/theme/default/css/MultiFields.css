@@ -35,7 +35,7 @@ body { overflow-y: scroll }
 .multifields .mf-wrap-items { padding: .5rem; border: 1px solid #eee; }
 .multifields .mf-section { position: relative; width: 100%; padding: .75rem; margin: 0 0 .5rem; }
 .multifields .mf-group { position: relative; width: 100%; padding: 2.75rem 0.75rem 1rem; margin: 0 0 .5rem; }
-.multifields .mf-row { position: relative; width: 100%; padding: .75rem; margin: 0 0 .5rem; }
+.multifields .mf-row { position: relative; width: 100%; padding: .75rem; margin: 0 0 .5rem; align-content: flex-start }
 .multifields .mf-col { position: relative; padding: 0 .25rem .5rem; margin: 0 }
 .multifields .mf-item { position: relative; padding: 0; margin: 0 }
 .multifields .mf-section::before, .multifields .mf-group::before, .multifields .mf-row::before { content: ""; position: absolute; left: .35rem; top: 0; right: .35rem; bottom: .5rem; border: 1px solid #eee; transition: border-color .3s }
