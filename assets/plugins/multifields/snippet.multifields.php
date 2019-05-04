@@ -9,4 +9,4 @@ if (!defined('MODX_BASE_PATH')) {
 }
 
 require_once MODX_BASE_PATH . 'assets/plugins/multifields/core/MultiFieldsFront.php';
-return MultiFieldsFront::getInstance($modx, $params);
+return MultiFieldsFront::getInstance($params);
