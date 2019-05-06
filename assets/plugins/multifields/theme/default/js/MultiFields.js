@@ -39,8 +39,8 @@
           self.clone(parent);
         }
         if (target.classList.contains('mf-actions-del')) {
-          if (parent.classList.contains('mf-thumb') && parent.parentElement.classList.contains('mf-row')) {
-            if (parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
+          if ((parent.classList.contains('mf-row') || parent.classList.contains('mf-thumb')) && parent.parentElement.classList.contains('mf-row')) {
+            if (parent.parentElement.querySelectorAll('.mf-row').length === 1 || parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
               self.clone(parent);
             }
           }
