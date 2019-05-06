@@ -457,11 +457,15 @@ class MultiFields
                 $class = 'col';
                 $inputClass = 'form-control';
                 $multi = isset($data['multi']) ? $data['multi'] : '';
-                $placeholder = isset($data['placeholder']) ? ' placeholder="' . $data['placeholder'] . '"' : '';
+                $data['placeholder'] = isset($data['placeholder']) ? ' placeholder="' . $data['placeholder'] . '"' : '';
+                $data['item.attr'] = isset($data['item.attr']) ? ' ' . $data['item.attr'] : '';
                 $data['title.class'] = isset($data['title.class']) ? $data['title.class'] : 'col-12';
                 $title = isset($data['title']) ? '<div class="' . $data['title.class'] . ' p-0 pr-1">' . $data['title'] . '</div>' : '';
                 $data['thumb'] = isset($data['thumb']) ? $data['thumb'] : '';
 
+                if (!empty($data['item.class'])) {
+                    $inputClass = ' ' . $data['item.class'];
+                }
                 if (!empty($data['image'])) {
                     $data['attr'] .= ' data-image="' . $data['image'] . '"';
                 }
@@ -544,7 +548,7 @@ class MultiFields
                 }
 
                 $data['element'] = preg_replace('/ style="(.*?)"/', '', $data['element']);
-                $data['element'] = $title . str_replace(' name="', $placeholder . ' data-value class="' . $inputClass . '" name="', $data['element']);
+                $data['element'] = $title . str_replace(' name="', $data['item.attr'] . $data['placeholder'] . ' data-value class="' . $inputClass . '" name="', $data['element']);
                 break;
         }
 
