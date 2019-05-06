@@ -203,10 +203,9 @@
         }
       }
     },
-    getRichText: function(e, tvId, options) {
+    getRichText: function(el, tvId, options) {
       options = options && '&options=' + options || '';
-      var id = e.target.parentElement.querySelector('textarea').id,
-          _richtext, url = document.location.href.split('?')[0] + '?mf-action=richtext' + options;
+      var _richtext, url = document.location.href.split('?')[0] + '?mf-action=richtext' + options;
       if (parent.modx) {
         _richtext = parent.modx.popup({
           iframe: 'iframe',
@@ -222,27 +221,27 @@
           url: url
         });
         _richtext.frame.addEventListener('load', function() {
-          var w = this.contentWindow;
-          var form = w.document.getElementById('ta_form');
-          var textarea = w.document.getElementById('ta');
-          textarea.value = document.getElementById(id).value;
-          if (typeof w.tinymce !== 'undefined') {
-            w.tinymce.get('ta').remove();
-            w.tinymce.execCommand('mceAddEditor', false, 'ta');
-          }
+          var w = this.contentWindow,
+              form = w.document.getElementById('ta_form'),
+              textarea = w.document.getElementById('ta'),
+              editor = w.tinymce && w.tinymce.get('ta');
+          form.querySelector('#actions .btn-close').onclick = function() {
+            w.documentDirty = false;
+            _richtext.close();
+          };
           form.onsubmit = function(e) {
             e.preventDefault();
             textarea = this.querySelector('textarea#ta');
             setTimeout(function() {
               w.documentDirty = false;
-              document.getElementById(id).value = textarea.value;
+              el.value = textarea.value;
               _richtext.close();
             }, 100);
           };
-          form.querySelector('#actions .btn-close').onclick = function() {
-            w.documentDirty = false;
-            _richtext.close();
-          };
+          textarea.value = el.value;
+          if (editor) {
+            editor.setContent(textarea.value);
+          }
         }, false);
       } else {
         alert('parent.modx not found !');
