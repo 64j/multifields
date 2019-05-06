@@ -73,6 +73,9 @@
               if (parent.parentElement.lastElementChild.querySelector('[data-type="date"]')) {
                 self.datePickersInit();
               }
+              parent.parentElement.lastElementChild.querySelectorAll('[data-thumb] input').forEach(function(el) {
+                el.onchange = self.setThumbImage;
+              });
               self.draggable(parent.parentElement.querySelectorAll('.mf-section, .mf-group, .mf-row'));
               var s = [], _s = '', b, c = /<script[^>]*>([\s\S]*?)<\/script>/gi;
               while ((b = c.exec(data['template']))) {
@@ -150,6 +153,9 @@
       }
       clone.querySelectorAll('.mf-thumb').forEach(function(el) {
         el.style.backgroundImage = '';
+      });
+      clone.querySelectorAll('[data-thumb] input').forEach(function(el) {
+        el.onchange = self.setThumbImage;
       });
       el.insertAdjacentElement('afterend', clone);
       if (el.querySelector('[data-type="date"]')) {
