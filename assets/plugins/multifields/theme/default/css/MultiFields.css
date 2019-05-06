@@ -16,7 +16,7 @@ body { overflow-y: scroll }
 .multifields .col-12 { -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; }
 .multifields .row, .multifields { display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
 .multifields, .multifields .mf-group { margin: 0; min-height: 3rem }
-.multifields { padding-bottom: 1rem; margin-bottom: 1rem; min-height: 2rem }
+.multifields { padding-bottom: 1rem; margin: 0 -.35rem 1rem; min-height: 2rem }
 .multifields .input-group-prepend, .multifields .input-group-append { display: -ms-flexbox; display: flex; }
 .multifields .input-group-prepend .btn, .multifields .input-group-append .btn { position: relative; z-index: 2; }
 .multifields .input-group-prepend { margin-right: -1px; }
