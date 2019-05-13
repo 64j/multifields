@@ -34,17 +34,30 @@
       this.el[id] = el;
       this.data[id] = el.nextElementSibling;
       el.addEventListener('click', function(e) {
-        var target = e.target, el, parent = target.parentElement.parentElement;
+        var target = e.target, el, parent = target.parentElement.parentElement, parentElement = parent.parentElement, clone;
         if (target.classList.contains('mf-actions-add')) {
-          self.clone(parent);
+          clone = self.clone(parent);
+          if (clone.classList.contains('mf-table')) {
+            clone.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+              item.firstElementChild.value = i + 1;
+            });
+            self.draggable([clone]);
+          } else {
+            parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+              item.firstElementChild.value = i + 1;
+            });
+          }
         }
         if (target.classList.contains('mf-actions-del')) {
-          if ((parent.classList.contains('mf-row') || parent.classList.contains('mf-thumb')) && parent.parentElement.classList.contains('mf-row')) {
+          if ((parent.classList.contains('mf-row') || parent.classList.contains('mf-thumb')) && (parent.parentElement.classList.contains('mf-row') || parent.parentElement.classList.contains('mf-table'))) {
             if (parent.parentElement.querySelectorAll('.mf-row').length === 1 || parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
               self.clone(parent);
             }
           }
-          parent.parentElement.removeChild(parent);
+          parentElement.removeChild(parent);
+          parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+            item.firstElementChild.value = i + 1;
+          });
         }
         if (target.classList.contains('mf-actions-edit-image')) {
           el = parent.querySelector('[data-value]');
@@ -76,7 +89,7 @@
               parent.parentElement.lastElementChild.querySelectorAll('[data-thumb] input').forEach(function(el) {
                 el.onchange = self.setThumbImage;
               });
-              self.draggable(parent.parentElement.querySelectorAll('.mf-section, .mf-group, .mf-row'));
+              self.draggable(parent.parentElement.querySelectorAll('.mf-section, .mf-group, .mf-row, .mf-table'));
               var s = [], _s = '', b, c = /<script[^>]*>([\s\S]*?)<\/script>/gi;
               while ((b = c.exec(data['template']))) {
                 s.push(b[1]);
@@ -93,7 +106,7 @@
       el.querySelectorAll('[data-thumb]').forEach(function(item) {
         item.onchange = self.setThumbImage;
       });
-      self.draggable(el.querySelectorAll('.mf-section, .mf-group, .mf-row'));
+      self.draggable(el.querySelectorAll('.mf-section, .mf-group, .mf-row, .mf-table'));
     },
     build: function() {
       var data, parent;
@@ -167,14 +180,19 @@
       if (els.length) {
         els.forEach(function(el) {
           Sortable.create(el, {
-            animation: 150,
             draggable: '.mf-draggable',
             dragClass: 'mf-drag',
             ghostClass: 'mf-active',
             selectedClass: 'mf-selected',
-            //filter: '.b-settings, .b-tab-title-input, .b-btn-settings, .b-btn-add',
-            preventOnFilter: false,
-            handle: '.mf-actions-move'
+            handle: '.mf-actions-move',
+            direction: el.classList.contains('mf-table') ? 'vertical' : 'auto',
+            onEnd: function(e) {
+              if (e.item.parentElement.classList.contains('mf-table')) {
+                e.item.parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+                  item.firstElementChild.value = i + 1;
+                });
+              }
+            }
           });
         });
       }

@@ -68,10 +68,14 @@ class MultiFields
             'section' => ['move', 'del', 'add'],
             'group' => ['move', 'del'],
             'row' => ['move', 'del', 'add'],
+            'table' => ['move', 'del', 'add'],
             'tabs' => ['move', 'del'],
             'thumb' => ['move', 'del', 'add', 'edit'],
             'thumb:image' => ['move', 'del', 'add', 'edit'],
             'thumb:file' => ['move', 'del', 'add', 'edit']
+        ];
+        $this->params['types'] = [
+            'table' => ['text', 'textarea', 'textareamini', 'richtext', 'image', 'file', 'dropdown', 'checkbox', 'option', 'number', 'date']
         ];
 
         return $this;
@@ -234,9 +238,7 @@ class MultiFields
                 if ($_ = $this->fillData($k, $level)) {
                     $v['items'] = $_;
                 }
-                if (!empty($v)) {
-                    $out[] = $v;
-                }
+                $out[] = $v;
             }
         }
 
@@ -262,6 +264,10 @@ class MultiFields
                 if (isset($this->config[$v['name']])) {
                     $result = $this->config[$v['name']];
                     $v['parentName'] = $v['name'];
+                }
+
+                if (isset($result['type']) && $result['type'] == 'table') {
+                    $result['items'] = $this->tableItems($result);
                 }
 
                 $v = is_array($result) ? array_replace($result, $v) : $v;
@@ -309,12 +315,9 @@ class MultiFields
     {
         if (isset($arr[$searchKey])) {
             $result = $arr[$searchKey];
-            //$this->dd($searchKey);
-            //return;
         }
         foreach ($arr as $key => $param) {
             if ($key == 'items') {
-                //$this->dd($key);
                 $this->findData($searchKey, $param, $result);
             }
         }
@@ -431,10 +434,14 @@ class MultiFields
             case 'section':
             case 'group':
             case 'row':
+            case 'table':
                 $class = 'row';
                 $data = $this->setActions($data, $this->params['actions'][$data['type']]);
                 if ($data['type'] == 'group') {
                     $data['toolbar'] = $this->getToolbar($data);
+                }
+                if ($data['type'] == 'table') {
+                    $data['header'] = $this->tableHeader($data);
                 }
                 break;
 
@@ -570,6 +577,71 @@ class MultiFields
     }
 
     /**
+     * @param array $data
+     * @return false|string
+     */
+    protected function tableHeader($data = [])
+    {
+        $out = '';
+        if (!empty($data['cols'])) {
+            foreach ($data['cols'] as $k => $v) {
+                $out .= $this->view('element', [
+                    'data' => isset($v['title']) ? $v['title'] : $k,
+                    'class' => 'col',
+                    'attr' => isset($v['width']) ? ' style="max-width: ' . $v['width'] . '"' : ''
+                ]);
+            }
+        }
+
+        if ($out) {
+            $out = $this->view('element', [
+                'class' => 'mf-table-header row w-100 m-0',
+                'data' => $out
+            ]);
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function tableItems($data = [])
+    {
+        $out = [];
+        if (!empty($data['cols'])) {
+            foreach ($data['cols'] as $k => $v) {
+                $out[$k] = [
+                    'placeholder' => isset($v['placeholder']) ? $v['placeholder'] : '',
+                    'type' => isset($v['type']) && in_array($v['type'], $this->params['types']['table']) ? $v['type'] : 'text',
+                ];
+                if (isset($v['width'])) {
+                    $out[$k]['attr'] = ' style="width:' . $v['width'] . ';max-width:' . $v['width'] . '"';
+                }
+                if (!empty($v['autoincrement'])) {
+                    $out[$k]['attr'] .= ' data-autoincrement';
+                    $out[$k]['value'] = 1;
+                }
+                if (isset($v['elements'])) {
+                    $out[$k]['elements'] = $v['elements'];
+                }
+            }
+        }
+
+        if (!empty($out)) {
+            $out = [
+                'table_row' => [
+                    'type' => 'row',
+                    'items' => $out
+                ]
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
      * @param string $value
      * @return string
      */
@@ -612,6 +684,9 @@ class MultiFields
         $out = [];
         foreach ($data as $k => $v) {
             if (is_array($v)) {
+                if (isset($v['type']) && $v['type'] == 'table') {
+                    $v['items'] = $this->tableItems($v);
+                }
                 if (isset($v['items'])) {
                     $v['id'] = $this->params['last']++;
                     $out[$v['id']] = [
