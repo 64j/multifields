@@ -799,9 +799,9 @@ class MultiFields
                             }
                             $out .= '$d[' . $k . ']=[';
                             $out .= '\'parent\'=>\'' . $v['parent'] . '\',';
-                            $out .= '\'name\'=>\'' . $v['name'] . '\'';
+                            $out .= '\'name\'=>\'' . $this->evo->db->escape($v['name']) . '\'';
                             if (isset($v['value'])) {
-                                $out .= ',\'value\'=>\'' . $v['value'] . '\'';
+                                $out .= ',\'value\'=>\'' . $this->evo->db->escape($v['value']) . '\'';
                             }
                             $out .= '];' . "\n";
                         }
@@ -815,9 +815,9 @@ class MultiFields
                                 'tv_id' => $this->params['tv']['id'],
                                 'field_parent' => $v['parent'],
                                 'field_id' => $k,
-                                'field_name' => $v['name'],
+                                'field_name' => $this->evo->db->escape($v['name']),
                                 'field_type' => '',
-                                'field_value' => $v['value'],
+                                'field_value' => $this->evo->db->escape($v['value']),
                             ], $this->evo->getFullTableName('multifields'));
                         }
                     }
