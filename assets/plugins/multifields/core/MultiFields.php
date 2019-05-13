@@ -793,11 +793,11 @@ class MultiFields
                     $data = json_decode($data, true);
 
                     if ($this->params['storage'] == 'files') {
-                        foreach ($data as $k => $v) {
+                        foreach ($data as $key => $v) {
                             if (is_array($v['value'])) {
                                 $v['value'] = implode('||', $v['value']);
                             }
-                            $out .= '$d[' . $k . ']=[';
+                            $out .= '$d[' . $key . ']=[';
                             $out .= '\'parent\'=>\'' . $v['parent'] . '\',';
                             $out .= '\'name\'=>\'' . $this->evo->db->escape($v['name']) . '\'';
                             if (isset($v['value'])) {
@@ -806,7 +806,7 @@ class MultiFields
                             $out .= '];' . "\n";
                         }
                     } else {
-                        foreach ($data as $k => $v) {
+                        foreach ($data as $key => $v) {
                             if (is_array($v['value'])) {
                                 $v['value'] = implode('||', $v['value']);
                             }
@@ -814,7 +814,7 @@ class MultiFields
                                 'doc_id' => $this->params['id'],
                                 'tv_id' => $this->params['tv']['id'],
                                 'field_parent' => $v['parent'],
-                                'field_id' => $k,
+                                'field_id' => $key,
                                 'field_name' => $this->evo->db->escape($v['name']),
                                 'field_type' => '',
                                 'field_value' => $this->evo->db->escape($v['value']),
