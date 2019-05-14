@@ -101,7 +101,7 @@ class MultiFields
                 'items' => $this->replaceData($this->fillData(), $this->config),
                 'docid' => $this->params['id'],
                 'tvId' => $this->params['tv']['id'],
-                'value' => !empty($this->data) ? json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : ''
+                'value' => !empty($this->data) ? stripcslashes(json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) : ''
             ];
             $data['toolbar'] = $this->getToolbar($data);
             $out = $this->view('wrap', $data);
