@@ -172,6 +172,10 @@ class MultiFieldsFront
                     $result = $this->config[$v['mf.name']];
                 }
 
+                if (isset($v['value'])) {
+                    $v['value'] = stripcslashes($v['value']);
+                }
+
                 if (!empty($this->params[$prepare])) {
                     $v = $this->prepare($this->params[$prepare], $v);
                 } elseif (isset($result['prepare'])) {
