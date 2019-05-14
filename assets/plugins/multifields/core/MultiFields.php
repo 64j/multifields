@@ -86,6 +86,9 @@ class MultiFields
      */
     public function renderData()
     {
+        global $ResourceManagerLoaded;
+
+        $tmp_ResourceManagerLoaded = $ResourceManagerLoaded;
         $this->getConfig();
         $this->getData();
 
@@ -105,6 +108,10 @@ class MultiFields
             ];
             $data['toolbar'] = $this->getToolbar($data);
             $out = $this->view('wrap', $data);
+
+            if (!empty($ResourceManagerLoaded)) {
+                $ResourceManagerLoaded = $tmp_ResourceManagerLoaded;
+            }
         }
 
         return $out;
