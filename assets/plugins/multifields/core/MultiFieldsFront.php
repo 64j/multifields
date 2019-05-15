@@ -253,7 +253,7 @@ class MultiFieldsFront
      */
     protected function setParams($params = [])
     {
-        $this->params = array_change_key_case($params, CASE_LOWER);
+        $this->params = $params;
 
         $pluginParams = [];
         if (!empty($this->evo->pluginCache['multifieldsProps'])) {
