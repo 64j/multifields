@@ -45,7 +45,7 @@ class MultiFieldsFront
     protected function renderForm()
     {
         $out = '';
-        if (!empty($this->params['tvid'])) {
+        if (!empty($this->params['tvId'])) {
             if (!empty($this->getData())) {
                 $out = $this->renderData(0, 0, $this->getConfig());
                 $out['mf.type'] = 'wrap';
@@ -84,8 +84,8 @@ class MultiFieldsFront
     {
         $this->config = [];
 
-        if (file_exists($this->basePath . 'config/' . $this->params['tvid'] . '.php')) {
-            $this->config = require_once $this->basePath . 'config/' . $this->params['tvid'] . '.php';
+        if (file_exists($this->basePath . 'config/' . $this->params['tvId'] . '.php')) {
+            $this->config = require_once $this->basePath . 'config/' . $this->params['tvId'] . '.php';
         }
 
         if (is_array($this->config)) {
@@ -116,11 +116,11 @@ class MultiFieldsFront
     {
         $this->data = [];
 
-        if (!empty($this->params['docid']) && !empty($this->params['tvid'])) {
+        if (!empty($this->params['docid']) && !empty($this->params['tvId'])) {
             $sql = $this->evo->db->query('
             SELECT id, field_parent, field_id, field_name, field_value
             FROM ' . $this->evo->getFullTableName('multifields') . ' 
-            WHERE doc_id=' . $this->params['docid'] . ' AND tv_id=' . $this->params['tvid'] . '
+            WHERE doc_id=' . $this->params['docid'] . ' AND tv_id=' . $this->params['tvId'] . '
             ORDER BY field_id ASC');
 
             if ($this->evo->db->getRecordCount($sql)) {
@@ -267,15 +267,15 @@ class MultiFieldsFront
             $this->params['docid'] = $this->evo->documentIdentifier;
         }
 
-        if (empty($this->params['tvid'])) {
-            $this->params['tvid'] = 0;
+        if (empty($this->params['tvId'])) {
+            $this->params['tvId'] = 0;
         }
 
         if (empty($this->params['prepare'])) {
             $this->params['prepare'] = '';
         }
 
-        $this->params['file'] = $this->basePath . 'data/' . $this->params['docid'] . '__' . $this->params['tvid'] . '.php';
+        $this->params['file'] = $this->basePath . 'data/' . $this->params['docid'] . '__' . $this->params['tvId'] . '.php';
 
         return $this;
     }
