@@ -157,8 +157,8 @@ class MultiFieldsFront
             unset($v['parent']);
             unset($v['name']);
 
-            $prepare = strtolower('prepare_' . $v['mf.name']);
-            $tpl = strtolower('tpl_' . $v['mf.name']);
+            $prepare = 'prepare_' . $v['mf.name'];
+            $tpl = 'tpl_' . $v['mf.name'];
 
             if ($parent == $v['mf.parent']) {
                 $v['mf.iteration'] = $i++;
@@ -186,7 +186,7 @@ class MultiFieldsFront
                     $this->params[$tpl] = $result['tpl'];
                 }
 
-                if ($_ = $this->renderData($k, $level, $result)) {
+                if (!empty($result['items']) && $_ = $this->renderData($k, $level, $result)) {
                     $v = array_merge($v, $_);
                     $out[] = $this->tpl($tpl, $v);
                 } else {
@@ -236,7 +236,6 @@ class MultiFieldsFront
      */
     protected function tpl($tpl = '', $data = [])
     {
-        $tpl = strtolower($tpl);
         if ($tpl != '' && isset($this->params[$tpl])) {
             $out = $this->evo->parseText($this->evo->getTpl($this->params[$tpl]), $data);
         } elseif (isset($data['mf.type']) && in_array($data['mf.type'], ['wrap', 'row', 'group'])) {
