@@ -186,16 +186,20 @@ class MultiFieldsFront
                     $this->params[$tpl] = $result['tpl'];
                 }
 
+                if (!isset($out[$v['mf.name']])) {
+                    $out[$v['mf.name']] = '';
+                }
+
                 if (!empty($result['items']) && $_ = $this->renderData($k, $level, $result)) {
                     $v = array_merge($v, $_);
-                    $out[] = $this->tpl($tpl, $v);
-                } else {
-                    if (!isset($out[$v['mf.name']])) {
-                        $out[$v['mf.name']] = '';
+                    if (!empty($this->params[$prepare])) {
+                        $v = $this->prepare($this->params[$prepare], $v);
+                    } elseif (isset($result['prepare'])) {
+                        $v = $this->prepare($result['prepare'], $v);
                     }
-
-                    $out[$v['mf.name']] .= $this->tpl($tpl, $v);
                 }
+
+                $out[$v['mf.name']] .= $this->tpl($tpl, $v);
             }
         }
 
