@@ -16,7 +16,6 @@ body { overflow-y: scroll }
 .multifields .col-12 { -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; }
 .multifields .row, .multifields { display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
 .multifields, .multifields .mf-group, .multifields .mf-table { margin: 0; min-height: 3rem }
-.multifields .mf-table { min-height: 5rem }
 .multifields { padding-bottom: 1rem; margin: 0 -.35rem 1rem; min-height: 2rem }
 .multifields .input-group-prepend, .multifields .input-group-append { display: -ms-flexbox; display: flex; }
 .multifields .input-group-prepend .btn, .multifields .input-group-append .btn { position: relative; z-index: 2; }
@@ -54,7 +53,7 @@ body { overflow-y: scroll }
 .multifields .mf-table { align-content: flex-start; padding: 2.175rem .35rem 2rem }
 .multifields .mf-table.mf-not-value { padding-top: 1px }
 .multifields .mf-table.mf-not-value.mf-not-header { padding-top: 1.35rem }
-.multifields .mf-table.mf-not-actions { padding-bottom: .55rem }
+.multifields .mf-table.mf-not-actions { padding-bottom: .575rem }
 .mf-table > .mf-title { z-index: 2; border-bottom: 1px solid #ddd }
 .mf-table .mf-table-header { z-index: 1; padding: 0 1.15rem; margin: 0 1px !important; border: 1px solid transparent; border-left: none; border-right: none;  background-color: #eee }
 .mf-table .mf-table-header .col { padding: 0 .25rem; border-right: 1px solid #ddd; text-align: center }
