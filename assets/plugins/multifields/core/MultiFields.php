@@ -74,9 +74,6 @@ class MultiFields
             'thumb:image' => ['move', 'del', 'add', 'edit'],
             'thumb:file' => ['move', 'del', 'add', 'edit']
         ];
-        $this->params['types'] = [
-            'table' => ['text', 'textarea', 'textareamini', 'richtext', 'image', 'file', 'dropdown', 'checkbox', 'option', 'number', 'date']
-        ];
 
         return $this;
     }
@@ -101,7 +98,7 @@ class MultiFields
         } else {
             $data = [
                 'id' => $this->uniqid(),
-                'items' => $this->replaceData($this->fillData(), $this->config),
+                'items' => $this->replaceData($this->fillData($this->data), $this->config),
                 'docid' => $this->params['id'],
                 'tvId' => $this->params['tv']['id'],
                 'value' => !empty($this->data) ? stripcslashes(json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) : ''
@@ -231,21 +228,24 @@ class MultiFields
     }
 
     /**
-     * @param int $parent
+     * @param array $data
+     * @param string $parent
      * @param int $level
      * @return array
      */
-    protected function fillData($parent = 0, $level = 0)
+    function fillData($data = [], $parent = 0, $level = 0)
     {
         $out = [];
         $level++;
-        foreach ($this->data as $k => $v) {
-            $v['level'] = $level;
+        foreach ($data as $k => $v) {
             if ($parent == $v['parent']) {
-                if ($_ = $this->fillData($k, $level)) {
+                $v['level'] = $level;
+                if ($_ = $this->fillData($data, $k, $level)) {
                     $v['items'] = $_;
                 }
                 $out[] = $v;
+            } else {
+                unset($data[$k]);
             }
         }
 
@@ -273,11 +273,11 @@ class MultiFields
                     $v['parentName'] = $v['name'];
                 }
 
-                if (isset($result['type']) && $result['type'] == 'table') {
-                    $result['items'] = $this->tableItems($result);
-                }
-
                 $v = is_array($result) ? array_replace($result, $v) : $v;
+
+                if (!isset($v['type'])) {
+                    $v['type'] = 'text';
+                }
 
                 if ($v['type'] == 'Item' && isset($result['items'])) {
                     $_items = $result['items'];
@@ -302,11 +302,15 @@ class MultiFields
                     }
                 }
 
-                $v['items'] = $this->replaceData($items, $result);
-
-                if (isset($v['type'])) {
-                    $out .= $this->renderElement($v);
+                if (isset($result['value']) && $result['value'] === false) {
+                    $v['value'] = false;
+                } elseif (!isset($v['value']) || is_bool($v['value'])) {
+                    $v['value'] = '';
                 }
+
+                $v['items'] = !empty($items) ? $this->replaceData($items, $result) : '';
+
+                $out .= $this->renderElement($v);
             }
         }
 
@@ -415,6 +419,10 @@ class MultiFields
             }
         }
 
+        if (!$actions) {
+            $data['_class'] .= ' mf-not-actions';
+        }
+
         $data['actions'] = $this->view('actions', [
             'actions' => $actions
         ]);
@@ -428,14 +436,24 @@ class MultiFields
      */
     protected function renderElement($data = [])
     {
-        $tpl = $data['type'];
         $class = '';
         $data['draggable'] = false;
         $data['id'] = $this->uniqid();
         $data['tvId'] = $this->params['tv']['id'];
-        $data['value'] = isset($data['value']) ? stripcslashes($data['value']) : '';
+        $data['type'] = isset($data['type']) ? $data['type'] : 'text';
         $data['style'] = isset($data['style']) ? $data['style'] : '';
         $data['attr'] = isset($data['attr']) ? $data['attr'] : '';
+        $data['_class'] = '';
+        if (!empty($data['autoincrement'])) {
+            $data['attr'] .= ' data-autoincrement';
+        }
+        if (isset($data['value']) && $data['value'] === false) {
+            unset($data['value']);
+            $data['_class'] .= ' mf-not-value';
+        } else {
+            $data['value'] = isset($data['value']) ? stripcslashes($data['value']) : '';
+        }
+        $tpl = $data['type'];
 
         switch ($tpl) {
             case 'section':
@@ -449,6 +467,9 @@ class MultiFields
                 }
                 if ($data['type'] == 'table') {
                     $data['header'] = $this->tableHeader($data);
+                    if (empty($data['header'])) {
+                        $data['_class'] .= ' mf-not-header';
+                    }
                 }
                 break;
 
@@ -476,6 +497,8 @@ class MultiFields
                 $data['title.class'] = isset($data['title.class']) ? $data['title.class'] : 'col-12';
                 $title = isset($data['title']) ? '<div class="' . $data['title.class'] . ' p-0 pr-1">' . $data['title'] . '</div>' : '';
                 $data['thumb'] = isset($data['thumb']) ? $data['thumb'] : '';
+                $data['default'] = isset($data['default']) ? $data['default'] : '';
+                $data['elements'] = isset($data['elements']) ? $data['elements'] : '';
 
                 if (!empty($data['item.class'])) {
                     $inputClass = ' ' . $data['item.class'];
@@ -576,6 +599,8 @@ class MultiFields
             $data['class'] .= ' mf-parent';
         }
 
+        $data['class'] .= ' ' . trim($data['_class']);
+
         $out = $this->view($tpl, $data);
 
         unset($data);
@@ -593,9 +618,9 @@ class MultiFields
         if (!empty($data['cols'])) {
             foreach ($data['cols'] as $k => $v) {
                 $out .= $this->view('element', [
-                    'data' => isset($v['title']) ? $v['title'] : $k,
                     'class' => 'col',
-                    'attr' => isset($v['width']) ? ' style="max-width: ' . $v['width'] . '"' : ''
+                    'data' => isset($v['title']) ? $v['title'] : $k,
+                    'attr' => isset($v['attr']) ? $v['attr'] : ''
                 ]);
             }
         }
@@ -605,44 +630,6 @@ class MultiFields
                 'class' => 'mf-table-header row w-100 m-0',
                 'data' => $out
             ]);
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    protected function tableItems($data = [])
-    {
-        $out = [];
-        if (!empty($data['cols'])) {
-            foreach ($data['cols'] as $k => $v) {
-                $out[$k] = [
-                    'placeholder' => isset($v['placeholder']) ? $v['placeholder'] : '',
-                    'type' => isset($v['type']) && in_array($v['type'], $this->params['types']['table']) ? $v['type'] : 'text',
-                ];
-                if (isset($v['width'])) {
-                    $out[$k]['attr'] = ' style="width:' . $v['width'] . ';max-width:' . $v['width'] . '"';
-                }
-                if (!empty($v['autoincrement'])) {
-                    $out[$k]['attr'] .= ' data-autoincrement';
-                    $out[$k]['value'] = 1;
-                }
-                if (isset($v['elements'])) {
-                    $out[$k]['elements'] = $v['elements'];
-                }
-            }
-        }
-
-        if (!empty($out)) {
-            $out = [
-                'table_row' => [
-                    'type' => 'row',
-                    'items' => $out
-                ]
-            ];
         }
 
         return $out;
@@ -662,7 +649,7 @@ class MultiFields
     }
 
     /**
-     *
+     * get template
      */
     public function getTemplate()
     {
@@ -673,7 +660,7 @@ class MultiFields
         if (!empty($this->getConfig())) {
             $this->params['last'] = 1;
             $this->data = $this->fillTemplate([$tpl => $this->config[$tpl]]);
-            $json['template'] = $this->replaceData($this->fillData(), $this->config);
+            $json['template'] = $this->replaceData($this->fillData($this->data), $this->config);
             $json['template'] = preg_replace('|\s+|u', ' ', $json['template']);
         }
 
@@ -691,8 +678,8 @@ class MultiFields
         $out = [];
         foreach ($data as $k => $v) {
             if (is_array($v)) {
-                if (isset($v['type']) && $v['type'] == 'table') {
-                    $v['items'] = $this->tableItems($v);
+                if (!isset($v['type'])) {
+                    $v['type'] = 'text';
                 }
                 if (isset($v['items'])) {
                     $v['id'] = $this->params['last']++;
@@ -717,7 +704,7 @@ class MultiFields
     }
 
     /**
-     *
+     * get richtext
      */
     public function getRichText()
     {
@@ -778,7 +765,7 @@ class MultiFields
     }
 
     /**
-     *
+     * save data
      */
     public function saveData()
     {
@@ -801,6 +788,9 @@ class MultiFields
 
                     if ($this->params['storage'] == 'files') {
                         foreach ($data as $key => $v) {
+                            if (!isset($v['value'])) {
+                                $v['value'] = '';
+                            }
                             if (is_array($v['value'])) {
                                 $v['value'] = implode('||', $v['value']);
                             }
@@ -814,6 +804,9 @@ class MultiFields
                         }
                     } else {
                         foreach ($data as $key => $v) {
+                            if (!isset($v['value'])) {
+                                $v['value'] = '';
+                            }
                             if (is_array($v['value'])) {
                                 $v['value'] = implode('||', $v['value']);
                             }

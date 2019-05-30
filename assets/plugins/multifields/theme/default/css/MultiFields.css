@@ -50,10 +50,12 @@ body { overflow-y: scroll }
 .mf-richtext textarea { min-height: 2.1rem }
 .mf-col:hover, .mf-item:hover { border-color: #ddd }
 .mf-group:hover::before { border-color: #0a5 }
-.mf-section:hover::before, .mf-row:hover::before, .mf-thumb:hover::after, .multifields .mf-thumb:hover .mf-actions, .multifields .mf-table:hover::before { border-color: #2196f3 }
-.multifields .mf-table { align-content: flex-start; padding: 2.15rem .35rem 3rem }
+.mf-section:not(.mf-not-actions):hover::before, .mf-row:not(.mf-not-actions):hover::before, .mf-thumb:not(.mf-not-actions):hover::after, .multifields .mf-thumb:not(.mf-not-actions):hover .mf-actions, .multifields .mf-table:not(.mf-not-actions):hover::before { border-color: #2196f3 }
+.multifields .mf-table { align-content: flex-start; padding: 2.175rem .35rem 2rem }
+.multifields .mf-table.mf-not-value { padding-top: 1px }
+.multifields .mf-table.mf-not-value.mf-not-header { padding-top: 1.35rem }
 .mf-table > .mf-title { z-index: 2; border-bottom: 1px solid #ddd }
-.mf-table .mf-table-header { z-index: 1; padding: 0 1.15rem; margin: 0 1px !important; border: 1px solid transparent; border-left: none; border-right: none; border-bottom-color: #ddd; background-color: #eee }
+.mf-table .mf-table-header { z-index: 1; padding: 0 1.15rem; margin: 0 1px !important; border: 1px solid transparent; border-left: none; border-right: none;  background-color: #eee }
 .mf-table .mf-table-header .col { padding: 0 .25rem; border-right: 1px solid #ddd; text-align: center }
 .mf-table .mf-table-header .col:first-child { border-left: 1px solid #ddd }
 .mf-table .mf-table-header .col:last-child { border-right-color: #ddd }
@@ -61,6 +63,7 @@ body { overflow-y: scroll }
 .mf-table .mf-row::before, .mf-table .mf-row::after { content: ""; position: absolute; display: block; left: 0; top: 0; right: 0; bottom: 0; border: none; pointer-events: none; }
 .mf-table .mf-row.mf-active::before { z-index: 0 }
 .mf-table .mf-row::after { z-index: 10; border: 1px solid transparent; border-bottom-color: #ddd; }
+.mf-table .mf-actions + .mf-row::after, .mf-table .mf-table-header + .mf-row::after { border-top-color: #ddd }
 .mf-table .mf-row:hover::after { border-color: #2196f3 }
 .mf-table .mf-row input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), .mf-table .mf-row div.form-control, .mf-table .mf-row button, .mf-table .mf-row select, .mf-table .mf-row button, .mf-table .mf-row textarea { height: 1.75rem; border: none !important; background-color: transparent }
 .mf-table .mf-row input[type="button"], .mf-table .mf-row button, .mf-table .mf-row .btn { padding: 0 1rem; line-height: 1.7rem; background-color: #f5f5f5; border: none }
@@ -72,10 +75,17 @@ body { overflow-y: scroll }
 .mf-table .mf-row .input-group .checkbox { margin: 0 .5rem 0 0 }
 .mf-table .mf-row .input-group .checkbox:first-child { margin-left: .25rem }
 .mf-table .mf-row .checkbox input { display: inline-block; float: none }
+.mf-table .mf-row > .mf-col > div { /*display: none*/ }
 .mf-table .mf-col { padding: 0; border-left: 1px solid transparent !important; border-right: 1px solid #ddd }
 .mf-table .mf-col:first-child { border-left-color: #ddd !important }
 .mf-table .mf-row .mf-richtext textarea { min-height: 1.75rem; height: 1.75rem; max-height: 1.75rem; overflow: hidden }
 .mf-table [data-autoincrement] [name] { user-select: none; pointer-events: none }
+.mf-table[data-display] .mf-row { /*display: none*/ }
+.mf-table[data-display] .mf-row.mf-show { display: flex }
+.mf-paginate { position: absolute; left: .35rem; bottom: .5rem; right: .35rem; padding: .5rem; overflow: hidden; overflow-x: auto; white-space: nowrap }
+.mf-paginate i { display: inline-block; padding: .15rem .25rem; margin: 0 .25rem .25rem 0; min-width: 1.5rem; border: 1px solid #ddd; text-align: center; font-size: .75rem; font-style: normal; cursor: pointer }
+.mf-paginate i:hover { border-color: #2196f3 }
+.mf-paginate i.active { border-color: #2196f3; background-color: #2196f3; color: #fff }
 .multifields .mf-active:not(.mf-thumb):before, .multifields .mf-active *, .multifields .mf-active.mf-thumb > .mf-actions, .multifields .mf-active.mf-table .mf-table-header .col { background-color: #ffecb3; border-color: #ffc107 }
 .multifields .mf-active.mf-table .mf-row .btn, .multifields .mf-active.mf-row .btn { background-color: #ffe082; transition: none }
 .multifields .mf-active.mf-table .mf-row::after { border-bottom-color: #ffc107 }
@@ -100,6 +110,9 @@ body { overflow-y: scroll }
 .mf-table .mf-actions .mf-actions-del { top: .65rem; }
 .mf-table .mf-row .mf-actions-move { left: .15rem; top: .5rem }
 .mf-table .mf-row .mf-actions-del { right: .15rem; top: .5rem }
+.mf-table.mf-not-value > .mf-actions .mf-actions-move, .mf-table.mf-not-value > .mf-actions .mf-actions-del { top: .35rem; }
+.mf-table.mf-not-value > .mf-actions .mf-actions-move { left: .55rem }
+.mf-table.mf-not-value > .mf-actions .mf-actions-del { right: .55rem }
 .mf-actions-add::before, .mf-actions-add::after, .mf-toolbar-add::before, .mf-toolbar-add::after { content: ""; position: absolute; left: 0; top: 50%; right: 0; margin: -1px .4375rem 0; height: 2px; width: auto; background-color: #fff }
 .mf-table .mf-row .mf-actions-add::before, .mf-table .mf-row .mf-actions-add::after { margin: -1px 4px }
 .mf-actions-add::after, .mf-toolbar-add::after { transform: rotate(90deg) }
