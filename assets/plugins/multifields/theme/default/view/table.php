@@ -1,4 +1,4 @@
-<div class="mf-table<?= $class ?>" data-type="table" data-name="<?= $name ?>"<?= (!empty($display) ? ' data-display="' . $display . '" style="height: calc((1.75rem * ' . $display . ') + 6.75rem);"' : '') ?>>
+<div class="mf-table<?= $class ?>" data-type="table" data-name="<?= $name ?>">
     <?php
     if (isset($value)) {
         ?>

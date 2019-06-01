@@ -1,8 +1,14 @@
-<div class="mf-group<?= $class ?>" data-type="<?= $type ?>" data-name="<?= $name ?>">
-    <div class="mf-title col-12">
-        <input type="text"  class="form-control form-control-sm" value="<?= $value ?>" placeholder="<?= $placeholder ?>" data-value>
-    </div>
+<div class="mf-group<?= $class ?>" data-type="group" data-name="<?= $name ?>">
+    <?php
+    if (isset($value)) {
+        ?>
+        <div class="mf-title col-12">
+            <input type="text" class="form-control form-control-sm" value="<?= $value ?>"<?= (isset($placeholder) ? ' placeholder="' . $placeholder . '"' : '') ?> data-value>
+        </div>
+        <?php
+    }
+    ?>
     <?= $toolbar ?>
-    <?= $items ?>
     <?= $actions ?>
+    <?= $items ?>
 </div>

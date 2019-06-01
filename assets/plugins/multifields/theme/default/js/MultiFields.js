@@ -42,7 +42,7 @@
               item.firstElementChild.value = i + 1;
             });
             self.draggable([clone]);
-          } else {
+          } else if (parentElement.classList.contains('mf-table')) {
             parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
               item.firstElementChild.value = i + 1;
             });
@@ -55,9 +55,11 @@
             }
           }
           parentElement.removeChild(parent);
-          parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
-            item.firstElementChild.value = i + 1;
-          });
+          if (parentElement.classList.contains('mf-table')) {
+            parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+              item.firstElementChild.value = i + 1;
+            });
+          }
         }
         if (target.classList.contains('mf-actions-edit-image')) {
           el = parent.querySelector('[data-value]');

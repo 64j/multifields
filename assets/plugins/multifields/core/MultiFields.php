@@ -499,6 +499,7 @@ class MultiFields
                 $data['thumb'] = isset($data['thumb']) ? $data['thumb'] : '';
                 $data['default'] = isset($data['default']) ? $data['default'] : '';
                 $data['elements'] = isset($data['elements']) ? $data['elements'] : '';
+                $data['value'] = isset($data['value']) ? $data['value'] : '';
 
                 if (!empty($data['item.class'])) {
                     $inputClass = ' ' . $data['item.class'];
