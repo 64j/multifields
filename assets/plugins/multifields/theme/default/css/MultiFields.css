@@ -92,6 +92,7 @@ body { overflow-y: scroll }
 .multifields .mf-active.mf-table .mf-row .btn, .multifields .mf-active.mf-row .btn { background-color: #ffe082; transition: none }
 .multifields .mf-active.mf-table .mf-row::after { border-bottom-color: #ffc107 }
 .multifields .mf-active.mf-table .mf-col:first-child, .multifields .mf-active.mf-row .mf-col:first-child { border-left-color: #ffc107 !important; }
+.multifields .mf-group > .mf-col { padding-left: .35rem; padding-right: .35rem }
 /* actions */
 .mf-actions { display: block !important }
 .multifields .mf-thumb .mf-actions { position: absolute; left: .35rem; top: 0; right: .35rem; bottom: .7rem; border: 1px solid #ddd; background: 50% 50% no-repeat; background-image: inherit; background-size: contain; transition: border-color .35s }
