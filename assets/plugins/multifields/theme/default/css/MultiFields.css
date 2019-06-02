@@ -62,7 +62,7 @@ body { overflow-y: scroll }
 .mf-table .mf-table-header .col:first-child { border-left: 1px solid #ddd }
 .mf-table .mf-table-header .col:last-child { border-right-color: #ddd }
 .mf-table .mf-row { padding: 0 1.15rem; margin: -1px 1px 0 }
-.mf-table .mf-row::before, .mf-table .mf-row::after { content: ""; position: absolute; z-index: 10; display: block; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid transparent; border-bottom: 1px solid #ddd; pointer-events: none; }
+.mf-table .mf-row::before, .mf-table .mf-row::after { content: ""; position: absolute; z-index: 10; display: block; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid transparent; border-bottom: 1px solid #ddd; pointer-events: none; transition: none }
 .mf-table .mf-row::before { z-index: 0; border: none }
 .mf-table .mf-row.mf-active::before { z-index: 0 }
 .mf-table .mf-actions + .mf-row::after, .mf-table .mf-table-header + .mf-row::after { border-top: 1px solid #ddd }
