@@ -190,7 +190,7 @@ class MultiFieldsFront
                     $out[$v['mf.name']] = '';
                 }
 
-                if (!empty($result['items']) && $_ = $this->renderData($k, $level, $result)) {
+                if ($_ = $this->renderData($k, $level, $result)) {
                     $v = array_merge($v, $_);
                     if (!empty($this->params[$prepare])) {
                         $v = $this->prepare($this->params[$prepare], $v);
