@@ -189,10 +189,20 @@ class MultiFields
     {
         $this->data = [];
 
-        $sql = $this->evo->db->query('SHOW TABLES FROM ' . $this->evo->db->config['dbase'] . ' LIKE "' . $this->evo->db->config['table_prefix'] . 'multifields"');
+        $prefix = $this->evo->getConfig('prefix');
+        if (!empty($this->evo->getConfig('table_prefix'))) {
+            $prefix = $this->evo->getConfig('table_prefix');
+        }
+
+        $database = $this->evo->getConfig('database');
+        if (!empty($this->evo->getConfig('dbase'))) {
+            $database = $this->evo->getConfig('dbase');
+        }
+
+        $sql = $this->evo->db->query('SHOW TABLES FROM ' . $database . ' LIKE "' . $prefix . 'multifields"');
         if (!$this->evo->db->getRecordCount($sql)) {
             $this->evo->db->query('
-            CREATE TABLE IF NOT EXISTS `' . $this->evo->db->config['table_prefix'] . 'multifields` (
+            CREATE TABLE IF NOT EXISTS `' . $prefix . 'multifields` (
             `id` int(15) NOT NULL AUTO_INCREMENT,
             `doc_id` int(10) NOT NULL default "0",
             `tv_id` int(10) NOT NULL default "0",
