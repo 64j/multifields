@@ -47,13 +47,26 @@ class MultiFieldsFront
         $out = '';
         if (!empty($this->params['tvId'])) {
             if (!empty($this->getData())) {
-                $out = $this->renderData(0, 0, $this->getConfig());
-                $out['mf.type'] = 'wrap';
-                $out = $this->tpl('tpl', $out);
-                $out = $this->tpl('wrap', [
-                    'mf.type' => 'wrap',
-                    'mf.items' => $out
-                ]);
+                $api = !empty($this->params['api']) ? $this->params['api'] : '';
+                switch ($api) {
+                    case 0:
+                        $out = $this->data;
+                        break;
+
+                    case 1:
+                        $this->fillData($this->data);
+                        break;
+
+                    default:
+                        $out = $this->renderData(0, 0, $this->getConfig());
+                        $out['mf.type'] = 'wrap';
+                        $out = $this->tpl('tpl', $out);
+                        $out = $this->tpl('wrap', [
+                            'mf.type' => 'wrap',
+                            'mf.items' => $out
+                        ]);
+                        break;
+                }
             }
         } else {
             $out = 'tv not found';
@@ -75,6 +88,31 @@ class MultiFieldsFront
         }
 
         return $this->data;
+    }
+
+    /**
+     * @param array $data
+     * @param int $parent
+     * @param int $level
+     * @return array
+     */
+    function fillData($data = [], $parent = 0, $level = 0)
+    {
+        $out = [];
+        $level++;
+        foreach ($data as $k => $v) {
+            if ($parent == $v['parent']) {
+                $v['level'] = $level;
+                if ($_ = $this->fillData($data, $k, $level)) {
+                    $v['items'] = $_;
+                }
+                $out[] = $v;
+            } else {
+                unset($data[$k]);
+            }
+        }
+
+        return $out;
     }
 
     /**
