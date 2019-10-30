@@ -47,7 +47,7 @@ class MultiFieldsFront
         $out = '';
         if (!empty($this->params['tvId'])) {
             if (!empty($this->getData())) {
-                $api = !empty($this->params['api']) ? $this->params['api'] : '';
+                $api = isset($this->params['api']) ? $this->params['api'] : '';
                 switch ($api) {
                     case 0:
                         $out = $this->data;
