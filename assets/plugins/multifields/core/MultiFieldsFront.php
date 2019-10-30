@@ -54,7 +54,7 @@ class MultiFieldsFront
                         break;
 
                     case '1':
-                        $this->fillData($this->data);
+                        $out = $this->fillData($this->data);
                         break;
 
                     default:
