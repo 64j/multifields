@@ -96,7 +96,7 @@ class MultiFieldsFront
      * @param int $level
      * @return array
      */
-    function fillData($data = [], $parent = 0, $level = 0)
+    protected function fillData($data = [], $parent = 0, $level = 0)
     {
         $out = [];
         $level++;
