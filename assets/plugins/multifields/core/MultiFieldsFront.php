@@ -49,11 +49,11 @@ class MultiFieldsFront
             if (!empty($this->getData())) {
                 $api = isset($this->params['api']) ? $this->params['api'] : '';
                 switch ($api) {
-                    case 0:
+                    case '0':
                         $out = $this->data;
                         break;
 
-                    case 1:
+                    case '1':
                         $this->fillData($this->data);
                         break;
 
