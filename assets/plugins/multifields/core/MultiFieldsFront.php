@@ -57,6 +57,10 @@ class MultiFieldsFront
                         $out = $this->fillData($this->data);
                         break;
 
+                    case 'json':
+                        $out = json_encode($this->fillData($this->data), JSON_FORCE_OBJECT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
+                        break;
+
                     default:
                         $out = $this->renderData(0, 0, $this->getConfig());
                         $out['mf.type'] = 'wrap';
