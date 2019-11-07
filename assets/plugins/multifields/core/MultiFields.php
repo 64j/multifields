@@ -189,14 +189,14 @@ class MultiFields
     {
         $this->data = [];
 
-        $prefix = $this->evo->getConfig('prefix');
-        if (!empty($this->evo->getConfig('table_prefix'))) {
-            $prefix = $this->evo->getConfig('table_prefix');
+        $prefix = $this->evo->db->config['prefix'];
+        if (!empty($this->evo->db->config['table_prefix'])) {
+            $prefix = $this->evo->db->config['table_prefix'];
         }
 
-        $database = $this->evo->getConfig('database');
-        if (!empty($this->evo->getConfig('dbase'))) {
-            $database = $this->evo->getConfig('dbase');
+        $database = $this->evo->db->config['database'];
+        if (!empty($this->evo->db->config['dbase'])) {
+            $database = $this->evo->db->config['dbase'];
         }
 
         $sql = $this->evo->db->query('SHOW TABLES FROM ' . $database . ' LIKE "' . $prefix . 'multifields"');
