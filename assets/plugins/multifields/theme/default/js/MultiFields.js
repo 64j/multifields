@@ -50,7 +50,9 @@
         }
         if (target.classList.contains('mf-actions-del')) {
           if ((parent.classList.contains('mf-row') || parent.classList.contains('mf-thumb')) && (parent.parentElement.classList.contains('mf-row') || parent.parentElement.classList.contains('mf-table'))) {
-            if (parent.parentElement.querySelectorAll('.mf-row').length === 1 || parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
+            if ([].filter.call(parent.parentElement.querySelectorAll('.mf-row'), function(el) {
+              return el.parentElement === parent.parentElement;
+            }).length === 1 || parent.parentElement.querySelectorAll('.mf-row').length === 1 || parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
               self.clone(parent);
             }
           }
