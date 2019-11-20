@@ -85,10 +85,19 @@ class MultiFieldsFront
     protected function getData()
     {
         $this->data = [];
-        if ($this->params['storage'] == 'files') {
-            $this->getDataFromFile();
-        } else {
-            $this->getDataFromBase();
+
+        switch ($this->params['storage']) {
+            case 'files':
+                $this->getDataFromFile();
+                break;
+
+            case 'database':
+                $this->getDataFromBase();
+                break;
+
+            default:
+                $this->getDataFromEvo();
+                break;
         }
 
         return $this->data;
@@ -142,7 +151,106 @@ class MultiFieldsFront
     }
 
     /**
-     *
+     * @return void
+     */
+    protected function getDataFromEvo()
+    {
+        $this->data = [];
+
+        if ($this->params['docid'] == $this->evo->documentIdentifier) {
+            if (is_numeric($this->params['tvId'])) {
+                $this->data = $this->evo->db->getValue('
+                SELECT tvc.value
+                FROM ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc
+                WHERE 
+                tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
+                AND tvc.tmplvarid="' . $this->evo->db->escape($this->params['tvId']) . '"');
+            } else {
+                if (isset($this->evo->documentObject[$this->params['tvId']])) {
+                    if (is_array($this->evo->documentObject[$this->params['tvId']])) {
+                        $this->data = $this->evo->documentObject[$this->params['tvId']][1];
+                    } else {
+                        $this->data = $this->evo->documentObject[$this->params['tvId']];
+                    }
+                } else {
+                    $this->data = $this->evo->db->getValue('
+                    SELECT tvc.value
+                    FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' AS tv
+                    LEFT JOIN ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc ON tvc.tmplvarid = tv.id
+                    WHERE 
+                    tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
+                    AND tv.name="' . $this->evo->db->escape($this->params['tvId']) . '"');
+                }
+            }
+        } else {
+            if (is_numeric($this->params['tvId'])) {
+                $this->data = $this->evo->db->getValue('
+                SELECT tvc.value
+                FROM ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc
+                WHERE 
+                tvc.contentid=' . $this->evo->db->escape($this->params['docid']) . ' 
+                AND tvc.tmplvarid=' . $this->evo->db->escape($this->params['tvId']));
+            } else {
+                $default_field = array(
+                    'type',
+                    'contentType',
+                    'pagetitle',
+                    'longtitle',
+                    'description',
+                    'alias',
+                    'link_attributes',
+                    'published',
+                    'pub_date',
+                    'unpub_date',
+                    'parent',
+                    'isfolder',
+                    'introtext',
+                    'content',
+                    'richtext',
+                    'template',
+                    'menuindex',
+                    'searchable',
+                    'cacheable',
+                    'createdon',
+                    'createdby',
+                    'editedon',
+                    'editedby',
+                    'deleted',
+                    'deletedon',
+                    'deletedby',
+                    'publishedon',
+                    'publishedby',
+                    'menutitle',
+                    'donthit',
+                    'privateweb',
+                    'privatemgr',
+                    'content_dispo',
+                    'hidemenu',
+                    'alias_visible'
+                );
+                if (in_array($this->params['tvId'], $default_field)) {
+                    $this->data = $this->evo->db->getValue('
+                    SELECT sc.' . $this->params['tvId'] . '
+                    FROM ' . $this->evo->getFullTableName('site_content') . ' AS sc
+                    WHERE 
+                    sc.id="' . $this->evo->db->escape($this->params['docid']) . '"');
+                } else {
+                    $this->data = $this->evo->db->getValue('
+                    SELECT tvc.value
+                    FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' AS tv
+                    LEFT JOIN ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc ON tvc.tmplvarid = tv.id
+                    WHERE 
+                    tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
+                    AND tv.name="' . $this->evo->db->escape($this->params['tvId']) . '"');
+                }
+            }
+        }
+
+        $this->data = !empty($this->data) ? json_decode($this->data, true) : [];
+    }
+
+    /**
+     * @return void
      */
     protected function getDataFromFile()
     {
@@ -152,7 +260,7 @@ class MultiFieldsFront
     }
 
     /**
-     * @return array
+     * @return void
      */
     protected function getDataFromBase()
     {
@@ -175,8 +283,6 @@ class MultiFieldsFront
                 }
             }
         }
-
-        return $this->data;
     }
 
     /**
