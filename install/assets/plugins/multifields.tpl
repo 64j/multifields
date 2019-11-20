@@ -7,7 +7,7 @@
  * @category    plugin
  * @version     1.3
  * @package     evo
- * @internal    @properties &multifields_theme=Default theme used;text;default &multifields_storage=Data storage;list;files,default;database;files
+ * @internal    @properties &multifields_theme=Default theme used;text;default &multifields_storage=Data storage;list;default,files,database;files
  * @internal    @events OnManagerPreFrameLoader,OnDocFormPrerender,OnDocFormSave,OnDocFormDelete
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base,sample
