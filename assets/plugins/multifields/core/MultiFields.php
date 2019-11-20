@@ -101,7 +101,8 @@ class MultiFields
                 'items' => $this->replaceData($this->fillData($this->data), $this->config),
                 'docid' => $this->params['id'],
                 'tvId' => $this->params['tv']['id'],
-                'value' => !empty($this->data) ? stripcslashes(json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) : ''
+                'fieldname' => $this->params['storage'] == 'default' ? (is_numeric($this->params['tv']['id']) ? 'tv' . $this->params['tv']['id'] : $this->params['tv']['id']) : 'mf-data[' . $this->params['id'] . '__' . $this->params['tv']['id'] . ']',
+                'value' => $this->params['storage'] == 'default' ? (!empty($this->params['tv']['value']) ? $this->params['tv']['value'] : '') : (!empty($this->data) ? stripcslashes(json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) : '')
             ];
             $data['toolbar'] = $this->getToolbar($data);
             $out = $this->view('wrap', $data);
@@ -149,16 +150,24 @@ class MultiFields
     {
         $this->data = [];
 
-        if ($this->params['storage'] == 'files') {
-            if (!is_dir($this->basePath . 'data')) {
-                mkdir($this->basePath . 'data', 0755);
-            }
+        switch ($this->params['storage']) {
+            case 'files':
+                if (!is_dir($this->basePath . 'data')) {
+                    mkdir($this->basePath . 'data', 0755);
+                }
 
-            if (file_exists($this->fileData())) {
-                require_once $this->fileData();
-            }
-        } else {
-            $this->data = $this->baseData();
+                if (file_exists($this->fileData())) {
+                    require_once $this->fileData();
+                }
+                break;
+
+            case 'database':
+                $this->data = $this->baseData();
+                break;
+
+            default:
+                $this->data = !empty($this->params['tv']['value']) ? json_decode($this->params['tv']['value'], true) : [];
+                break;
         }
 
         return $this->data;
@@ -247,16 +256,20 @@ class MultiFields
     {
         $out = [];
         $level++;
-        foreach ($data as $k => $v) {
-            if ($parent == $v['parent']) {
-                $v['level'] = $level;
-                if ($_ = $this->fillData($data, $k, $level)) {
-                    $v['items'] = $_;
+        if (is_array($data)) {
+            foreach ($data as $k => $v) {
+                if ($parent == $v['parent']) {
+                    $v['level'] = $level;
+                    if ($_ = $this->fillData($data, $k, $level)) {
+                        $v['items'] = $_;
+                    }
+                    $out[] = $v;
+                } else {
+                    unset($data[$k]);
                 }
-                $out[] = $v;
-            } else {
-                unset($data[$k]);
             }
+        } else {
+            $out[] = $data;
         }
 
         return $out;

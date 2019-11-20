@@ -2,4 +2,4 @@
     <?= $toolbar ?>
     <?= $items ?>
 </div>
-<textarea name="mf-data[<?= $docid ?>__<?= $tvId ?>]" data-tvid="<?= $tvId ?>" rows="10"><?= $value ?></textarea>
+<textarea name="<?= $fieldname ?>" data-tvid="<?= $tvId ?>" data-multifields rows="10"><?= $value ?></textarea>

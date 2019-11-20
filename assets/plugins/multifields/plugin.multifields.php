@@ -8,9 +8,9 @@ $e = &$modx->event;
 switch ($e->name) {
     case 'OnDocFormPrerender':
         $theme = !empty($multifields_theme) ? $multifields_theme : 'default';
-        $e->addOutput('<link rel="stylesheet" href="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/css/MultiFields.css">');
-        $e->addOutput('<script defer="true" src="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/js/Sortable.min.js"></script>');
-        $e->addOutput('<script defer="true" src="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/js/MultiFields.js"></script>');
+        $e->addOutput('<link rel="stylesheet" href="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/css/MultiFields.css?v=1.3.0">');
+        $e->addOutput('<script defer="true" src="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/js/Sortable.min.js?v=1.9.0"></script>');
+        $e->addOutput('<script defer="true" src="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/js/MultiFields.js?v=1.3.0"></script>');
         $e->addOutput('<script>MultiFields_urlBrowseServer = \'' . MODX_MANAGER_URL . 'media/browser/' . $modx->config['which_browser'] . '/browser.php\';</script>');
         break;
 
