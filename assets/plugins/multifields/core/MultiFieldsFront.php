@@ -45,7 +45,7 @@ class MultiFieldsFront
     protected function renderForm()
     {
         $out = '';
-        if (!empty($this->params['tvId'])) {
+        if (!empty($this->params['tvId']) || !empty($this->params['tvName'])) {
             if (!empty($this->getData())) {
                 $api = isset($this->params['api']) ? $this->params['api'] : '';
                 switch ($api) {
@@ -135,7 +135,9 @@ class MultiFieldsFront
     {
         $this->config = [];
 
-        if (file_exists($this->basePath . 'config/' . $this->params['tvId'] . '.php')) {
+        if (file_exists($this->basePath . 'config/' . $this->params['tvName'] . '.php')) {
+            $this->config = require_once $this->basePath . 'config/' . $this->params['tvName'] . '.php';
+        } elseif (file_exists($this->basePath . 'config/' . $this->params['tvId'] . '.php')) {
             $this->config = require_once $this->basePath . 'config/' . $this->params['tvId'] . '.php';
         }
 
@@ -158,38 +160,57 @@ class MultiFieldsFront
         $this->data = [];
 
         if ($this->params['docid'] == $this->evo->documentIdentifier) {
-            if (is_numeric($this->params['tvId'])) {
-                $this->data = $this->evo->db->getValue('
-                SELECT tvc.value
-                FROM ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc
+            if (!empty($this->params['tvId'])) {
+                $result = $this->evo->db->query('
+                SELECT tv.id, tv.name, tvc.value
+                FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' AS tv
+                LEFT JOIN ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc ON tvc.tmplvarid = tv.id
                 WHERE 
                 tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
-                AND tvc.tmplvarid="' . $this->evo->db->escape($this->params['tvId']) . '"');
-            } else {
-                if (isset($this->evo->documentObject[$this->params['tvId']])) {
-                    if (is_array($this->evo->documentObject[$this->params['tvId']])) {
-                        $this->data = $this->evo->documentObject[$this->params['tvId']][1];
+                AND tv.id="' . $this->evo->db->escape($this->params['tvId']) . '"');
+                if ($this->evo->db->getRecordCount($result)) {
+                    $row = $this->evo->db->getRow($result);
+                    $this->data = $row['value'];
+                    $this->params['tvName'] = $row['name'];
+                }
+            } elseif (!empty($this->params['tvName'])) {
+                if (isset($this->evo->documentObject[$this->params['tvName']])) {
+                    if (is_array($this->evo->documentObject[$this->params['tvName']])) {
+                        $this->data = $this->evo->documentObject[$this->params['tvName']][1];
                     } else {
-                        $this->data = $this->evo->documentObject[$this->params['tvId']];
+                        $this->data = $this->evo->documentObject[$this->params['tvName']];
                     }
+                    $this->params['tvId'] = $this->evo->db->getValue('SELECT id FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' WHERE name="' . $this->params['tvName'] . '"');
                 } else {
-                    $this->data = $this->evo->db->getValue('
-                    SELECT tvc.value
+                    $result = $this->evo->db->query('
+                    SELECT tv.id, tv.name, tvc.value
                     FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' AS tv
                     LEFT JOIN ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc ON tvc.tmplvarid = tv.id
                     WHERE 
                     tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
-                    AND tv.name="' . $this->evo->db->escape($this->params['tvId']) . '"');
+                    AND tv.name="' . $this->evo->db->escape($this->params['tvName']) . '"');
+                    if ($this->evo->db->getRecordCount($result)) {
+                        $row = $this->evo->db->getRow($result);
+                        $this->data = $row['value'];
+                        $this->params['tvId'] = $row['id'];
+                    }
                 }
             }
+
         } else {
-            if (is_numeric($this->params['tvId'])) {
-                $this->data = $this->evo->db->getValue('
-                SELECT tvc.value
-                FROM ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc
+            if (!empty($this->params['tvId'])) {
+                $result = $this->evo->db->query('
+                SELECT tv.id, tv.name, tvc.value
+                FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' AS tv
+                LEFT JOIN ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc ON tvc.tmplvarid = tv.id
                 WHERE 
-                tvc.contentid=' . $this->evo->db->escape($this->params['docid']) . ' 
-                AND tvc.tmplvarid=' . $this->evo->db->escape($this->params['tvId']));
+                tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
+                AND tv.id="' . $this->evo->db->escape($this->params['tvId']) . '"');
+                if ($this->evo->db->getRecordCount($result)) {
+                    $row = $this->evo->db->getRow($result);
+                    $this->data = $row['value'];
+                    $this->params['tvName'] = $row['name'];
+                }
             } else {
                 $default_field = array(
                     'type',
@@ -228,20 +249,26 @@ class MultiFieldsFront
                     'hidemenu',
                     'alias_visible'
                 );
-                if (in_array($this->params['tvId'], $default_field)) {
+                if (in_array($this->params['tvName'], $default_field)) {
                     $this->data = $this->evo->db->getValue('
-                    SELECT sc.' . $this->params['tvId'] . '
+                    SELECT sc.' . $this->params['tvName'] . '
                     FROM ' . $this->evo->getFullTableName('site_content') . ' AS sc
                     WHERE 
                     sc.id="' . $this->evo->db->escape($this->params['docid']) . '"');
+                    $this->params['tvId'] = $this->params['tvName'];
                 } else {
-                    $this->data = $this->evo->db->getValue('
-                    SELECT tvc.value
+                    $result = $this->evo->db->query('
+                    SELECT tv.id, tv.name, tvc.value
                     FROM ' . $this->evo->getFullTableName('site_tmplvars') . ' AS tv
                     LEFT JOIN ' . $this->evo->getFullTableName('site_tmplvar_contentvalues') . ' AS tvc ON tvc.tmplvarid = tv.id
                     WHERE 
                     tvc.contentid="' . $this->evo->db->escape($this->params['docid']) . '"
-                    AND tv.name="' . $this->evo->db->escape($this->params['tvId']) . '"');
+                    AND tv.name="' . $this->evo->db->escape($this->params['tvName']) . '"');
+                    if ($this->evo->db->getRecordCount($result)) {
+                        $row = $this->evo->db->getRow($result);
+                        $this->data = $row['value'];
+                        $this->params['tvId'] = $row['id'];
+                    }
                 }
             }
         }
@@ -421,6 +448,10 @@ class MultiFieldsFront
 
         if (empty($this->params['tvId'])) {
             $this->params['tvId'] = 0;
+        }
+
+        if (empty($this->params['tvName'])) {
+            $this->params['tvName'] = '';
         }
 
         if (empty($this->params['prepare'])) {

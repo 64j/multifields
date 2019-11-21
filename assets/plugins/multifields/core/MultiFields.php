@@ -101,6 +101,7 @@ class MultiFields
                 'items' => $this->replaceData($this->fillData($this->data), $this->config),
                 'docid' => $this->params['id'],
                 'tvId' => $this->params['tv']['id'],
+                'tvName' => $this->params['tv']['name'],
                 'fieldname' => $this->params['storage'] == 'default' ? (is_numeric($this->params['tv']['id']) ? 'tv' . $this->params['tv']['id'] : $this->params['tv']['id']) : 'mf-data[' . $this->params['id'] . '__' . $this->params['tv']['id'] . ']',
                 'value' => $this->params['storage'] == 'default' ? (!empty($this->params['tv']['value']) ? $this->params['tv']['value'] : '') : (!empty($this->data) ? stripcslashes(json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) : '')
             ];
@@ -126,7 +127,9 @@ class MultiFields
             mkdir($this->basePath . 'config', 0755);
         }
 
-        if (file_exists($this->basePath . 'config/' . $this->params['tv']['id'] . '.php')) {
+        if (file_exists($this->basePath . 'config/' . $this->params['tv']['name'] . '.php')) {
+            $this->config = require_once $this->basePath . 'config/' . $this->params['tv']['name'] . '.php';
+        } elseif (file_exists($this->basePath . 'config/' . $this->params['tv']['id'] . '.php')) {
             $this->config = require_once $this->basePath . 'config/' . $this->params['tv']['id'] . '.php';
         }
 
@@ -252,7 +255,7 @@ class MultiFields
      * @param int $level
      * @return array
      */
-    function fillData($data = [], $parent = 0, $level = 0)
+    protected function fillData($data = [], $parent = 0, $level = 0)
     {
         $out = [];
         $level++;
@@ -680,6 +683,7 @@ class MultiFields
         $json = [];
         $tpl = isset($_REQUEST['tpl']) ? $_REQUEST['tpl'] : '';
         $this->params['tv']['id'] = isset($_REQUEST['tvid']) ? $_REQUEST['tvid'] : '';
+        $this->params['tv']['name'] = isset($_REQUEST['tvname']) ? $_REQUEST['tvname'] : '';
 
         if (!empty($this->getConfig())) {
             $this->params['last'] = 1;
@@ -795,65 +799,67 @@ class MultiFields
     {
         $this->post = $_POST;
 
-        if (isset($this->post['mf-data'])) {
+        if (isset($this->post['mf-data']) && $this->params['storage'] != 'default') {
             foreach ($this->post['mf-data'] as $k => $data) {
                 list($id, $tvId) = explode('__', $k);
                 $this->params['id'] = $id;
                 $this->params['tv']['id'] = $tvId;
                 $out = '';
                 $data = $this->evo->removeSanitizeSeed($data);
+                $data = !empty($data) ? json_decode($data, true) : [];
 
-                if ($this->params['storage'] == 'database') {
-                    $this->deleteData($this->params['id'], $this->params['tv']['id']);
-                }
-
-                if (!empty($data)) {
-                    $data = json_decode($data, true);
-
-                    if ($this->params['storage'] == 'files') {
-                        foreach ($data as $key => $v) {
-                            if (!isset($v['value'])) {
-                                $v['value'] = '';
+                switch ($this->params['storage']) {
+                    case 'files':
+                        if (!empty($data)) {
+                            foreach ($data as $key => $v) {
+                                if (!isset($v['value'])) {
+                                    $v['value'] = '';
+                                }
+                                if (is_array($v['value'])) {
+                                    $v['value'] = implode('||', $v['value']);
+                                }
+                                $out .= '$d[' . $key . ']=[';
+                                $out .= '\'parent\'=>\'' . $v['parent'] . '\',';
+                                $out .= '\'name\'=>\'' . $v['name'] . '\'';
+                                if (isset($v['value'])) {
+                                    $out .= ',\'value\'=>\'' . $this->evo->db->escape($v['value']) . '\'';
+                                }
+                                $out .= '];' . "\n";
                             }
-                            if (is_array($v['value'])) {
-                                $v['value'] = implode('||', $v['value']);
-                            }
-                            $out .= '$d[' . $key . ']=[';
-                            $out .= '\'parent\'=>\'' . $v['parent'] . '\',';
-                            $out .= '\'name\'=>\'' . $v['name'] . '\'';
-                            if (isset($v['value'])) {
-                                $out .= ',\'value\'=>\'' . $this->evo->db->escape($v['value']) . '\'';
-                            }
-                            $out .= '];' . "\n";
                         }
-                    } else {
-                        foreach ($data as $key => $v) {
-                            if (!isset($v['value'])) {
-                                $v['value'] = '';
+                        if ($out == '') {
+                            if (file_exists($this->fileData())) {
+                                unlink($this->fileData());
                             }
-                            if (is_array($v['value'])) {
-                                $v['value'] = implode('||', $v['value']);
-                            }
-                            $this->evo->db->insert([
-                                'doc_id' => $this->params['id'],
-                                'tv_id' => $this->params['tv']['id'],
-                                'field_parent' => $v['parent'],
-                                'field_id' => $key,
-                                'field_name' => $v['name'],
-                                'field_type' => '',
-                                'field_value' => $this->evo->db->escape($v['value']),
-                            ], $this->evo->getFullTableName('multifields'));
+                        } else {
+                            $out = '<?php' . "\n" . '$d = &$this->data;' . "\n" . $out;
+                            file_put_contents($this->fileData(), $out);
                         }
-                    }
-                }
+                        break;
 
-                if ($this->params['storage'] == 'files') {
-                    if ($out == '') {
-                        @unlink($this->fileData());
-                    } else {
-                        $out = '<?php' . "\n" . '$d = &$this->data;' . "\n" . $out;
-                        file_put_contents($this->fileData(), $out);
-                    }
+                    case 'database':
+                        $this->deleteData($this->params['id'], $this->params['tv']['id']);
+
+                        if (!empty($data)) {
+                            foreach ($data as $key => $v) {
+                                if (!isset($v['value'])) {
+                                    $v['value'] = '';
+                                }
+                                if (is_array($v['value'])) {
+                                    $v['value'] = implode('||', $v['value']);
+                                }
+                                $this->evo->db->insert([
+                                    'doc_id' => $this->params['id'],
+                                    'tv_id' => $this->params['tv']['id'],
+                                    'field_parent' => $v['parent'],
+                                    'field_id' => $key,
+                                    'field_name' => $v['name'],
+                                    'field_type' => '',
+                                    'field_value' => $this->evo->db->escape($v['value']),
+                                ], $this->evo->getFullTableName('multifields'));
+                            }
+                        }
+                        break;
                 }
             }
         }

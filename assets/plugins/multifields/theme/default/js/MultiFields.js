@@ -30,7 +30,7 @@
   __.prototype = {
     constructor: __,
     init: function(el) {
-      var self = this, id = el.getAttribute('data-tvid');
+      var self = this, id = el.getAttribute('data-tvid'), name = el.getAttribute('data-tvname');
       this.el[id] = el;
       this.data[id] = el.nextElementSibling;
       el.addEventListener('click', function(e) {
@@ -83,7 +83,7 @@
           }
         }
         if (target.classList.contains('mf-option')) {
-          self.getTemplate(id, target.getAttribute('data-id'), function(data) {
+          self.getTemplate(id, name, target.getAttribute('data-id'), function(data) {
             data = JSON.parse(data);
             if (data['template']) {
               parent.parentElement.insertAdjacentHTML('beforeend', data['template']);
@@ -254,8 +254,8 @@
       }
       return els;
     },
-    getTemplate: function(tvId, tpl, callback) {
-      var url = document.location.href.split('?')[0] + '?mf-action=template&tpl=' + tpl + '&tvid=' + tvId, xhr = new XMLHttpRequest();
+    getTemplate: function(tvId, tvName, tpl, callback) {
+      var url = document.location.href.split('?')[0] + '?mf-action=template&tpl=' + tpl + '&tvid=' + tvId + '&tvname=' + tvName, xhr = new XMLHttpRequest();
       xhr.open('POST', url, true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
       xhr.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
