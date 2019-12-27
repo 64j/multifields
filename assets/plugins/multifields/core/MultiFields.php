@@ -545,6 +545,11 @@ class MultiFields
                         $tpl = $type;
                         $class = 'col-auto';
                         $data['thumb_value'] = $this->checkThumbImage($data['value']);
+                        if (stripos($data['attr'], 'style=') !== false) {
+                            $data['attr'] = str_replace('style="', 'style="background-image: url(' . $data['thumb_value'] . ');', $data['attr']);
+                        } else {
+                            $data['attr'] = ' style="background-image: url(' . $data['thumb_value'] . ')"';
+                        }
                         if (!empty($data['image'])) {
                             $data = $this->setActions($data);
                         } else {
