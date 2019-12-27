@@ -9,9 +9,12 @@
     var self = this;
     this.el = {};
     this.data = {};
-    document.mutate.addEventListener('submit', function() {
-      self.build();
-    });
+    this.form = document.getElementById('mutate');
+    if (this.form) {
+      this.form.addEventListener('submit', function() {
+        self.build();
+      });
+    }
     document.addEventListener('DOMContentLoaded', function() {
       var els = document.querySelectorAll('.multifields');
       els.forEach(function(el) {
@@ -50,9 +53,9 @@
         }
         if (target.classList.contains('mf-actions-del')) {
           if ((parent.classList.contains('mf-row') || parent.classList.contains('mf-thumb')) && (parent.parentElement.classList.contains('mf-row') || parent.parentElement.classList.contains('mf-table'))) {
-            if ([].filter.call(parent.parentElement.querySelectorAll('.mf-row'), function(el) {
+            if ([].filter.call(parent.parentElement.querySelectorAll('.mf-row:not(.mf-not-actions)'), function(el) {
               return el.parentElement === parent.parentElement;
-            }).length === 1 || parent.parentElement.querySelectorAll('.mf-row').length === 1 || parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
+            }).length === 1 || parent.parentElement.querySelectorAll('.mf-row:not(.mf-not-actions)').length === 1 || parent.parentElement.querySelectorAll('.mf-thumb').length === 1) {
               self.clone(parent);
             }
           }
