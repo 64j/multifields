@@ -570,12 +570,15 @@ class MultiFields
                     case 'dropdown':
                     case 'listbox':
                     case 'listbox-multiple':
-                    case 'option':
-                    case 'checkbox':
                     case 'url':
                     case 'email':
                     case 'number':
                     case 'custom_tv':
+                        break;
+
+                    case 'checkbox':
+                    case 'option':
+                        $inputClass = !empty($data['item.class']) ? $data['item.class'] : '';
                         break;
 
                     case 'image':
