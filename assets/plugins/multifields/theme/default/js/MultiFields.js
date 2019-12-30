@@ -198,18 +198,42 @@
       }
     },
     clone: function(el, replace) {
-      var self = this, clone = el.cloneNode(true);
+      var self = this, clone = el.cloneNode(true), els = {};
       replace = replace || {};
       clone.querySelectorAll('[data-value]').forEach(function(el) {
         el.value = '';
         if (el.id) {
-          if (typeof replace[el.id] !== 'undefined') {
-            el.name = el.id = replace[el.id];
+          if (el.type === 'radio' || el.type === 'checkbox') {
+            if (typeof els[el.name] === 'undefined') {
+              els[el.name] = [];
+            }
+            els[el.name][el.id] = el;
           } else {
-            el.name = el.id = self.uniqid();
+            if (typeof replace[el.id] !== 'undefined') {
+              el.name = el.id = replace[el.id];
+            } else {
+              el.name = el.id = self.uniqid();
+            }
           }
         }
       });
+      if (Array(els).length) {
+        for (var k in els) {
+          if (els.hasOwnProperty(k)) {
+            var id = self.uniqid(), l = 0;
+            for (var i in els[k]) {
+              l++;
+              if (els[k].hasOwnProperty(i)) {
+                els[k][i].name = id;
+                clone.querySelectorAll('label[for="' + els[k][i].id + '"]').forEach(function(el) {
+                  el.setAttribute('for', id + '_' + l);
+                });
+                els[k][i].id = id + '_' + l;
+              }
+            }
+          }
+        }
+      }
       if (clone.classList.contains('mf-thumb')) {
         clone.style.backgroundImage = '';
       }
