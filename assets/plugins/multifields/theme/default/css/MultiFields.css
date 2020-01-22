@@ -1,19 +1,4 @@
 body { overflow-y: scroll }
-.multifields .col-1, .multifields .col-2, .multifields .col-3, .multifields .col-4, .multifields .col-5, .multifields .col-6, .multifields .col-7, .multifields .col-8, .multifields .col-9, .multifields .col-10, .multifields .col-11, .multifields .col-12, .multifields .col, .multifields .col-auto, .multifields .col-sm-1, .multifields .col-sm-2, .multifields .col-sm-3, .multifields .col-sm-4, .multifields .col-sm-5, .multifields .col-sm-6, .multifields .col-sm-7, .multifields .col-sm-8, .multifields .col-sm-9, .multifields .col-sm-10, .multifields .col-sm-11, .multifields .col-sm-12, .multifields .col-sm, .multifields .col-sm-auto, .multifields .col-md-1, .multifields .col-md-2, .multifields .col-md-3, .multifields .col-md-4, .multifields .col-md-5, .multifields .col-md-6, .multifields .col-md-7, .multifields .col-md-8, .multifields .col-md-9, .multifields .col-md-10, .multifields .col-md-11, .multifields .col-md-12, .multifields .col-md, .multifields .col-md-auto, .multifields .col-lg-1, .multifields .col-lg-2, .multifields .col-lg-3, .multifields .col-lg-4, .multifields .col-lg-5, .multifields .col-lg-6, .multifields .col-lg-7, .multifields .col-lg-8, .multifields .col-lg-9, .multifields .col-lg-10, .multifields .col-lg-11, .multifields .col-lg-12, .multifields .col-lg, .multifields .col-lg-auto, .multifields .col-xl-1, .multifields .col-xl-2, .multifields .col-xl-3, .multifields .col-xl-4, .multifields .col-xl-5, .multifields .col-xl-6, .multifields .col-xl-7, .multifields .col-xl-8, .multifields .col-xl-9, .multifields .col-xl-10, .multifields .col-xl-11, .multifields .col-xl-12, .multifields .col-xl, .multifields .col-xl-auto { position: relative; width: 100%; min-height: 1px; padding-right: 15px; padding-left: 15px; }
-.multifields .col { -ms-flex-preferred-size: 0; flex-basis: 0; -ms-flex-positive: 1; flex-grow: 1; max-width: 100%; }
-.multifields .col-auto { -ms-flex: 0 0 auto; flex: 0 0 auto; width: auto; max-width: none; }
-.multifields .col-1 { -ms-flex: 0 0 8.333333%; flex: 0 0 8.333333%; max-width: 8.333333%; }
-.multifields .col-2 { -ms-flex: 0 0 16.666667%; flex: 0 0 16.666667%; max-width: 16.666667%; }
-.multifields .col-3 { -ms-flex: 0 0 25%; flex: 0 0 25%; max-width: 25%; }
-.multifields .col-4 { -ms-flex: 0 0 33.333333%; flex: 0 0 33.333333%; max-width: 33.333333%; }
-.multifields .col-5 { -ms-flex: 0 0 41.666667%; flex: 0 0 41.666667%; max-width: 41.666667%; }
-.multifields .col-6 { -ms-flex: 0 0 50%; flex: 0 0 50%; max-width: 50%; }
-.multifields .col-7 { -ms-flex: 0 0 58.333333%; flex: 0 0 58.333333%; max-width: 58.333333%; }
-.multifields .col-8 { -ms-flex: 0 0 66.666667%; flex: 0 0 66.666667%; max-width: 66.666667%; }
-.multifields .col-9 { -ms-flex: 0 0 75%; flex: 0 0 75%; max-width: 75%; }
-.multifields .col-10 { -ms-flex: 0 0 83.333333%; flex: 0 0 83.333333%; max-width: 83.333333%; }
-.multifields .col-11 { -ms-flex: 0 0 91.666667%; flex: 0 0 91.666667%; max-width: 91.666667%; }
-.multifields .col-12 { -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; }
 .multifields .row, .multifields { display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
 .multifields .row::after { display: none }
 .multifields, .multifields .mf-group, .multifields .mf-table { margin: 0; min-height: 3rem }
