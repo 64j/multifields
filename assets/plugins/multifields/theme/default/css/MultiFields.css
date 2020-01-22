@@ -43,7 +43,7 @@ body { overflow-y: scroll }
 .multifields .mf-section::before, .multifields .mf-section::after, .multifields .mf-group::before, .multifields .mf-group::after, .multifields .mf-row::before, .multifields .mf-row::after, .multifields .mf-table::before, .multifields .mf-table::after { content: ""; position: absolute; display: block; z-index: 10; left: .35rem; top: 0; right: .35rem; bottom: .5rem; pointer-events: none; border: 1px solid #e0e0e0; transition: border-color .3s }
 .multifields .mf-section::before, .multifields .mf-group::before, .multifields .mf-row::before, .multifields .mf-table::before { z-index: 0; border: none }
 .multifields .mf-table::before { background-color: #fff }
-.multifields .mf-thumb { position: relative; align-self: flex-start; border: none; background: transparent -100% -100% no-repeat; background-size: contain; }
+.multifields .mf-thumb { position: relative; align-self: flex-start; border: none; background: transparent -10000% -10000% no-repeat; background-size: contain; }
 .mf-thumb::after { content: ""; display: block; padding-top: 100%; }
 .mf-thumb.col-auto { width: 7rem }
 .mf-thumb > * { display: none !important }
