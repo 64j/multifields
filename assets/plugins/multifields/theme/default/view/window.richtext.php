@@ -15,7 +15,7 @@
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body { display: table !important; width: 100%; height: 100%; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body > div { display: table-row !important; height: 1%; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body > div.mce-edit-area { height: auto }
-        #table-layout iframe { height: 100% !important; }
+        #table-layout iframe { position: absolute; height: 100% !important; }
         textarea, textarea + div { height: 100% !important; border: none !important; }
         #actions { display: flex }
     </style>
