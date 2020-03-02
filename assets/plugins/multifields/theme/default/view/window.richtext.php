@@ -11,7 +11,7 @@
         #table-layout { position: relative; width: 100%; height: 100%; padding: 0; border: none; border-collapse: collapse; }
         #table-layout > tfoot > tr { height: 2rem; }
         #table-layout > tbody > tr > td { padding: 0 }
-        #table-layout > tbody > tr > td > .mce-tinymce { height: 100% !important; border: none !important; }
+        #table-layout > tbody > tr > td > .mce-tinymce { position: absolute; top: 5%; height: 95% !important; border: none !important; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body { display: table !important; width: 100%; height: 100%; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body > div { display: table-row !important; height: 1%; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body > div.mce-edit-area { height: auto }
