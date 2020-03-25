@@ -2,6 +2,8 @@
 
 namespace Multifields\Elements;
 
+use Multifields\Base\Core;
+
 class Table extends \Multifields\Base\Elements
 {
     protected $styles = 'view/css/table.css';
@@ -291,7 +293,6 @@ class Table extends \Multifields\Base\Elements
 
     public function actionGetElementByType($params = [])
     {
-        $this->init();
         $params['html'] = $this->renderFormElement([
             'type' => $params['type'],
             'name' => $params['name'],

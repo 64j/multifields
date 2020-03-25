@@ -12,6 +12,7 @@ namespace Multifields\Base;
 class Core
 {
     const VERSION = '2.0.1';
+    const DEBUG = true;
 
     private static $instance;
     private static $elements;
@@ -20,7 +21,6 @@ class Core
     protected $scripts;
     protected $styles;
     protected $data;
-    protected $debug = true;
     public $params;
 
     public function __construct()
@@ -114,7 +114,7 @@ class Core
 
         $out = '';
 
-        if ($this->debug) {
+        if ($this::DEBUG) {
             foreach ($this->styles as $styles) {
                 foreach ($styles as $style) {
                     $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $style . '"/>';
@@ -127,15 +127,15 @@ class Core
                 }
             }
 
-            if (is_file(dirname(__DIR__) . '/styles.min.css')) {
-                unlink(dirname(__DIR__) . '/styles.min.css');
+            if (is_file(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css')) {
+                unlink(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css');
             }
 
-            if (is_file(dirname(__DIR__) . '/scripts.min.js')) {
-                unlink(dirname(__DIR__) . '/scripts.min.js');
+            if (is_file(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js')) {
+                unlink(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js');
             }
         } else {
-            if (!is_file(dirname(__DIR__) . '/styles.min.css') || !is_file(dirname(__DIR__) . '/scripts.min.js')) {
+            if (!is_file(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css') || !is_file(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js')) {
                 $__ = '';
                 foreach ($this->styles as $styles) {
                     foreach ($styles as $style) {
@@ -143,7 +143,7 @@ class Core
                     }
                 }
 
-                file_put_contents(dirname(__DIR__) . '/styles.min.css', $this->compressCSS($__));
+                file_put_contents(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css', Compress::css($__));
 
                 $__ = '';
                 foreach ($this->scripts as $scripts) {
@@ -152,38 +152,14 @@ class Core
                     }
                 }
 
-                file_put_contents(dirname(__DIR__) . '/scripts.min.js', $this->compressJS($__));
+                file_put_contents(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js', Compress::js($__));
             }
 
-            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl('styles.min.css', dirname(__DIR__) . '/') . '"/>';
-            $out .= "\n" . '<script src="' . $this->setFileUrl('scripts.min.js', dirname(__DIR__) . '/') . '"></script>';
+            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl('elements/multifields/view/css/styles.min.css', dirname(__DIR__) . '/') . '"/>';
+            $out .= "\n" . '<script src="' . $this->setFileUrl('elements/multifields/view/js/scripts.min.js', dirname(__DIR__) . '/') . '"></script>';
         }
 
         return $out;
-    }
-
-    /**
-     * @param $buffer
-     * @return string
-     */
-    protected function compressJS($buffer)
-    {
-        $buffer = preg_replace("/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/", "", $buffer);
-        $buffer = str_replace(array("\r\n", "\r", "\n", "\t", "  ", "    ", "    "), "", $buffer);
-
-        return $buffer;
-    }
-
-    /**
-     * @param $buffer
-     * @return string
-     */
-    protected function compressCSS($buffer)
-    {
-        $buffer = preg_replace("!/\*[^*]*\*+([^/][^*]*\*+)*/!", "", $buffer);
-        $buffer = str_replace(array("\r\n", "\r", "\n", "\t", "  ", "    ", "    "), "", $buffer);
-
-        return $buffer;
     }
 
     /**
@@ -200,7 +176,7 @@ class Core
             $url = $parent . '/' . $url;
 
             if (is_file(MODX_BASE_PATH . $url)) {
-                //$url .= '?time=' . filemtime(MODX_BASE_PATH . $url);
+                $url .= '?time=' . filemtime(MODX_BASE_PATH . $url);
             } else {
                 $url = '';
             }
@@ -219,13 +195,13 @@ class Core
         global $ResourceManagerLoaded;
 
         $tmp_ResourceManagerLoaded = $ResourceManagerLoaded;
-        self::$config = [];
+        self::$config = null;
         $this->params['id'] = $id;
         $this->params['tv'] = $row;
         $this->getConfig();
         $this->getData();
 
-        if (empty(self::$config)) {
+        if (empty(self::$config['templates'])) {
             if (self::$config === null) {
                 $this->data = 'Must be an array in file for id=' . $this->params['tv']['id'];
             } else {
@@ -290,7 +266,7 @@ class Core
                 if (!isset(self::$config['items'])) {
                     self::$config['items'] = [];
                 }
-                self::$config['templates'] = $this->configNormalize(self::$config['templates']);
+                //self::$config['templates'] = $this->configNormalize(self::$config['templates']);
             }
         }
 

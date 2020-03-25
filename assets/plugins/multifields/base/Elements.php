@@ -100,7 +100,7 @@ class Elements extends \Multifields\Base\Core
     }
 
     /**
-     * @return bool|false|string
+     * @return string
      */
     protected function getTemplate()
     {
@@ -146,7 +146,6 @@ class Elements extends \Multifields\Base\Core
      */
     public function actionTemplate($params = [])
     {
-        $this->init();
         $this->params['tv']['id'] = $params['tvid'];
         $this->params['tv']['name'] = $params['tvname'];
 
@@ -156,20 +155,6 @@ class Elements extends \Multifields\Base\Core
             $params['html'] = $this->renderData($data);
         }
 
-        return $this->json_encode($params);
-    }
-
-    /**
-     * @param array $data
-     * @param int $options
-     * @param int $depth
-     * @return false|string
-     */
-    protected function json_encode(
-        $data = [],
-        $options = JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE,
-        $depth = 512
-    ) {
-        return json_encode($data, $options, $depth);
+        return json_encode($params, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
     }
 }

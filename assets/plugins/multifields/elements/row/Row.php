@@ -53,7 +53,26 @@ class Row extends \Multifields\Base\Elements
             $i = 0;
             foreach ($this->getConfig('templates') as $k => $v) {
                 if (empty($v['hidden']) && ($params['templates'] === true || (is_array($params['templates']) && in_array($k, $params['templates'])))) {
-                    $out .= '<div class="mf-option" onclick="Multifields.elements.row.template(\'' . $k . '\');">' . (isset($v['title']) ? $v['title'] : $k) . '</div>';
+                    $v['title'] = isset($v['title']) ? $v['title'] : $k;
+                    $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
+                    $icon = '';
+                    $icon_class = '';
+                    $icon_image = '';
+
+                    if ($v['icon'][0] == '<') {
+                        $icon = $v['icon'];
+                        $icon_class = 'mf-icon mf-icon-image';
+                    } elseif (stripos($v['icon'], '/') !== false) {
+                        $icon_image = ' style="background-image: url(\'' . $v['icon'] . '\');"';
+                        $icon_class = 'mf-icon mf-icon-image';
+                    } elseif ($v['icon']) {
+                        $icon_class = 'mf-icon ' . $v['icon'];
+                    }
+
+                    $out .= '
+                    <div class="mf-option" onclick="Multifields.elements.row.template(\'' . $k . '\');">
+                        <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
+                    </div>';
                     $i++;
                 }
             }

@@ -30,23 +30,38 @@ class Multifields extends \Multifields\Base\Elements
             foreach ($this->getConfig('templates') as $k => $v) {
                 if (empty($v['hidden'])) {
                     $v['title'] = isset($v['title']) ? $v['title'] : $k;
-//                    if (empty($v['icon.class']) && empty($v['icon'])) {
-//                        $v['icon'] = ' style="background-image: url(\'/' . str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__))) . '/' . $v['type'] . '/' . $v['type'] . '.svg\')"';
-//                    }
+                    $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
+                    $icon = '';
+                    $icon_class = '';
+                    $icon_image = '';
+
+                    if ($v['icon'][0] == '<') {
+                        $icon = $v['icon'];
+                        $icon_class = 'mf-icon mf-icon-image';
+                    } elseif (stripos($v['icon'], '/') !== false) {
+                        $icon_image = ' style="background-image: url(\'' . $v['icon'] . '\');"';
+                        $icon_class = 'mf-icon mf-icon-image';
+                    } elseif ($v['icon']) {
+                        $icon_class = 'mf-icon ' . $v['icon'];
+                    }
+
                     $out .= '
                     <div class="mf-option" onclick="Multifields.elements.multifields.template(\'' . $k . '\');">
-                        <div class="mf-icon ' . $v['icon.class'] . '"' . $v['icon'] . '></div>' . $v['title'] . '
+                        <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
                     </div>';
                     $i++;
                 }
             }
 
             if (!empty($out)) {
+                $class = '';
                 $params['class'] .= ' mf-row-group';
                 if (!empty($this->getConfig('settings')['view']) && in_array($this->getConfig('settings')['view'], $this->settings['view'])) {
                     $params['class'] .= ' mf-view-' . $this->getConfig('settings')['view'];
+                } else {
+                    $class = ' contextMenu';
                 }
-                $out = '<div id="mf-templates-' . $params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . ' contextMenu">' . $out . '</div>';
+                $out = '<div id="mf-templates-' . $params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . $class . '">' . $out . '</div>';
             }
         }
 
