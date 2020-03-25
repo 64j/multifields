@@ -229,6 +229,8 @@
                   el.setAttribute('for', id + '_' + l);
                 });
                 els[k][i].id = id + '_' + l;
+                els[k][i].checked = false;
+                els[k][i].removeAttribute('checked');
               }
             }
           }
