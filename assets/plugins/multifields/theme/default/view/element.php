@@ -1,1 +1,0 @@
-<<?= (isset($tag) ? $tag : 'div') ?><?= (isset($id) ? ' id="' . $id . '"' : '') ?><?= (isset($class) ? ' class="' . $class . '"' : '') ?> <?= (isset($attr) ? $attr : '') ?>><?= (isset($data) ? $data : '') ?></<?= (isset($tag) ? $tag : 'div') ?>>
