@@ -2,7 +2,7 @@
 
 namespace Multifields\Base;
 
-class Update
+class Updater
 {
     const OLD_VERSION = '1.3.0';
 
@@ -12,7 +12,7 @@ class Update
     public function run()
     {
         if (version_compare($this->getVersion(), '2.0', '<')) {
-            $this->setVersion((new \Multifields\Base\Updates\UpdateTo200())->run());
+            $this->setVersion((new \Multifields\Base\Updates\Updater200())->run());
         }
 
         if (version_compare($this->getVersion(), Core::VERSION, '<')) {

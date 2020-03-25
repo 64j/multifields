@@ -14,7 +14,7 @@ switch ($e->name) {
             $e->addOutput(\Multifields\Base\Core::getInstance()
                 ->getStartScripts());
 
-            (new \Multifields\Base\Update)->run();
+            (new \Multifields\Base\Updater)->run();
         }
         break;
 

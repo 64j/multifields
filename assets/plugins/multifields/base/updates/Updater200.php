@@ -2,9 +2,9 @@
 
 namespace Multifields\Base\Updates;
 
-use Multifields\Base\Update;
+use Multifields\Base\Updater;
 
-class UpdateTo200 extends Update
+class Updater200 extends Updater
 {
     const VERSION = '2.0.0';
 
