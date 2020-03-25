@@ -11,4 +11,4 @@
  * @internal    @installset base,sample
  * @author      64j
  */
-return require MODX_BASE_PATH . 'assets/plugins/multifields/snippet.multifields.php';
+require MODX_BASE_PATH . 'assets/plugins/multifields/snippet.multifields.php';
