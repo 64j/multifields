@@ -5,7 +5,7 @@
  * Creating custom fields for documents
  *
  * @category    snippet
- * @version     1.3
+ * @version     2.0
  * @package     evo
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base,sample

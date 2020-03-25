@@ -1,0 +1,13 @@
+.mf-thumb { width: 100%; max-width: 7rem; background: transparent -10000% -10000% no-repeat; }
+.multifields .mf-thumb::before { content: ""; display: block; padding-top: 100%; }
+.multifields .mf-thumb > .mf-actions { background-image: inherit; background-repeat: no-repeat; background-size: contain; background-position: 50% 50% }
+.multifields .mf-thumb > .mf-actions .mf-actions-add { left: 100%; top: 50%; opacity: 0; visibility: hidden; transform: scale(.8); transition: opacity .15s, visibility .15s, transform .15s; }
+.multifields .mf-thumb:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
+.multifields .mf-thumb > .mf-actions .mf-actions-del { top: .6rem; right: .45rem; }
+.multifields .mf-thumb > .mf-actions .mf-actions-move { top: .6rem; }
+.multifields .mf-thumb > .mf-actions .mf-actions-edit { left: 50%; top: 50%; font-size: 1rem; opacity: .8; }
+.multifields .mf-thumb > .mf-actions .mf-actions-edit:hover { opacity: 1; }
+.multifields .mf-thumb > .mf-actions .mf-actions-edit::before { content: "\f03e"; margin: 0 0 .15rem .15rem; }
+.multifields .mf-thumb[data-multi] > .mf-actions .mf-actions-edit::before { content: "\f302"; }
+.multifields .mf-thumb > .mf-actions .mf-actions-edit::after { font-size: 2rem; opacity: .5; }
+.multifields .mf-thumb > .mf-items { display: none !important }

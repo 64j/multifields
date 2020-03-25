@@ -1,0 +1,2 @@
+.multifields [data-type="file"] input + [type="button"] { z-index: 5; float: right; margin-top: -2.3077069em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.multifields [data-type="file"] input + i { display: flex; float: right; position: relative; z-index: 3; margin: -1.3rem 1px; width: 1.3rem; background-color: #fff; cursor: pointer; }
