@@ -255,20 +255,19 @@ class MultiFields
      * @param int $level
      * @return array
      */
-    protected function fillData($data = [], $parent = 0, $level = 0)
+    protected function fillData(&$data = [], $parent = 0, $level = 0)
     {
         $out = [];
         $level++;
         if (is_array($data)) {
             foreach ($data as $k => $v) {
                 if ($parent == $v['parent']) {
+                    unset($data[$k]);
                     $v['level'] = $level;
                     if ($_ = $this->fillData($data, $k, $level)) {
                         $v['items'] = $_;
                     }
                     $out[] = $v;
-                } else {
-                    unset($data[$k]);
                 }
             }
         } else {
@@ -469,6 +468,7 @@ class MultiFields
         $data['type'] = isset($data['type']) ? $data['type'] : 'text';
         $data['style'] = isset($data['style']) ? $data['style'] : '';
         $data['attr'] = isset($data['attr']) ? $data['attr'] : '';
+        $data['header'] = isset($data['header']) ? $data['header'] : '';
         $data['_class'] = '';
         if (!empty($data['autoincrement'])) {
             $data['attr'] .= ' data-autoincrement';

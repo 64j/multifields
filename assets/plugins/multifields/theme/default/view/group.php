@@ -1,4 +1,5 @@
 <div class="mf-group<?= $class ?>" data-type="group" data-name="<?= $name ?>">
+    <?= $header ?>
     <?php
     if (isset($value)) {
         ?>
