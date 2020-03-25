@@ -33,7 +33,7 @@ class Elements extends \Multifields\Base\Core
      */
     protected function path($dir = '')
     {
-        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__) . '/elements/' . strtolower(basename(static::class)) . '/' . $dir);
+        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__) . '/elements/' . strtolower($this->classBasename()) . '/' . $dir);
     }
 
     /**
@@ -106,7 +106,7 @@ class Elements extends \Multifields\Base\Core
     {
         if (empty($this->_template)) {
             if (empty($this->tpl)) {
-                $this->_template = $this->tpl = str_replace(DIRECTORY_SEPARATOR, '/', dirname(dirname(__DIR__)) . '/' . strtolower(static::class) . '/' . strtolower(basename(static::class))) . '.tpl';
+                $this->_template = $this->tpl = str_replace(DIRECTORY_SEPARATOR, '/', dirname(dirname(__DIR__)) . '/' . strtolower($this->classBasename()) . '/' . strtolower($this->classBasename())) . '.tpl';
             } else {
                 $this->_template = trim($this->tpl, '/');
                 $this->_template = $this->path() . $this->_template;

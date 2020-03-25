@@ -171,7 +171,7 @@ class Core
     {
         if (!empty($url)) {
             $url = trim(str_replace(DIRECTORY_SEPARATOR, '/', $url), '\\/');
-            $parent = str_replace(MODX_BASE_PATH, '', trim(str_replace(DIRECTORY_SEPARATOR, '/', $parent), '\\/'));
+            $parent = trim(str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', $parent)), '\\/');
 
             $url = $parent . '/' . $url;
 
@@ -592,5 +592,13 @@ class Core
     public function deleteData()
     {
 
+    }
+
+    /**
+     * @return string
+     */
+    protected function classBasename()
+    {
+        return basename(str_replace('\\', '/', static::class));
     }
 }
