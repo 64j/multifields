@@ -164,7 +164,7 @@ class Front
             $this->prepare($prepare, $v);
 
             if (isset($v['items'])) {
-                $v = array_merge($v, $this->renderData($v['items'], $level, $config));
+                $v = array_merge($v, $this->renderData($v['items'], $level, $find));
                 $this->prepare($prepare, $v);
             }
 
