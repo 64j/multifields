@@ -266,7 +266,7 @@ class Core
                 if (!isset(self::$config['items'])) {
                     self::$config['items'] = [];
                 }
-                //self::$config['templates'] = $this->configNormalize(self::$config['templates']);
+                self::$config['templates'] = $this->configNormalize(self::$config['templates']);
             }
         }
 
@@ -290,8 +290,9 @@ class Core
                 }
                 unset($data[$k]);
             }
-            if (!empty($v['items'])) {
-                $v['items'] = $this->configNormalize($v['items']);
+            if (!empty($v['templates'])) {
+                $v['@templates'] = $v['templates'];
+                $v['templates'] = $this->configNormalize($v['templates']);
             }
         }
 
@@ -369,8 +370,10 @@ class Core
                 $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
             }
 
-            $this->element($v['type'])
-                ->preFillData($v, $config, $find);
+            if ($this->element($v['type'])) {
+                $this->element($v['type'])
+                    ->preFillData($v, $config, $find);
+            }
 
             if (!empty($v['items'])) {
                 if (!empty($find['items']) && (!isset($v['ignoreConfig']) || (isset($v['ignoreConfig']) && !$v['ignoreConfig']))) {

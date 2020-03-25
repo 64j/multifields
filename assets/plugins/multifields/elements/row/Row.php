@@ -52,7 +52,7 @@ class Row extends \Multifields\Base\Elements
         if (!empty($this->getConfig('templates')) && isset($params['templates']) && ($params['templates'] === true || is_array($params['templates']))) {
             $i = 0;
             foreach ($this->getConfig('templates') as $k => $v) {
-                if (empty($v['hidden']) && ($params['templates'] === true || (is_array($params['templates']) && in_array($k, $params['templates'])))) {
+                if ((empty($v['hidden']) && empty($params['templates'])) || ($params['templates'] === true || (is_array($params['templates']) && (isset($params['templates'][$k]) || in_array($k, $params['templates']))))) {
                     $v['title'] = isset($v['title']) ? $v['title'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
                     $icon = '';
