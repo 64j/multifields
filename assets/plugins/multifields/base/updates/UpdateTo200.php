@@ -32,6 +32,11 @@ class UpdateTo200 extends Update
         $files = glob(dirname(dirname(__DIR__)) . '/config/*.php');
         if (!empty($files)) {
             foreach ($files as $file) {
+                // Skip example config files
+                if (stripos(basename($file), 'example.') !== false) {
+                    continue;
+                }
+
                 // copy old config
                 copy($file, $file . '.bak');
 
