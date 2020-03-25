@@ -1,38 +1,66 @@
 <?php
 /**
- * plugin multifields
+ * Plugin multifields
  * @author 64j
  */
 
 $e = &$modx->event;
+
+require_once '__autoload.php';
+
 switch ($e->name) {
     case 'OnManagerMainFrameHeaderHTMLBlock':
         if (in_array($modx->manager->action, [3, 4, 17, 27, 72, 112])) {
-            $theme = !empty($multifields_theme) ? $multifields_theme : 'default';
-            $e->addOutput('<link rel="stylesheet" href="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/css/MultiFields.css?v=1.3.0.3">');
-            $e->addOutput('<script defer="true" src="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/js/Sortable.min.js?v=1.9.0"></script>');
-            $e->addOutput('<script defer="true" src="' . MODX_BASE_URL . 'assets/plugins/multifields/theme/' . $theme . '/js/MultiFields.js?v=1.3.0.3"></script>');
-            $e->addOutput('<script>MultiFields_urlBrowseServer = \'' . MODX_MANAGER_URL . 'media/browser/' . $modx->config['which_browser'] . '/browser.php\';</script>');
+            $e->addOutput(\Multifields\Base\Core::getInstance()
+                ->getStartScripts());
+
+            (new \Multifields\Base\Update)->run();
+        }
+        break;
+
+    case 'OnManagerPreFrameLoader':
+        if (isset($_REQUEST['mf-action']) && !empty($_REQUEST['action'])) {
+            $className = !empty($_REQUEST['class']) ? $_REQUEST['class'] : '';
+
+            if (class_exists($className)) {
+                $class = new $className();
+                $method = 'action' . ucfirst(strtolower($_REQUEST['action']));
+                if (is_callable([$className, $method])) {
+                    try {
+                        echo $class->$method($_REQUEST);
+                    } catch (Error $exception) {
+                        echo json_encode([
+                            'error' => (string)$exception
+                        ], JSON_UNESCAPED_UNICODE);
+                    }
+                } else {
+                    echo 'Method ' . $method . ' not found in class ' . $className . '!';
+                }
+            } else {
+                echo 'Class ' . $className . ' not found!';
+            }
+
+            exit;
         }
         break;
 
     case 'OnDocFormSave':
-        require_once MODX_BASE_PATH . 'assets/plugins/multifields/core/MultiFields.php';
-        \MF2\MultiFields::getInstance($id)->saveData();
+        \Multifields\Base\Core::getInstance()
+            ->saveData();
         break;
 
-    case 'OnManagerPreFrameLoader':
-        if (!empty($_REQUEST['mf-action'])) {
-            require_once MODX_BASE_PATH . 'assets/plugins/multifields/core/MultiFields.php';
-            switch ($_REQUEST['mf-action']) {
-                case 'template':
-                    \MF2\MultiFields::getInstance($id)->getTemplate();
-                    break;
+    case 'OnDocFormDelete':
+        \Multifields\Base\Core::getInstance()
+            ->deleteData();
+        break;
 
-                case 'richtext':
-                    \MF2\MultiFields::getInstance($id)->getRichText();
-                    break;
-            }
-        }
+    case 'OnWebPageInit':
+        \Multifields\Base\Front::getInstance();
+        break;
+
+    case 'OnAfterLoadDocumentObject':
+        /** @var TYPE_NAME $documentObject */
+        $e->setOutput(\Multifields\Base\Front::getInstance()
+            ->addDocumentObject($documentObject));
         break;
 }

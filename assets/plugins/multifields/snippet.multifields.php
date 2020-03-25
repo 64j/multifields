@@ -8,5 +8,5 @@ if (!defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 
-require_once MODX_BASE_PATH . 'assets/plugins/multifields/core/MultiFieldsFront.php';
-return MultiFieldsFront::getInstance($params);
+echo \Multifields\Base\Front::getInstance()
+    ->render($params);
