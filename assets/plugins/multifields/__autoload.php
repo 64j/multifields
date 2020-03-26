@@ -1,10 +1,12 @@
 <?php
 spl_autoload_register(function ($class) {
-    if (stripos($class, '\\Elements\\') !== false) {
-        $class .= '\\' . basename(str_replace('\\', '/', $class));
+    $className = basename(str_replace('\\', '/', $class));
+    $class = dirname(strtolower(str_replace('\\', '/', $class)));
+    if (basename($class) == 'elements') {
+        $class .=  '/' . strtolower($className);
     }
-    $file = dirname(__DIR__) . '/' . strtolower(str_replace('\\', '/', $class));
-    $file = dirname($file) . '/' . ucfirst(basename($file)) . '.php';
+    $class .=  '/' . $className;
+    $file = dirname(__DIR__) . '/' . $class . '.php';
     if (is_file($file) && is_readable($file)) {
         require $file;
     }
