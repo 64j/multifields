@@ -136,9 +136,9 @@ class MultiFieldsFront
         $this->config = [];
 
         if (file_exists($this->basePath . 'config/' . $this->params['tvName'] . '.php')) {
-            $this->config = require_once $this->basePath . 'config/' . $this->params['tvName'] . '.php';
+            $this->config = require $this->basePath . 'config/' . $this->params['tvName'] . '.php';
         } elseif (file_exists($this->basePath . 'config/' . $this->params['tvId'] . '.php')) {
-            $this->config = require_once $this->basePath . 'config/' . $this->params['tvId'] . '.php';
+            $this->config = require $this->basePath . 'config/' . $this->params['tvId'] . '.php';
         }
 
         if (is_array($this->config)) {
