@@ -320,7 +320,9 @@ class MultiFieldsFront
      */
     protected function renderData($parent = 0, $level = 0, $config = [])
     {
-        $out = [];
+        $out = [
+            'mf.items' => []
+        ];
         $level++;
         $i = 1;
         $result = [];
@@ -361,10 +363,6 @@ class MultiFieldsFront
                     $this->params[$tpl] = $result['tpl'];
                 }
 
-                if (!isset($out[$v['mf.name']])) {
-                    $out[$v['mf.name']] = '';
-                }
-
                 if ($_ = $this->renderData($k, $level, $result)) {
                     $v = array_merge($v, $_);
                     if (!empty($this->params[$prepare])) {
@@ -374,16 +372,31 @@ class MultiFieldsFront
                     }
                 }
 
-                $out[$v['mf.name']] .= $this->tpl($tpl, $v);
+                $_out = $this->tpl($tpl, $v);
+
+                if (!isset($out[$v['mf.name']])) {
+                    $out[$v['mf.name']] = '';
+                }
+
+                // Assign by name
+                $out[$v['mf.name']] .= $_out;
+
+                // Assign by name and iteration
+                $out[$v['mf.name'] . '__' . $v['mf.iteration']] = $_out;
+
+                // Assign All
+                $out['mf.items'][] = $_out;
             }
         }
 
-        if (!empty($out)) {
+        if (!empty($out['mf.items'])) {
             $out['mf.items'] = $this->tpl('', [
                 'mf.type' => 'wrap',
-                'mf.items' => is_array($out) ? implode($out) : $out,
+                'mf.items' => is_array($out['mf.items']) ? implode($out['mf.items']) : $out['mf.items'],
                 'mf.level' => $level
             ]);
+        } else {
+            unset($out['mf.items']);
         }
 
         return $out;
