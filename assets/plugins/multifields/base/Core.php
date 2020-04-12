@@ -68,7 +68,6 @@ class Core
         ]);
 
         self::setConfig(null);
-        self::setData(null);
 
         if (empty(self::getConfig('templates'))) {
             if (self::getConfig()) {
@@ -234,15 +233,6 @@ class Core
         }
 
         return $data;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    public static function setData($data = [])
-    {
-        return self::$data = $data;
     }
 
     /**
