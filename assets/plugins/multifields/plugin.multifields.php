@@ -11,8 +11,7 @@ require_once '__autoload.php';
 switch ($e->name) {
     case 'OnManagerMainFrameHeaderHTMLBlock':
         if (in_array($modx->manager->action, [3, 4, 17, 27, 72, 112])) {
-            $e->addOutput(\Multifields\Base\Core::getInstance()
-                ->getStartScripts());
+            $e->addOutput((new \Multifields\Base\Elements())->getStartScripts());
 
             (new \Multifields\Base\Updater)->run();
         }

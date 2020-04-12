@@ -26,14 +26,10 @@ class Table extends \Multifields\Base\Elements
     ];
 
     /**
-     * @param array $items
-     * @return array|string
+     * @param array $item
+     * @param array $config
+     * @param array $find
      */
-    protected function _renderData($items = [])
-    {
-        return $items;
-    }
-
     protected function preFillData(&$item = [], $config = [], $find = [])
     {
         if (!empty($item['columns'])) {
@@ -50,7 +46,7 @@ class Table extends \Multifields\Base\Elements
                     foreach ($v['items'] as $key => &$val) {
                         if (isset($find['columns'][$val['name']]['attr'])) {
                             $val['attr'] = $find['columns'][$val['name']]['attr'];
-                        } else {
+                        } elseif (isset($find['columns'])) {
                             if ($arr = reset(array_slice($find['columns'], $key, 1))) {
                                 if (!empty($arr['attr'])) {
                                     $val['attr'] = $arr['attr'];
@@ -124,15 +120,6 @@ class Table extends \Multifields\Base\Elements
 
         $params['types'] = implode('', $params['types']);
 
-        //        $first = reset($params['columns']);
-        //        if (!(isset($params['columns']['id']) || empty($first) || (!empty($first) && isset($first['type']) && $first['type'] == 'id'))) {
-        //            array_unshift($params['columns'], [
-        //                'name' => 'id',
-        //                'value' => 'id',
-        //                'type' => 'id'
-        //            ]);
-        //        }
-
         $columns = '';
         $i = 0;
         foreach ($params['columns'] as $k => &$v) {
@@ -170,8 +157,8 @@ class Table extends \Multifields\Base\Elements
                         'tag' => 'div',
                         'class' => 'col',
                         'attr' => 'data-type="' . $v['type'] . '" data-name="' . $v['name'] . '"',
-                        'items' => '
-                        <i class="mf-column-settings fas fa-angle-down" onclick="Multifields.elements.table.columnMenu(event, \'' . $params['id'] . '\')"></i>
+                        'items' => (!empty($params['multi']) ? '
+                        <i class="mf-column-settings fas fa-angle-down" onclick="Multifields.elements.table.columnMenu(event, \'' . $params['id'] . '\')"></i>' : '') . '
                         <input type="text" id="' . $id . '" class="form-control" name="' . $id . '" value="' . $v['value'] . '" onchange="documentDirty=true;">'
                     ]);
             }
@@ -291,6 +278,10 @@ class Table extends \Multifields\Base\Elements
         return parent::render($params, $data);
     }
 
+    /**
+     * @param array $params
+     * @return string
+     */
     public function actionGetElementByType($params = [])
     {
         $params['html'] = $this->renderFormElement([

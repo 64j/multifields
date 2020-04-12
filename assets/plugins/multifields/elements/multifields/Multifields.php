@@ -2,6 +2,8 @@
 
 namespace Multifields\Elements;
 
+use Multifields\Base\Core;
+
 class Multifields extends \Multifields\Base\Elements
 {
     protected $styles = 'view/css/multifields.css';
@@ -25,9 +27,9 @@ class Multifields extends \Multifields\Base\Elements
     {
         $out = '';
 
-        if (!empty($this->getConfig('templates'))) {
+        if (!empty(Core::getConfig('templates'))) {
             $i = 0;
-            foreach ($this->getConfig('templates') as $k => $v) {
+            foreach (Core::getConfig('templates') as $k => $v) {
                 if (empty($v['hidden'])) {
                     $v['title'] = isset($v['title']) ? $v['title'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
@@ -56,8 +58,8 @@ class Multifields extends \Multifields\Base\Elements
             if (!empty($out)) {
                 $class = '';
                 $params['class'] .= ' mf-row-group';
-                if (!empty($this->getConfig('settings')['view']) && in_array($this->getConfig('settings')['view'], $this->settings['view'])) {
-                    $params['class'] .= ' mf-view-' . $this->getConfig('settings')['view'];
+                if (!empty(Core::getConfig('settings')['view']) && in_array(Core::getConfig('settings')['view'], $this->settings['view'])) {
+                    $params['class'] .= ' mf-view-' . Core::getConfig('settings')['view'];
                 } else {
                     $class = ' contextMenu';
                 }
