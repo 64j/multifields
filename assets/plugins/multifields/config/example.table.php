@@ -1,63 +1,51 @@
 <?php
 
 return [
-    'Table' => [
-        'type' => 'table',
-        'placeholder' => 'Table title',
-        //'value' => false,
-        'cols' => [
-            'id' => [
-                'title' => 'id',
-                'attr' => 'style="width: 40px; max-width: 40px"',
-            ],
-            'title' => [
-                'title' => 'Title',
-            ],
-            'text' => [
-                'title' => 'Text',
-            ],
-            'date' => [
-                'title' => 'Date',
-            ],
-            'image' => [
-                'title' => 'Image'
-            ]
-        ],
-        'items' => [
-            'Table_Row' => [
-                'type' => 'row',
-                'items' => [
-                    'id' => [
-                        'attr' => 'style="width: 40px; max-width: 40px"',
-                        'autoincrement' => true
-                    ],
-                    'title' => [
-                        'type' => 'text'
-                    ],
-                    'text' => [
-                        'type' => 'richtext'
-                    ],
-                    'date' => [
-                        'type' => 'date'
-                    ],
-                    'image' => [
-                        'type' => 'image',
-                    ]
+    'settings' => [],
+    'templates' => [
+        'Table' => [
+            'type' => 'table',
+            'placeholder' => 'Table title',
+            'value' => true,
+            'thead' => [
+                [
+                    'type' => 'id',
+                    'value' => 'id'
                 ],
-                'tpl' => '@CODE:
-                    <tr>
-                        <td>[+id+]</td>
-                        <td>[+title+]</td>
-                        <td>[+text+]</td>
-                        <td>[+date+]</td>
-                        <td>[+image+]</td>
-                    </tr>'
+                [
+                    'type' => 'text',
+                    'value' => 'Title'
+                ],
+                [
+                    'type' => 'text',
+                    'value' => 'Text'
+                ],
+                [
+                    'type' => 'date',
+                    'value' => 'Date'
+                ],
+                [
+                    'type' => 'image',
+                    'value' => 'Image'
+                ]
+            ],
+            'tbody' => [
+                [
+                    'type' => 'id'
+                ],
+                [
+                    'type' => 'text'
+                ],
+                [
+                    'type' => 'text'
+                ],
+                [
+                    'type' => 'date'
+                ],
+                [
+                    'type' => 'image'
+                ]
             ]
-        ],
-        'tpl' => '@CODE:
-            <h3>[+value+]</h3>
-            <table style="width: 100%; border-spacing: 5px; border-collapse: separate; border: 1px solid #000;" border="1">
-                [+mf.items+]
-            </table>'
+        ]
     ]
 ];
