@@ -4,15 +4,45 @@ namespace Multifields\Base;
 
 use DLTemplate;
 
-class Elements extends Core
+class Elements
 {
     private static $elements;
+    protected static $lang;
     protected $tpl;
     protected $actions;
-    protected $_template;
+    protected $template;
     protected $scripts;
     protected $styles;
     protected $disabled = false;
+
+    /**
+     * Elements constructor.
+     */
+    public function __construct()
+    {
+    }
+
+    /**
+     * @param null $key
+     * @return mixed
+     */
+    public static function lang($key = null)
+    {
+        if (empty(self::$lang)) {
+            $path = dirname(dirname(__DIR__)) . '/' . strtolower(dirname(str_replace('\\', '/', static::class))) . '/lang/';
+            if (is_file($path . evolutionCMS()->getConfig('manager_language') . '.php')) {
+                self::$lang = require_once $path . evolutionCMS()->getConfig('manager_language') . '.php';
+            } elseif (is_file($path . 'english.php')) {
+                self::$lang = require_once $path . 'english.php';
+            }
+        }
+
+        if (isset(self::$lang[$key])) {
+            return self::$lang[$key];
+        }
+
+        return self::$lang;
+    }
 
     /**
      * @return string
@@ -34,7 +64,7 @@ class Elements extends Core
 
         if ($elements = glob(Core::getParams('basePath') . 'elements/*', GLOB_ONLYDIR)) {
             foreach ($elements as $element) {
-                $name = ucfirst(basename($element));
+                $name = basename($element);
 
                 if (!self::element($name)) {
                     continue;
@@ -160,11 +190,19 @@ class Elements extends Core
     public static function element($className = null)
     {
         $element = null;
+        $name = null;
+
+        if (isset($className)) {
+            list($className, $name) = explode(':', $className);
+            if (empty($name)) {
+                $name = $className;
+            }
+        }
 
         if (!isset($className)) {
             $className = get_called_class();
         } elseif (strpos($className, '\\') === false) {
-            $className = '\\Multifields\\Elements\\' . ucfirst($className);
+            $className = '\\Multifields\\Elements\\' . ucfirst($className) . '\\' . ucfirst($name);
         }
 
         if (isset(self::$elements[$className])) {
@@ -239,6 +277,14 @@ class Elements extends Core
      */
     protected function view($params = [])
     {
+        $lang = self::lang();
+
+        if (is_array($lang)) {
+            foreach ($lang as $k => $v) {
+                $params['lang.' . $k] = $v;
+            }
+        }
+
         return class_exists('DLTemplate') ? DLTemplate::getInstance(evolutionCMS())
             ->parseChunk('@CODE:' . $this->getTemplate(), $params, false, true) : evolutionCMS()->parseText($this->getTemplate(), $params);
     }
@@ -248,38 +294,22 @@ class Elements extends Core
      */
     protected function getTemplate()
     {
-        if (empty($this->_template)) {
+        if (empty($this->template)) {
             if (empty($this->tpl)) {
-                $this->_template = $this->tpl = str_replace(DIRECTORY_SEPARATOR, '/', dirname(dirname(__DIR__)) . '/' . strtolower($this->classBasename()) . '/' . strtolower($this->classBasename())) . '.tpl';
+                $name = str_replace('\\', '/', static::class);
+                $this->template = $this->tpl = dirname(dirname(__DIR__)) . '/' . strtolower(dirname($name) . '/' . basename($name)) . '.tpl';
             } else {
-                $this->_template = trim($this->tpl, '/');
-                $this->_template = $this->path() . $this->_template;
+                $this->template = dirname(dirname(__DIR__)) . '/' . strtolower(dirname(str_replace('\\', '/', static::class))) . '/' . trim($this->tpl, '/');
             }
-            if (is_file($this->_template)) {
-                $this->_template = file_get_contents($this->_template);
+
+            if (is_file($this->template)) {
+                $this->template = file_get_contents($this->template);
             } else {
-                $this->_template = 'Error: Could not load template ' . $this->tpl . ' in class ' . static::class . '!<br>';
+                $this->template = 'Error: Could not load template ' . $this->tpl . ' in class ' . static::class . '!<br>';
             }
         }
 
-        return $this->_template;
-    }
-
-    /**
-     * @return string
-     */
-    protected function classBasename()
-    {
-        return basename(str_replace('\\', '/', static::class));
-    }
-
-    /**
-     * @param string $dir
-     * @return string
-     */
-    protected function path($dir = '')
-    {
-        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__) . '/elements/' . strtolower($this->classBasename()) . '/' . $dir);
+        return $this->template;
     }
 
     /**
@@ -288,6 +318,7 @@ class Elements extends Core
      */
     public function actionTemplate($params = [])
     {
+        Core::getInstance();
         Core::setParams([
             'tv' => [
                 'id' => $params['tvid'],
@@ -309,52 +340,33 @@ class Elements extends Core
      * @param array $find
      * @return array
      */
-    protected static function fillData($data = [], $config = [], $find = [])
+    public static function fillData($data = [], $config = [], $find = [])
     {
-        foreach ($data as $k => &$v) {
-            $find = self::findElements($v['name'], $config);
-            $v = array_merge($find, $v);
+        if (is_array($data)) {
+            foreach ($data as $k => &$v) {
+                $find = self::findElements($v['name'], $config);
+                $v = array_merge($find, $v);
 
-            if (!isset($v['name'])) {
-                $v['name'] = $k;
-            }
+                if (!isset($v['name'])) {
+                    $v['name'] = $k;
+                }
 
-            if (empty($v['type'])) {
-                $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
-            }
+                if (empty($v['type'])) {
+                    $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
+                }
 
-            if (self::element($v['type'])) {
-                self::element($v['type'])
-                    ->preFillData($v, $config, $find);
-            }
+                if (self::element($v['type'])) {
+                    self::element($v['type'])
+                        ->preFillData($v, $config, $find);
+                }
 
-            if (!empty($v['items'])) {
-                //                if (!empty($find['items']) && (!isset($v['ignoreConfig']) || (isset($v['ignoreConfig']) && !$v['ignoreConfig']))) {
-                //                    foreach ($v['items'] as $key => $item) {
-                //                        if (isset($find['items'][$item['name']])) {
-                //                            $v['items'][$key] = array_merge($find['items'][$item['name']], $item);
-                //                        } else {
-                //                            unset($v['items'][$key]);
-                //                        }
-                //                    }
-                //                    foreach ($find['items'] as $key => $item) {
-                //                        $item['name'] = $key;
-                //                        $_item = false;
-                //                        foreach ($v['items'] as $val) {
-                //                            if ($val['name'] == $key) {
-                //                                $_item = true;
-                //                            }
-                //                        }
-                //                        if (!$_item) {
-                //                            $v['items'][] = $item;
-                //                        }
-                //                    }
-                //                }
-                $v['items'] = self::element($v['type'])
-                    ->fillData($v['items'], $find['items'], $find);
-            } elseif (!empty($find['items'])) {
-                $v['items'] = self::element($v['type'])
-                    ->fillData($find['items'], $find['items'], $find);
+                if (!empty($v['items'])) {
+                    $v['items'] = self::element($v['type'])
+                        ->fillData($v['items'], $find['items'], $find);
+                } elseif (!empty($find['items'])) {
+                    $v['items'] = self::element($v['type'])
+                        ->fillData($find['items'], $find['items'], $find);
+                }
             }
         }
 
@@ -412,23 +424,26 @@ class Elements extends Core
      * @param array $data
      * @return string
      */
-    protected static function renderData($data = [])
+    public static function renderData($data = [])
     {
         $out = '';
 
-        foreach ($data as $k => $v) {
-            $_v = $v;
-            if (!empty($v['items']) && self::element($v['type'])) {
-                $v['items'] = self::element($v['type'])
-                    ->renderData($v['items']);
-            } else {
-                unset($v['items']);
+        if (is_array($data)) {
+            foreach ($data as $k => $v) {
+                $_v = $v;
+                if (!empty($v['items']) && self::element($v['type'])) {
+                    $v['items'] = self::element($v['type'])
+                        ->renderData($v['items']);
+                } else {
+                    unset($v['items']);
+                }
+
+                $out .= self::renderFormElement($v, $_v);
             }
-
-            $out .= self::renderFormElement($v, $_v);
+            unset($data);
+        } else {
+            $out = $data;
         }
-
-        unset($data);
 
         return $out;
     }
@@ -493,6 +508,23 @@ class Elements extends Core
     protected static function uniqid()
     {
         return 'id' . time() . rand(0, 99999);
+    }
+
+    /**
+     * @param string $dir
+     * @return string
+     */
+    protected function path($dir = '')
+    {
+        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__) . '/elements/' . strtolower($this->classBasename()) . '/' . $dir);
+    }
+
+    /**
+     * @return string
+     */
+    protected function classBasename()
+    {
+        return basename(str_replace('\\', '/', static::class));
     }
 
     /**

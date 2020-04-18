@@ -1,8 +1,6 @@
 <?php
 
-namespace Multifields\Elements;
-
-use Multifields\Base\Core;
+namespace Multifields\Elements\Table;
 
 class Table extends \Multifields\Base\Elements
 {
@@ -18,71 +16,51 @@ class Table extends \Multifields\Base\Elements
 
     protected $types = [
         'separator' => '',
-        'text' => 'Text',
-        'number' => 'Number',
-        'date' => 'Date',
-        'image' => 'Image',
-        'file' => 'File',
+        'text' => '[+lang.type.text+]',
+        'number' => '[+lang.type.number+]',
+        'date' => '[+lang.type.date+]',
+        'image' => '[+lang.type.image+]',
+        'file' => '[+lang.type.file+]',
     ];
 
-    /**
-     * @param array $item
-     * @param array $config
-     * @param array $find
-     */
-    protected function preFillData(&$item = [], $config = [], $find = [])
-    {
-        if (!empty($item['columns'])) {
-            foreach ($item['columns'] as $k => &$v) {
-                if (isset($find['columns'][$v['name']]['attr'])) {
-                    $v['attr'] = $find['columns'][$v['name']]['attr'];
-                }
-            }
-        }
-
-        if (!empty($item['items'])) {
-            foreach ($item['items'] as $k => &$v) {
-                if (!empty($v['items'])) {
-                    foreach ($v['items'] as $key => &$val) {
-                        if (isset($find['columns'][$val['name']]['attr'])) {
-                            $val['attr'] = $find['columns'][$val['name']]['attr'];
-                        } elseif (isset($find['columns'])) {
-                            if ($arr = reset(array_slice($find['columns'], $key, 1))) {
-                                if (!empty($arr['attr'])) {
-                                    $val['attr'] = $arr['attr'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    protected $template = '
+        <div id="[+id+]" class="mf-table row [+class+]" data-type="table" data-name="[+name+]" [+attr+]>
+            [+value+]
+            [+actions+]
+            <div class="row m-0 col-12 p-0">
+                <div class="mf-column-menu contextMenu">
+                    <div onclick="Multifields.elements.table.addColumn(event);" data-action="addColumn">
+                        <i class="fa fa-plus fa-fw"></i> [+lang.add_column+]
+                    </div>
+                    <div onclick="Multifields.elements.table.delColumn(event);" data-action="delColumn">
+                        <i class="fa fa-minus fa-fw"></i> [+lang.del_column+]
+                    </div>
+                    [+types+]
+                </div>
+            </div>
+            <div class="mf-items mf-items-table row [+items.class+]">
+                <div class="position-relative w-100 m-0 p-0">
+                    <div class="col-resize"></div>
+                    <table class="table table-sm data table-hover table-bordered mb-3">
+                        [+items+]
+                    </table>
+                </div>
+            </div>
+        </div>';
 
     /**
      * @param $params
      */
     protected function getValue(&$params)
     {
-        if (isset($params['value']) && !empty($params['value'])) {
-            $type = 'text';
-
-            if (isset($params['value']) && $params['value'] === false) {
-                $type = 'hidden';
-            } else {
-                if (is_bool($params['value'])) {
-                    $params['value'] = '';
-                }
-                if (isset($params['value']) && $params['value'] !== '') {
-                    $params['value'] = stripcslashes($params['value']);
-                } else {
-                    $params['value'] = '';
-                }
+        if (isset($params['value']) && $params['value'] !== false) {
+            if (is_bool($params['value'])) {
+                $params['value'] = '';
             }
 
             $params['value'] = '
-            <div class="mf-value mf-' . $type . '">
-                <input type="' . $type . '" class="form-control form-control-sm" name="' . $params['id'] . '_value" value="' . $params['value'] . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
+            <div class="mf-value mf-text">
+                <input type="text" class="form-control form-control-sm" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
             </div>';
         }
     }
@@ -90,178 +68,74 @@ class Table extends \Multifields\Base\Elements
     /**
      * @param $params
      */
-    protected function columns(&$params)
+    protected function menu(&$params)
     {
-        if (!empty($params['multi'])) {
-            $params['class'] .= ' mf-table-multi';
+        if (empty($params['types'])) {
+            $params['types'] = $this->types;
         }
 
-        if (!isset($params['columns'])) {
-            $params['columns'] = [];
-        }
-
-        if (!isset($params['types'])) {
-            $params['types'] = [];
-        }
-
-        if (!empty($params['multi'])) {
-            if (empty($params['types'])) {
-                $params['types'] = $this->types;
-            }
-
-            foreach ($params['types'] as $k => &$v) {
-                if (stripos($k, 'separator') !== false) {
-                    $v = '<div class="separator cntxMnuSeparator"></div>';
-                } else {
-                    $v = '<div onclick="Multifields.elements.table.setType(event, \'' . $k . '\');" data-type="' . $k . '">' . $v . '</div>';
-                }
+        foreach ($params['types'] as $k => &$v) {
+            if (stripos($k, 'separator') !== false) {
+                $v = '<div class="separator cntxMnuSeparator"></div>';
+            } else {
+                $v = '<div onclick="Multifields.elements.table.setType(event, \'' . $k . '\');" data-type="' . $k . '">' . $v . '</div>';
             }
         }
 
         $params['types'] = implode('', $params['types']);
-
-        $columns = '';
-        $i = 0;
-        foreach ($params['columns'] as $k => &$v) {
-            $id = parent::uniqid();
-
-            if (!isset($v['name'])) {
-                $v['name'] = $k;
-            }
-
-            if (!empty($params['multi'])) {
-                $v['name'] = $i;
-            }
-
-            if (isset($v['title']) && $v['value'] == '') {
-                $v['value'] = $v['title'];
-            }
-
-            if (!isset($v['attr'])) {
-                $v['attr'] = '';
-            }
-
-            if ($v['type'] == 'id') {
-                $columns .= parent::element('element')
-                    ->render([
-                        'id' => '',
-                        'tag' => 'div',
-                        'class' => 'col',
-                        'attr' => 'data-type="id" data-name="id" ' . $v['attr'],
-                        'items' => '<input type="text" id="' . $id . '" class="form-control" name="' . $id . '" value="#" readonly>'
-                    ]);
-            } else {
-                $columns .= parent::element('element')
-                    ->render([
-                        'id' => '',
-                        'tag' => 'div',
-                        'class' => 'col',
-                        'attr' => 'data-type="' . $v['type'] . '" data-name="' . $v['name'] . '"',
-                        'items' => (!empty($params['multi']) ? '
-                        <i class="mf-column-settings fas fa-angle-down" onclick="Multifields.elements.table.columnMenu(event, \'' . $params['id'] . '\')"></i>' : '') . '
-                        <input type="text" id="' . $id . '" class="form-control" name="' . $id . '" value="' . $v['value'] . '" onchange="documentDirty=true;">'
-                    ]);
-            }
-            $i++;
-        }
-
-        $params['columns.html'] = $columns ? '<div class="mf-columns row m-0 col-12">' . $columns . '</div>' : '';
     }
 
     /**
      * @param $params
-     * @param $data
      */
-    protected function items(&$params, &$data)
+    protected function thead(&$params)
     {
-        if (empty($params['items'])) {
-            $params['items'] = [
-                'row' => [
-                    'type' => 'row',
-                    'name' => 'row',
-                    'autoincrement' => 'id',
-                    'items' => []
-                ]
-            ];
+        if (empty($params['items']) && !empty($params['thead'])) {
+            $cells = '';
 
-            $i = 0;
-            foreach ($params['columns'] as $k => $v) {
-                $v['title'] = '';
-                $v['value'] = '';
-                if ($v['type'] == 'id') {
-                    $v['value'] = $i + 1;
-                }
-                $params['items']['row']['items'][$k] = $v;
-                $i++;
+            foreach ($params['thead'] as $k => $v) {
+                $type = isset($v['type']) ? $v['type'] : 'text';
+                $v['type'] = isset($v['type']) && $v['type'] == 'id' ? 'id' : 'text';
+                $cells .= parent::element('table:th')
+                    ->render([
+                        '@type' => $type,
+                        'items' => parent::renderFormElement($v)
+                    ]);
             }
-            $params['items'] = parent::renderData($params['items']);
-        }
 
-        //        if (empty($params['items'])) {
-        //            $params['items'] = [
-        //                'row' => [
-        //                    'type' => 'row',
-        //                    'name' => 'row',
-        //                    'autoincrement' => 'id',
-        //                    'items' => []
-        //                ]
-        //            ];
-        //
-        //            $i = 0;
-        //            foreach ($params['columns'] as $k => $v) {
-        //                $v['title'] = '';
-        //                $v['value'] = '';
-        ////                if ($i == 0) {
-        ////                    $v['name'] = 'id';
-        ////                    $v['type'] = 'id';
-        ////                    $v['value'] = $i + 1;
-        ////                    $v['item.attr'] = ' readonly';
-        ////                }
-        //                if ($v['type'] == 'id') {
-        //                    $v['value'] = $i + 1;
-        //                }
-        //                $params['items']['row']['items'][$k] = $v;
-        //                $i++;
-        //            }
-        //            $params['items'] = parent::renderData($params['items']);
-        //        } elseif (is_array($params['items'])) {
-        //            if (!empty($params['columns'])) {
-        //                $i = 1;
-        //                foreach ($params['items'] as &$items) {
-        //                    if (is_array($items['items'])) {
-        //                        $items['type'] = 'row';
-        //                        $items['name'] = 'row';
-        //                        $items['autoincrement'] = 'id';
-        //                        $j = 0;
-        //                        foreach ($items['items'] as $k => &$item) {
-        //                            if ($j == 0) {
-        //                                $item['value'] = $i;
-        //                                $item['type'] = 'text';
-        //                                $item['item.attr'] = ' readonly';
-        //                            } else {
-        //                                $item['type'] = isset($params['columns'][$k]) ? $params['columns'][$k]['type'] : 'text';
-        //                                $item['attr'] = isset($params['columns'][$k]) ? $params['columns'][$k]['attr'] : '';
-        //                            }
-        //                            $j++;
-        //                        }
-        //                        $i++;
-        //                    }
-        //                }
-        //            } else {
-        //                $i = 1;
-        //                foreach ($params['items'] as &$items) {
-        //                    if (!empty($items['autoincrement'])) {
-        //                        foreach ($items['items'] as $k => &$item) {
-        //                            if ($items['autoincrement'] == $item['name']) {
-        //                                $item['value'] = $i;
-        //                            }
-        //                        }
-        //                        $i++;
-        //                    }
-        //                }
-        //            }
-        //            $params['items'] = parent::renderData($params['items']);
-        //        }
+            $params['@items'] .= parent::element('table:head')
+                ->render([
+                    'items' => parent::element('table:row')
+                        ->render([
+                            'items' => $cells
+                        ])
+                ]);
+        }
+    }
+
+    /**
+     * @param $params
+     */
+    protected function tbody(&$params)
+    {
+        if (empty($params['items']) && !empty($params['tbody'])) {
+            $cells = '';
+
+            foreach ($params['tbody'] as $k => $v) {
+                $cells .= parent::element('table:td')
+                    ->render([
+                        'items' => parent::renderFormElement($v)
+                    ]);
+            }
+
+            $params['@items'] .= parent::element('table:body')
+                ->render([
+                    'items' => parent::element('table:row')
+                        ->render([
+                            'items' => $cells
+                        ])
+                ]);
+        }
     }
 
     /**
@@ -271,9 +145,22 @@ class Table extends \Multifields\Base\Elements
      */
     public function render($params = [], $data = [])
     {
+        if (!isset($params['items'])) {
+            $params['items'] = '';
+        }
+
+        $params['@items'] = '';
+
         $this->getValue($params);
-        $this->columns($params);
-        $this->items($params, $data);
+
+        $this->menu($params);
+        $this->thead($params);
+        $this->tbody($params);
+
+        if (empty($params['items']) && !empty($params['@items'])) {
+            $params['items'] = $params['@items'];
+            unset($params['@items']);
+        }
 
         return parent::render($params, $data);
     }

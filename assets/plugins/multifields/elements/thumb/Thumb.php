@@ -1,12 +1,11 @@
 <?php
 
-namespace Multifields\Elements;
+namespace Multifields\Elements\Thumb;
 
 class Thumb extends \Multifields\Base\Elements
 {
     protected $styles = 'view/css/thumb.css';
     protected $scripts = 'view/js/thumb.js';
-    protected $tpl = 'view/thumb.tpl';
 
     protected $actions = [
         'add',
@@ -14,6 +13,15 @@ class Thumb extends \Multifields\Base\Elements
         'del',
         'edit'
     ];
+
+    protected $template = '
+        <div class="mf-thumb row [+class+]" data-type="thumb" data-name="[+name+]" [+attr+]>
+            [+value+]
+            [+actions+]
+            <div class="mf-items row [+items.class+]">
+                [+items+]
+            </div>
+        </div>';
 
     /**
      * @param $params
@@ -80,84 +88,5 @@ class Thumb extends \Multifields\Base\Elements
         }
 
         return $out;
-    }
-
-    /**
-     * @param array $params
-     * @param array $data
-     * @return string
-     */
-    public function render2($params = [], $data = [])
-    {
-        // нет вложенных элементов
-        if (empty($params['items'])) {
-            if (!empty($params['image'])) {
-                $params['attr'] .= ' data-image="' . $params['image'] . '"';
-            }
-
-            if (empty($params['value']) && !empty($data['items'][0]['value'])) {
-                $params['value'] = $data['items'][0]['value'];
-            }
-
-            $params['items'] = $this->renderFormElement([
-                'type' => 'image',
-                'name' => 'image',
-                'class' => $params['class'],
-                'thumb' => $params['name'],
-                'multi' => empty($params['multi']) ? '' : $params['multi'],
-                'value' => $params['value'],
-                'attr' => $params['attr']
-            ]);
-        } // есть элементы
-        elseif (!empty($data) && count($data['items'])) {
-            // больше одного
-            if (count($data['items']) > 1) {
-                $params['class'] .= 'mf-group';
-                if ($thumbs = $this->findImage($data['items'])) {
-                    if (isset($thumbs[$params['name']])) {
-                        $params['attr'] .= 'style="background-image: url(\'/' . $thumbs[$params['name']] . '\');"';
-                        unset($thumbs[$params['name']]);
-                    }
-                    if (!empty($thumbs)) {
-                        foreach ($thumbs as $k => $thumb) {
-                            $params['items'] = str_replace('data-name="' . $k . '"', 'data-name="' . $k . '" style="background-image: url(\'/' . $thumb . '\');"', $params['items']);
-                        }
-                    }
-                }
-            } else {
-                // ставим картинку если тип image
-                if ($data['items'][0]['type'] == 'image' && !empty($data['items'][0]['value'])) {
-                    $params['attr'] .= ' style="background-image: url(\'/' . $data['items'][0]['value'] . '\');"';
-                }
-
-                //                preg_match('/id="(.*?)"/', $params['items'], $matches);
-                //                $id = $matches[1];
-
-                $attr = 'data-thumb="' . $params['name'] . '"';
-                $onchange = 'Multifields.elements.image.events.change(event);';
-                $onclick = '';
-
-                if (!empty($params['multi'])) {
-                    $attr .= ' data-multi="' . $params['multi'] . '"';
-                    $onclick = 'Multifields.elements.image.MultiBrowseServer(event);';
-                }
-
-                if (!empty($params['image'])) {
-                    $attr .= ' data-image="' . $params['image'] . '"';
-                }
-
-                $params['items'] = preg_replace([
-                    '/data-name="/',
-                    '/onchange="(.*?)"/',
-                    '/onclick="(.*?)"/'
-                ], [
-                    $attr . ' data-name="',
-                    'onchange="$1' . $onchange . '"',
-                    'onclick="$1' . $onclick . '"'
-                ], $params['items']);
-            }
-        }
-
-        return parent::render($params, $data);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Multifields\Elements;
+namespace Multifields\Elements\Row;
 
 use Multifields\Base\Core;
 
@@ -8,7 +8,6 @@ class Row extends \Multifields\Base\Elements
 {
     protected $styles = 'view/css/row.css';
     protected $scripts = 'view/js/row.js';
-    protected $tpl = 'view/row.tpl';
 
     protected $actions = [
         'add',
@@ -16,30 +15,29 @@ class Row extends \Multifields\Base\Elements
         'del',
     ];
 
+    protected $template = '
+        <div id="[+id+]" class="mf-row row [+class+]" data-type="row" data-name="[+name+]" [+attr+]>
+            [+templates+]
+            [+value+]
+            [+actions+]
+            <div class="mf-items row [+items.class+]">
+                [+items+]
+            </div>
+        </div>';
+
     /**
      * @param $params
      */
     protected function getValue(&$params)
     {
-        if (isset($params['value']) && !empty($params['value'])) {
-            $type = 'text';
-
-            if (isset($params['value']) && $params['value'] === false) {
-                $type = 'hidden';
-            } else {
-                if (is_bool($params['value'])) {
-                    $params['value'] = '';
-                }
-                if (isset($params['value']) && $params['value'] !== '') {
-                    $params['value'] = stripcslashes($params['value']);
-                } else {
-                    $params['value'] = '';
-                }
+        if (isset($params['value']) && $params['value'] !== false) {
+            if (is_bool($params['value'])) {
+                $params['value'] = '';
             }
 
             $params['value'] = '
-            <div class="mf-value mf-' . $type . '">
-                <input type="' . $type . '" class="form-control form-control-sm" name="' . $params['id'] . '_value" value="' . $params['value'] . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
+            <div class="mf-value mf-text">
+                <input type="text" class="form-control form-control-sm" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
             </div>';
         }
     }

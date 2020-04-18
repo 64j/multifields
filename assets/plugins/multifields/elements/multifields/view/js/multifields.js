@@ -1,5 +1,5 @@
 Multifields.element('multifields', {
-  class: 'Multifields\\Elements\\Multifields',
+  class: 'Multifields\\Elements\\Multifields\\Multifields',
 
   actionAdd: function(e) {
     e.stopPropagation();

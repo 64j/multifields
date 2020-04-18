@@ -1,6 +1,6 @@
 <?php
 
-namespace Multifields\Elements;
+namespace Multifields\Elements\Multifields;
 
 use Multifields\Base\Core;
 

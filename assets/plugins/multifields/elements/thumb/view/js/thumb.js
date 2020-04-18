@@ -93,7 +93,19 @@ Multifields.element('thumb', {
           window.KCFinder = null;
           window.lastFileCtrl = el.id;
           window.SetUrl(files[0]);
+//          let parent = Multifields.el.dataset['multi'] && Multifields.el.parentElement.closest('[data-name="' + Multifields.el.dataset['multi'] + '"]') || null,
+//              clone;
           for (let k in files) {
+//            if (parent && files.hasOwnProperty(k) && k !== '0') {
+//              clone = Multifields.clone(true, parent);
+//              parent.insertAdjacentElement('afterend', clone);
+//              parent = clone;
+//              el = parent.querySelector('[data-name="' + el.parentElement.dataset['name'] + '"] > input');
+//              if (el) {
+//                window.lastFileCtrl = el.id;
+//                window.SetUrl(files[k]);
+//              }
+//            }
             if (files.hasOwnProperty(k) && k !== '0') {
               el = Multifields.clone();
               Multifields.el.insertAdjacentElement('afterend', el);

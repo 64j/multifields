@@ -138,17 +138,20 @@
             if (item.type) {
               if (els[i].querySelector('.mf-items')) {
                 el = els[i].querySelector(':scope > .mf-value input');
-                item.value = el && el.value || '';
               } else {
                 el = els[i].querySelector('[name]');
-                item.value = el && (el.value || el.innerHTML || '');
               }
             } else {
               el = els[i].querySelector(':scope > input');
-              item.value = el && el.value || '';
             }
-            if (!item.value) {
-              delete item.value;
+            item.value = false;
+            if (el) {
+              if (!el.hidden) {
+                item.value = el.value || el.innerHTML || '';
+              }
+              if (el.placeholder !== '') {
+                item.placeholder = el.placeholder;
+              }
             }
             item.items = els[i].querySelector('.mf-items');
             if (item.items && item.items.children.length) {
@@ -222,24 +225,8 @@
     draggable: function(els) {
       if (els.length) {
         els.forEach(function(el) {
-          if (el.classList.contains('mf-items-table')) {
-            Sortable.create(el, {
-              animation: 0,
-              draggable: '.mf-draggable',
-              dragClass: 'mf-drag',
-              ghostClass: 'mf-active',
-              selectedClass: 'mf-selected',
-              handle: '.mf-actions-move',
-              tableDisplay: parseInt(el.dataset['display']),
-              onEnd: function(e) {
-                e.item.parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
-                  let el = item.querySelector('[data-type="' + item.dataset['autoincrement'] + '"] > input');
-                  if (el) {
-                    el.value = i + 1;
-                  }
-                });
-              }
-            });
+          if (Multifields.elements[el.parentElement.dataset.type] && typeof Multifields.elements[el.parentElement.dataset.type]['draggable'] === 'function') {
+            Multifields.elements[el.parentElement.dataset.type]['draggable'](el);
           } else {
             Sortable.create(el, {
               animation: 50,
@@ -249,6 +236,25 @@
               selectedClass: 'mf-selected',
               handle: '.mf-actions-move'
             });
+            if (el.classList.contains('mf-items-table')) {
+              Sortable.create(el, {
+                animation: 0,
+                draggable: '.mf-draggable',
+                dragClass: 'mf-drag',
+                ghostClass: 'mf-active',
+                selectedClass: 'mf-selected',
+                handle: '.mf-actions-move',
+                tableDisplay: parseInt(el.dataset['display']),
+                onEnd: function(e) {
+                  e.item.parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+                    let el = item.querySelector('[data-type="' + item.dataset['autoincrement'] + '"] > input');
+                    if (el) {
+                      el.value = i + 1;
+                    }
+                  });
+                }
+              });
+            }
           }
         });
       }

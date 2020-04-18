@@ -1,43 +1,90 @@
 Multifields.element('table', {
-  class: 'Multifields\\Elements\\Table',
+  class: 'Multifields\\Elements\\Table\\Table',
   el: null,
   menu: null,
   target: null,
 
+  draggable: function(el) {
+    let tbody = el.querySelector('tbody');
+    if (tbody) {
+      Sortable.create(tbody, {
+        animation: 0,
+        draggable: 'tr',
+        dragClass: 'mf-drag',
+        ghostClass: 'mf-active',
+        selectedClass: 'mf-selected',
+        handle: '.mf-actions-move',
+        forceFallback: false,
+        onEnd: Multifields.elements.table.setIndexes
+      });
+    }
+  },
+
   build: function(el, item) {
-    item.columns = el.querySelector('.mf-columns');
-    if (item.columns && item.columns.children.length) {
-      item.columns = Multifields.elements.table.buildColumns(item.columns.children);
-    } else {
-      delete item.columns;
+    item.items = {};
+    let els = el.querySelector('.table thead');
+    if (els && els.rows) {
+      item.items['thead'] = {
+        type: 'table:head',
+        items: Multifields.elements.table.rows(els.rows, true)
+      };
+    }
+    els = el.querySelector('.table tbody');
+    if (els && els.rows) {
+      item.items['tbody'] = {
+        type: 'table:body',
+        items: Multifields.elements.table.rows(els.rows, false)
+      };
     }
     return item;
   },
 
-  buildColumns: function(els) {
+  rows: function(rows, thead) {
     let data = [];
-    if (els) {
-      for (let i = 0; i < els.length; i++) {
-        if (els[i].tagName === 'DIV' && els[i].dataset['type']) {
-          let item = Object.create(null),
-              el;
-          item.name = els[i].dataset['name'];
-          if (item.name[0] !== '!') {
-            item.type = els[i].dataset['type'];
-            el = els[i].querySelector('[name]');
-            item.value = el && (el.value || el.innerHTML || '');
-          }
-          data.push(item);
+    [...rows].map(function(row, rowIndex) {
+      data[rowIndex] = {
+        type: 'table:row',
+        items: []
+      };
+      [...row.cells].map(function(cell) {
+        let el = cell.querySelector('.col');
+        if (el && el.dataset.type) {
+          data[rowIndex]['items'].push({
+            type: thead ? 'table:th' : 'table:td',
+            items: [
+              {
+                type: thead ? cell.dataset.type : el.dataset.type,
+                name: el.dataset.name,
+                value: el.querySelector('input').value
+              }
+            ]
+          });
         }
-      }
-    }
+      });
+    });
     return data;
   },
 
-  columnMenu: function(e, id) {
+  actionAddRow: function(e) {
+    let el = e.target.closest('tr'), clone;
+    clone = Multifields.clone(true, el);
+    el.after(clone);
+    Multifields.elements.table.setIndexes();
+  },
+
+  actionDelRow: function(e) {
+    let el = e.target.closest('tr');
+    if (el.parentElement.rows.length === 1) {
+      Multifields.elements.table.actionAddRow(e);
+    }
+    el.parentElement.removeChild(el);
+    Multifields.elements.table.setIndexes();
+  },
+
+  columnMenu: function(e) {
     e.stopPropagation();
-    Multifields.elements.table.el = Multifields.container.getElementById(id);
-    Multifields.elements.table.menu = Multifields.elements.table.el.querySelector('#' + id + ' .mf-column-menu');
+    Multifields.elements.table.el = e.target.closest('.mf-table');
+    Multifields.elements.table.menu = Multifields.elements.table.el.querySelector('.mf-column-menu');
     if (Multifields.elements.table.menu) {
       Multifields.elements.table.menu.querySelectorAll('.selected').forEach(function(el) {
         el.classList.remove('selected');
@@ -49,6 +96,19 @@ Multifields.element('table', {
         Multifields.elements.table.menu.classList.add('open');
       }
       Multifields.elements.table.target = e.target.parentElement;
+      if (Multifields.elements.table.target.dataset['type'] === 'id') {
+        [...Multifields.elements.table.menu.children].map(function(el) {
+          if (el.dataset['action'] !== 'addColumn') {
+            el.style.display = 'none';
+          }
+        });
+      } else {
+        [...Multifields.elements.table.menu.children].map(function(el) {
+          if (el.dataset['action'] !== 'addColumn') {
+            el.style.display = 'block';
+          }
+        });
+      }
       let el = Multifields.elements.table.menu.querySelector('[data-type="' + Multifields.elements.table.target.dataset['type'] + '"]');
       if (el) {
         el.classList.add('selected');
@@ -57,81 +117,46 @@ Multifields.element('table', {
   },
 
   addColumn: function(e) {
-    let el, els, clone;
-    let index = [...Multifields.elements.table.target.parentElement.children].findIndex(function(item) {
-      return item === Multifields.elements.table.target;
+    let tbody = Multifields.el.querySelector('tbody');
+    Multifields.elements.table.target.after(Multifields.clone(true, Multifields.elements.table.target));
+    [...tbody.rows].map(function(row) {
+      row.cells[Multifields.elements.table.target.cellIndex].after(Multifields.clone(true, row.cells[Multifields.elements.table.target.cellIndex]));
     });
-    clone = Multifields.clone(true, Multifields.elements.table.target);
-    Multifields.elements.table.target.insertAdjacentElement('afterend', clone);
-    clone.querySelector('input').focus();
-    els = Multifields.el.querySelector('.mf-items').children;
-    for (let i = 0; i < els.length; i++) {
-      el = els[i].querySelector('.mf-items').children[index];
-      el.insertAdjacentElement('afterend', Multifields.clone(true, el));
-    }
-    Multifields.elements.table.setIndexes();
   },
 
   delColumn: function(e) {
-    let el, els, cols;
-    els = Multifields.elements.table.target.parentElement.children;
-    let index = [...Multifields.elements.table.target.parentElement.children].findIndex(function(item) {
-      return item === Multifields.elements.table.target;
-    });
-    if (els.length > 2) {
-      els = Multifields.el.querySelector('.mf-items').children;
-      for (let i = 0; i < els.length; i++) {
-        el = els[i].querySelector('.mf-items').children[index];
-        el.parentElement.removeChild(el);
-      }
-      Multifields.elements.table.target.parentElement.removeChild(Multifields.elements.table.target);
-    } else {
-      for (let i = 1; i < els.length; i++) {
-        els[i].querySelector('input').value = '';
-      }
-      els = Multifields.el.querySelector('.mf-items').children;
-      for (let i = 0; i < els.length; i++) {
-        cols = els[i].querySelector('.mf-items').children;
-        for (let j = 1; j < cols.length; j++) {
-          cols[j].querySelector('input').value = '';
-        }
-      }
+    if (Multifields.elements.table.target.parentElement.cells.length < 5) {
+      Multifields.elements.table.addColumn();
     }
-    Multifields.elements.table.setIndexes();
+    Multifields.el.querySelectorAll('tbody tr').forEach(function(row) {
+      row.cells[Multifields.elements.table.target.cellIndex].parentElement.removeChild(row.cells[Multifields.elements.table.target.cellIndex]);
+    });
+    Multifields.elements.table.target.parentElement.removeChild(Multifields.elements.table.target);
   },
 
   setType: function(e, type) {
-    Multifields.elements.table.target.dataset['type'] = type;
-    let index = [...Multifields.elements.table.target.parentElement.children].findIndex(function(item) {
-          return item === Multifields.elements.table.target;
-        }),
-        id = Multifields.uniqid();
-
     if (type === 'number' && !confirm('If you select the "Number" type, you may lose text data.')) {
       return;
     }
+
+    let id = Multifields.uniqid();
 
     Multifields.getAction({
       action: 'getElementByType',
       class: this.class,
       type: type,
-      name: Multifields.elements.table.target.dataset['name'],
+      name: Multifields.elements.table.target.querySelector('.col').dataset['name'],
       id: id
     }, function(data) {
-      let els = Multifields.elements.table.el.querySelector('.mf-items').children;
-
-      for (let i = 0; i < els.length; i++) {
-
-        let fragment = document.createElement('div'),
-            el = els[i].querySelector('.mf-items').children[index],
+      Multifields.elements.table.target.dataset['type'] = type;
+      Multifields.elements.table.el.querySelectorAll('tbody tr').forEach(function(row, i) {
+        let _input = row.cells[Multifields.elements.table.target.cellIndex].querySelector('input'),
             input;
-
-        fragment.innerHTML = data.html.replace(new RegExp(id, 'g'), id + '_' + i);
-        input = fragment.children[0].querySelector('input');
-        input.value = el.querySelector('input').value;
-
+        row.cells[Multifields.elements.table.target.cellIndex].innerHTML = data.html.replace(new RegExp(id, 'g'), id + '_' + i);
+        input = row.cells[Multifields.elements.table.target.cellIndex].querySelector('input');
+        input.value = _input.value;
         if (type === 'date') {
-          let format = input.dataset['format'];
+          format = input.dataset['format'];
           new DatePicker(input, {
             yearOffset: dpOffset,
             format: format !== null ? format : dpformat,
@@ -140,28 +165,13 @@ Multifields.element('table', {
             startDay: dpstartDay
           });
         }
-
-        el.parentElement.replaceChild(fragment.children[0], el);
-      }
+      });
     });
   },
 
   setIndexes: function() {
-    let els, row;
-    els = Multifields.el.querySelector('.mf-columns');
-    if (els) {
-      for (let i = 1; i < els.children.length; i++) {
-        els.children[i].dataset['name'] = i;
-      }
-    }
-    els = Multifields.el.querySelector('.mf-items');
-    if (els) {
-      for (let i = 0; i < els.children.length; i++) {
-        row = els.children[i].querySelector('.mf-items');
-        for (let j = 1; j < row.children.length; j++) {
-          row.children[j].dataset['name'] = j;
-        }
-      }
-    }
+    Multifields.el.querySelectorAll('tbody [data-type="id"]').forEach(function(cell, i) {
+      cell.querySelector('input').value = (i + 1).toString();
+    });
   }
 });

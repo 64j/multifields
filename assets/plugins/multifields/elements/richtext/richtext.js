@@ -1,5 +1,5 @@
 Multifields.element('richtext', {
-  class: 'Multifields\\Elements\\Richtext',
+  class: 'Multifields\\Elements\\Richtext\\Richtext',
   popup: null,
 
   actionDisplay: function() {

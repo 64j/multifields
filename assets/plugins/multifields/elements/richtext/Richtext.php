@@ -1,6 +1,6 @@
 <?php
 
-namespace Multifields\Elements;
+namespace Multifields\Elements\Richtext;
 
 class Richtext extends \Multifields\Base\Elements
 {
@@ -13,7 +13,7 @@ class Richtext extends \Multifields\Base\Elements
     public function actionDisplay()
     {
         $evo = evolutionCMS();
-        $this->_template = file_get_contents(__DIR__ . '/editor.tpl');
+        $this->template = file_get_contents(__DIR__ . '/editor.tpl');
 
         $which_editor = $evo->getConfig('which_editor');
 

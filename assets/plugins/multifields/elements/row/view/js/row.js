@@ -1,5 +1,5 @@
 Multifields.element('row', {
-  class: 'Multifields\\Elements\\Row',
+  class: 'Multifields\\Elements\\Row\\Row',
   index: 1,
 
   actionAdd: function(e) {
@@ -84,17 +84,5 @@ Multifields.element('row', {
       item.autoincrement = el.dataset['autoincrement'];
     }
     return item;
-  },
-
-  __buildItems: function(el, item, index) {
-    if (el.dataset['autoincrement']) {
-      for (let i = 0; i < item.items.children.length; i++) {
-        if (item.items.children[i].dataset['name'] === el.dataset['autoincrement']) {
-          item.items.children[i].querySelector('input').value = index + 1;
-          break;
-        }
-      }
-    }
-    return Multifields.buildItems(item.items.children);
   }
 });
