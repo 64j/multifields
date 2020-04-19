@@ -7,45 +7,128 @@ return [
             'type' => 'table',
             'placeholder' => 'Table title',
             'value' => true,
-            'thead' => [
-                [
-                    'type' => 'id',
-                    'value' => 'id'
+            'items' => [
+                'thead' => [
+                    'type' => 'table:head',
+                    'items' => [
+                        'row' => [
+                            'type' => 'table:row',
+                            'items' => [
+                                [
+                                    'type' => 'table:th',
+                                    'items' => [
+                                        [
+                                            'type' => 'id',
+                                            'value' => 'id'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<th>[+mf.items+]</th>'
+                                ],
+                                [
+                                    'type' => 'table:th',
+                                    'items' => [
+                                        [
+                                            'type' => 'text',
+                                            'value' => 'Title'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<th>[+mf.items+]</th>'
+                                ],
+                                [
+                                    'type' => 'table:th',
+                                    'items' => [
+                                        [
+                                            'type' => 'text',
+                                            'value' => 'Text'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<th>[+mf.items+]</th>'
+                                ],
+                                [
+                                    'type' => 'table:th',
+                                    'items' => [
+                                        [
+                                            'type' => 'date',
+                                            'value' => 'Date'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<th>[+mf.items+]</th>'
+                                ],
+                                [
+                                    'type' => 'table:th',
+                                    'items' => [
+                                        [
+                                            'type' => 'image',
+                                            'value' => 'Image'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<th>[+mf.items+]</th>'
+                                ]
+                            ],
+                            'tpl' => '@CODE:<tr>[+mf.items+]</tr>'
+                        ]
+                    ],
+                    'tpl' => '@CODE:<thead class="thead-dark">[+mf.items+]</thead>'
                 ],
-                [
-                    'type' => 'text',
-                    'value' => 'Title'
-                ],
-                [
-                    'type' => 'text',
-                    'value' => 'Text'
-                ],
-                [
-                    'type' => 'date',
-                    'value' => 'Date'
-                ],
-                [
-                    'type' => 'image',
-                    'value' => 'Image'
+                'tbody' => [
+                    'type' => 'table:body',
+                    'items' => [
+                        'row' => [
+                            'type' => 'table:row',
+                            'items' => [
+                                [
+                                    'type' => 'table:td',
+                                    'items' => [
+                                        [
+                                            'type' => 'id'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<td>[+mf.items+]</td>'
+                                ],
+                                [
+                                    'type' => 'table:td',
+                                    'items' => [
+                                        [
+                                            'type' => 'text'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<td>[+mf.items+]</td>'
+                                ],
+                                [
+                                    'type' => 'table:td',
+                                    'items' => [
+                                        [
+                                            'type' => 'text'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<td>[+mf.items+]</td>'
+                                ],
+                                [
+                                    'type' => 'table:td',
+                                    'items' => [
+                                        [
+                                            'type' => 'date'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<td>[+mf.items+]</td>'
+                                ],
+                                [
+                                    'type' => 'table:td',
+                                    'items' => [
+                                        [
+                                            'type' => 'image'
+                                        ]
+                                    ],
+                                    'tpl' => '@CODE:<td>[+mf.items+]</td>'
+                                ]
+                            ],
+                            'tpl' => '@CODE:<tr>[+mf.items+]</tr>'
+                        ]
+                    ],
+                    'tpl' => '@CODE:<tbody>[+mf.items+]</tbody>'
                 ]
             ],
-            'tbody' => [
-                [
-                    'type' => 'id'
-                ],
-                [
-                    'type' => 'text'
-                ],
-                [
-                    'type' => 'text'
-                ],
-                [
-                    'type' => 'date'
-                ],
-                [
-                    'type' => 'image'
-                ]
-            ]
+            'tpl' => '@CODE:<table class="table table-sm table-hover table-bordered">[+mf.items+]</table>'
         ]
     ]
 ];
