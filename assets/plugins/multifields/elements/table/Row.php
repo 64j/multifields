@@ -5,7 +5,7 @@ namespace Multifields\Elements\Table;
 class Row extends \Multifields\Base\Elements
 {
     protected $template = '
-        <tr>
+        <tr data-name="[+name+]">
             <th>
                 <div class="mf-actions">
                     <i class="mf-actions-move fa"></i>

@@ -68,6 +68,7 @@ class Core
         ]);
 
         self::setConfig(null);
+        self::setData(null);
 
         if (empty(self::getConfig('templates'))) {
             if (self::getConfig()) {
@@ -82,7 +83,7 @@ class Core
 
             if (!empty(self::getData())) {
                 $values = htmlspecialchars(json_encode(self::getData(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
-                $out = Elements::fillData(self::getData(), self::getConfig('templates'));
+                self::setData(Elements::fillData(self::getData(), self::getConfig('templates')));
             }
 
             $out = Elements::renderData([
@@ -92,7 +93,7 @@ class Core
                     'form.id' => self::getParams('storage') == 'files' ? '-mf-data[' . self::getParams('id') . '__' . self::getParams('tv')['id'] . ']' : self::getParams('tv')['id'],
                     'tv.id' => self::getParams('tv')['id'],
                     'tv.name' => self::getParams('tv')['name'],
-                    'items' => $out,
+                    'items' => self::getData(),
                     'values' => $values
                 ]
             ]);
@@ -236,20 +237,29 @@ class Core
     }
 
     /**
+     * @param array $data
+     * @return array
+     */
+    public static function setData($data = [])
+    {
+        return self::$data = $data;
+    }
+
+    /**
      * @return array
      */
     public static function getData()
     {
-        self::$data = [];
+        if (empty(self::$data)) {
+            switch (self::getParams('storage')) {
+                case 'files':
+                    self::$data = self::fileData();
+                    break;
 
-        switch (self::getParams('storage')) {
-            case 'files':
-                self::$data = self::fileData();
-                break;
-
-            default:
-                self::$data = !empty(self::getParams('tv')['value']) ? json_decode(self::getParams('tv')['value'], true) : self::getConfig('items');
-                break;
+                default:
+                    self::$data = !empty(self::getParams('tv')['value']) ? json_decode(self::getParams('tv')['value'], true) : self::getConfig('items');
+                    break;
+            }
         }
 
         return self::$data;

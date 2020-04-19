@@ -44,6 +44,7 @@ Multifields.element('table', {
     [...rows].map(function(row, rowIndex) {
       data[rowIndex] = {
         type: 'table:row',
+        name: row.dataset.name,
         items: []
       };
       [...row.cells].map(function(cell) {

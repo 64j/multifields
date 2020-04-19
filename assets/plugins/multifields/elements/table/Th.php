@@ -5,7 +5,7 @@ namespace Multifields\Elements\Table;
 class Th extends \Multifields\Base\Elements
 {
     protected $template = '
-        <th data-type="[+@type+]">
+        <th data-type="[+@type+]" data-name="[+name+]">
             <i class="mf-column-settings fas fa-angle-down" onclick="Multifields.elements.table.columnMenu(event)"></i>
             [+items+]
         </th>';
@@ -15,8 +15,9 @@ class Th extends \Multifields\Base\Elements
         $item['@type'] = '';
         if (!empty($item['items'])) {
             foreach ($item['items'] as $k => &$v) {
-                if (isset($v['type'])) {
-                    $item['@type'] = $v['type'];
+                $type = isset($v['type']) ? $v['type'] : (isset($find['items'][$k]['type']) ? $find['items'][$k]['type'] : null);
+                if (!empty($type)) {
+                    $item['@type'] = $type;
                     if ($v['type'] != 'id') {
                         $v['type'] = 'text';
                     }

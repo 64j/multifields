@@ -193,7 +193,7 @@ class Elements
         $name = null;
 
         if (isset($className)) {
-            list($className, $name) = explode(':', $className);
+            list($className, $name) = explode(':', $className . ':');
             if (empty($name)) {
                 $name = $className;
             }
@@ -344,11 +344,14 @@ class Elements
     {
         if (is_array($data)) {
             foreach ($data as $k => &$v) {
-                $find = self::findElements($v['name'], $config);
-                $v = array_merge($find, $v);
-
                 if (!isset($v['name'])) {
                     $v['name'] = $k;
+                }
+
+                $find = self::findElements($v['name'], $config);
+
+                if (!empty($find)) {
+                    $v = array_replace($find, $v);
                 }
 
                 if (empty($v['type'])) {
@@ -551,5 +554,36 @@ class Elements
     protected function preFillData(&$item = [], $config = [], $find = [])
     {
 
+    }
+
+    /**
+     * @param null $str
+     * @param null $str2
+     * @param bool $exit
+     */
+    protected function dd($str = null, $str2 = null, $exit = false)
+    {
+        $class = 'col-6';
+
+        if ($str == null || $str2 == null) {
+            //$class = 'col-xs-12';
+        }
+        print '<div class="row">';
+        print '<div class="' . $class . '">';
+        print '<pre class="alert alert-info">';
+        print_r($str);
+        print '</pre>';
+        print '</div>';
+
+        print '<div class="' . $class . '">';
+        print '<pre class="alert alert-warning">';
+        print_r($str2);
+        print '</pre>';
+        print '</div>';
+
+        print '</div>';
+        if ($exit) {
+            exit;
+        }
     }
 }

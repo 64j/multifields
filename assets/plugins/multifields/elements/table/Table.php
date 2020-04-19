@@ -86,59 +86,6 @@ class Table extends \Multifields\Base\Elements
     }
 
     /**
-     * @param $params
-     */
-    protected function thead(&$params)
-    {
-        if (empty($params['items']) && !empty($params['thead'])) {
-            $cells = '';
-
-            foreach ($params['thead'] as $k => $v) {
-                $type = isset($v['type']) ? $v['type'] : 'text';
-                $v['type'] = isset($v['type']) && $v['type'] == 'id' ? 'id' : 'text';
-                $cells .= parent::element('table:th')
-                    ->render([
-                        '@type' => $type,
-                        'items' => parent::renderFormElement($v)
-                    ]);
-            }
-
-            $params['@items'] .= parent::element('table:head')
-                ->render([
-                    'items' => parent::element('table:row')
-                        ->render([
-                            'items' => $cells
-                        ])
-                ]);
-        }
-    }
-
-    /**
-     * @param $params
-     */
-    protected function tbody(&$params)
-    {
-        if (empty($params['items']) && !empty($params['tbody'])) {
-            $cells = '';
-
-            foreach ($params['tbody'] as $k => $v) {
-                $cells .= parent::element('table:td')
-                    ->render([
-                        'items' => parent::renderFormElement($v)
-                    ]);
-            }
-
-            $params['@items'] .= parent::element('table:body')
-                ->render([
-                    'items' => parent::element('table:row')
-                        ->render([
-                            'items' => $cells
-                        ])
-                ]);
-        }
-    }
-
-    /**
      * @param array $params
      * @param array $data
      * @return string
@@ -149,18 +96,8 @@ class Table extends \Multifields\Base\Elements
             $params['items'] = '';
         }
 
-        $params['@items'] = '';
-
         $this->getValue($params);
-
         $this->menu($params);
-        $this->thead($params);
-        $this->tbody($params);
-
-        if (empty($params['items']) && !empty($params['@items'])) {
-            $params['items'] = $params['@items'];
-            unset($params['@items']);
-        }
 
         return parent::render($params, $data);
     }

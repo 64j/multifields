@@ -36,9 +36,7 @@
 .multifields .mf-table .mf-table-head { background-color: #f2f2f2 }
 /* table */
 .multifields .mf-table > .mf-items .table { /*table-layout: fixed*/ }
-.multifields .mf-table > .mf-items .table th, .multifields .mf-table > .mf-items .table td { padding: 0; }
-/*.multifields .mf-table > .mf-items .table tr > td:first-child { padding-left: 1rem; }
-.multifields .mf-table > .mf-items .table tr > td:last-child { padding-right: 1rem; }*/
+.multifields .mf-table > .mf-items .table th, .multifields .mf-table > .mf-items .table td { padding: 0; height: 1.75rem; }
 .multifields .mf-table > .mf-items .table thead, .multifields .mf-table > .mf-items .table th:first-child, .multifields .mf-table > .mf-items .table th:last-child, .multifields .mf-table > .mf-items .table td:first-child, .multifields .mf-table > .mf-items .table td:last-child  { background-color: #f2f2f2; }
 .multifields .mf-table > .mf-items .table th:first-child, .multifields .mf-table > .mf-items .table th:last-child, .multifields .mf-table > .mf-items .table td:first-child, .multifields .mf-table > .mf-items .table td:last-child { width: 1.1rem }
 .multifields .mf-table > .mf-items .table th[data-type="id"] { width: 2.5rem }
