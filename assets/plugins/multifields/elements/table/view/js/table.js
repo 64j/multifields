@@ -171,7 +171,7 @@ Multifields.element('table', {
   },
 
   setIndexes: function() {
-    Multifields.el.querySelectorAll('tbody [data-type="id"]').forEach(function(cell, i) {
+    Multifields.el.querySelectorAll('td[data-type="id"]').forEach(function(cell, i) {
       cell.querySelector('input').value = (i + 1).toString();
     });
   }

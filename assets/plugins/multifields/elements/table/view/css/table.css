@@ -39,7 +39,7 @@
 .multifields .mf-table > .mf-items .table th, .multifields .mf-table > .mf-items .table td { padding: 0; height: 1.75rem; }
 .multifields .mf-table > .mf-items .table thead, .multifields .mf-table > .mf-items .table th:first-child, .multifields .mf-table > .mf-items .table th:last-child, .multifields .mf-table > .mf-items .table td:first-child, .multifields .mf-table > .mf-items .table td:last-child  { background-color: #f2f2f2; }
 .multifields .mf-table > .mf-items .table th:first-child, .multifields .mf-table > .mf-items .table th:last-child, .multifields .mf-table > .mf-items .table td:first-child, .multifields .mf-table > .mf-items .table td:last-child { width: 1.1rem }
-.multifields .mf-table > .mf-items .table th[data-type="id"] { width: 2.5rem }
+.multifields .mf-table > .mf-items .table th[data-type="id"], .multifields .mf-table > .mf-items .table td[data-type="id"] { width: 2.5rem }
 .multifields .mf-table > .mf-items .table thead th, .multifields .mf-table > .mf-items .table thead td { border-top-color: inherit }
 .multifields .mf-table > .mf-items .table .mf-table-row th, .multifields .mf-table > .mf-items .table .mf-table-row td { padding: 0 !important; border-color: transparent; }
 .multifields .mf-table > .mf-items .table thead .mf-actions { display: none }

@@ -351,7 +351,7 @@ class Elements
                 $find = self::findElements($v['name'], $config);
 
                 if (!empty($find)) {
-                    $v = array_replace($find, $v);
+                    $v = array_merge($find, $v);
                 }
 
                 if (empty($v['type'])) {

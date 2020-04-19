@@ -58,8 +58,6 @@ class Core
     {
         global $ResourceManagerLoaded;
 
-        $out = '';
-
         $tmp_ResourceManagerLoaded = $ResourceManagerLoaded;
 
         self::setParams([
