@@ -62,6 +62,17 @@ class MultiFields
      */
     protected function setParams($id = 0, $params = [])
     {
+        if (!is_int($params['id']))
+        {
+            $result = $this->evo->db->select(
+                'id', $this->evo->getFullTableName('site_tmplvars'), "name='{$params['name']}'"
+            );
+            if ($this->evo->db->getRecordCount($result))
+            {
+                $params['id'] = $this->evo->db->getValue($result);
+            }
+        }
+
         $this->params['tv'] = $params;
         $this->params['id'] = $id;
         $this->params['actions'] = [
@@ -209,7 +220,7 @@ class MultiFields
             ) ENGINE=MyISAM');
         }
 
-        if (!empty($this->params['id']) && !empty($this->params['tv']['id'])) {
+        if ((!empty($this->params['id']) || $this->params['id'] === 0) && !empty($this->params['tv']['id'])) {
             $sql = $this->evo->db->query('
             SELECT id, field_parent, field_id, field_name, field_value
             FROM ' . $this->evo->getFullTableName('multifields') . ' 
