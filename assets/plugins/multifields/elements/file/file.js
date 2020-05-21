@@ -20,7 +20,7 @@ function BrowseServer(ctrl)
   lastImageCtrl = ctrl;
   var w = screen.width * 0.5;
   var h = screen.height * 0.5;
-  OpenServerBrowser('http://multifields4x.local/manager/media/browser/mcpuk/browser.php?Type=images', w, h);
+  OpenServerBrowser('/manager/media/browser/mcpuk/browser.php?Type=images', w, h);
 }
 
 function BrowseFileServer(ctrl)
@@ -28,7 +28,7 @@ function BrowseFileServer(ctrl)
   lastFileCtrl = ctrl;
   var w = screen.width * 0.5;
   var h = screen.height * 0.5;
-  OpenServerBrowser('http://multifields4x.local/manager/media/browser/mcpuk/browser.php?Type=files', w, h);
+  OpenServerBrowser('/manager/media/browser/mcpuk/browser.php?Type=files', w, h);
 }
 
 function SetUrlChange(el)
