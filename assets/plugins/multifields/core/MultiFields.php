@@ -102,7 +102,7 @@ class MultiFields
                 'docid' => $this->params['id'],
                 'tvId' => $this->params['tv']['id'],
                 'tvName' => $this->params['tv']['name'],
-                'fieldname' => $this->params['storage'] == 'default' ? (is_numeric($this->params['tv']['id']) ? 'tv' . $this->params['tv']['id'] : $this->params['tv']['id']) : 'mf-data[' . $this->params['id'] . '__' . $this->params['tv']['id'] . ']',
+                'fieldname' => $this->params['storage'] == 'default' ? 'tv' . $this->params['tv']['id'] : 'mf-data[' . $this->params['id'] . '__' . $this->params['tv']['id'] . ']',
                 'value' => $this->params['storage'] == 'default' ? (!empty($this->params['tv']['value']) ? $this->params['tv']['value'] : '') : (!empty($this->data) ? stripcslashes(json_encode($this->data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) : '')
             ];
             $data['toolbar'] = $this->getToolbar($data);
