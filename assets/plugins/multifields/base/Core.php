@@ -96,7 +96,7 @@ class Core
                 ]
             ]);
 
-            echo microtime(true) - $start . ' s.';
+            //echo microtime(true) - $start . ' s.';
 
             if (!empty($ResourceManagerLoaded)) {
                 $ResourceManagerLoaded = $tmp_ResourceManagerLoaded;
