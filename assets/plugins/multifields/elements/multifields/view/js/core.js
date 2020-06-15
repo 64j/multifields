@@ -31,7 +31,7 @@
       document.querySelectorAll('.multifields').forEach(function(el) {
         Multifields.init(el);
       });
-      Multifields.draggable(document.querySelectorAll('.multifields > .mf-items, .multifields .mf-draggable > .mf-items'));
+      Multifields.draggable(document.querySelectorAll('.multifields .mf-items'));
 
       // delete all mm_widget_showimagetvs
       if (typeof jQuery !== 'undefined') {
