@@ -166,7 +166,14 @@
             if (Multifields.elements[item.type] && typeof Multifields.elements[item.type]['build'] === 'function') {
               item = Multifields.elements[item.type]['build'](els[i], item, i);
             }
-            data.push(item);
+            if (item.items) {
+              data.push(item);
+            } else {
+              if (!Object.values(data).length) {
+                data = {};
+              }
+              data[item.name] = item;
+            }
           }
         }
       }

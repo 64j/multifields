@@ -309,9 +309,11 @@ class Front
             if (isset($v['items'])) {
                 $v = array_merge($v, $this->renderData($v['items'], $level, $find));
                 $this->prepare($prepare, $v);
+                $out[] = $this->tpl($tpl, $v);
+            } else {
+                $out[$v['name']] = $this->tpl($tpl, $v);
+                $out[] = $out[$v['name']];
             }
-
-            $out[] = $this->tpl($tpl, $v);
         }
 
         if (!empty($out)) {
