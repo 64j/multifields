@@ -45,7 +45,7 @@ class MultiFieldsFront
     protected function renderForm()
     {
         $out = '';
-        if (!empty($this->params['tvId']) || !empty($this->params['tvName'])) {
+        if (!empty($this->params['tvId']) || !empty($this->params['tvName']) || isset($this->params['data'])) {
             if (!empty($this->getData())) {
                 $api = isset($this->params['api']) ? $this->params['api'] : '';
                 switch ($api) {
@@ -86,18 +86,22 @@ class MultiFieldsFront
     {
         $this->data = [];
 
-        switch ($this->params['storage']) {
-            case 'files':
-                $this->getDataFromFile();
-                break;
+        if (isset($this->params['data'])) {
+            $this->data = !empty($this->params['data']) ? json_decode($this->params['data'], true) : [];
+        } else {
+            switch ($this->params['storage']) {
+                case 'files':
+                    $this->getDataFromFile();
+                    break;
 
-            case 'database':
-                $this->getDataFromBase();
-                break;
+                case 'database':
+                    $this->getDataFromBase();
+                    break;
 
-            default:
-                $this->getDataFromEvo();
-                break;
+                default:
+                    $this->getDataFromEvo();
+                    break;
+            }
         }
 
         return $this->data;
