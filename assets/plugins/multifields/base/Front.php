@@ -61,7 +61,7 @@ class Front
 
         $out = '';
 
-        if (!empty(self::getData() && (!empty(self::getParams('tvId')) || !empty(self::getParams('tvName'))))) {
+        if (!empty(self::getData() && (!empty(self::getParams('tvId')) || !empty(self::getParams('tvName') || !empty(self::getParams('data')))))) {
             switch (self::getParams('api')) {
                 case '1':
                     $out = self::getData();
@@ -118,14 +118,18 @@ class Front
     protected static function getData()
     {
         if (empty(self::$data)) {
-            switch (self::getParams('storage')) {
-                case 'files':
-                    self::getDataFromFile();
-                    break;
+            if (!is_null(self::getParams('data'))) {
+                self::$data = json_decode(self::getParams('data', '{}'), true);
+            } else {
+                switch (self::getParams('storage')) {
+                    case 'files':
+                        self::getDataFromFile();
+                        break;
 
-                default:
-                    self::getDataFromEvo();
-                    break;
+                    default:
+                        self::getDataFromEvo();
+                        break;
+                }
             }
         }
 
