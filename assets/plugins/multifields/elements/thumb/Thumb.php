@@ -40,7 +40,9 @@ class Thumb extends \Multifields\Base\Elements
      */
     protected function items(&$params, &$data)
     {
-        $params['attr'] .= 'style="background-image: url(\'/' . $params['value'] . '\');"';
+        preg_match('/style="(.*)"/', $params['attr'], $matches);
+        $params['attr'] = preg_replace('/style="(.*)"/', '', $params['attr']);
+        $params['attr'] .= 'style="background-image: url(\'/' . $params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
         if (empty($params['items'])) {
         } elseif (!empty($data) && count($data['items'])) {
             $params['class'] .= 'mf-group';
