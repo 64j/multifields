@@ -70,6 +70,7 @@ Multifields.element('table', {
     let el = e.target.closest('tr'), clone;
     clone = Multifields.clone(true, el);
     el.after(clone);
+    Multifields.setDatepicker(clone);
     Multifields.elements.table.setIndexes();
   },
 
@@ -121,7 +122,9 @@ Multifields.element('table', {
     let tbody = Multifields.el.querySelector('tbody');
     Multifields.elements.table.target.after(Multifields.clone(true, Multifields.elements.table.target));
     [...tbody.rows].map(function(row) {
-      row.cells[Multifields.elements.table.target.cellIndex].after(Multifields.clone(true, row.cells[Multifields.elements.table.target.cellIndex]));
+      let clone = Multifields.clone(true, row.cells[Multifields.elements.table.target.cellIndex]);
+      row.cells[Multifields.elements.table.target.cellIndex].after(clone);
+      Multifields.setDatepicker(clone);
     });
   },
 
@@ -157,14 +160,7 @@ Multifields.element('table', {
         input = row.cells[Multifields.elements.table.target.cellIndex].querySelector('input');
         input.value = _input.value;
         if (type === 'date') {
-          format = input.dataset['format'];
-          new DatePicker(input, {
-            yearOffset: dpOffset,
-            format: format !== null ? format : dpformat,
-            dayNames: dpdayNames,
-            monthNames: dpmonthNames,
-            startDay: dpstartDay
-          });
+          Multifields.setDatepicker(input);
         }
       });
     });

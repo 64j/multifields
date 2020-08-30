@@ -21,32 +21,55 @@ Multifields.element('row', {
         }
       }
     } else {
-      let clone = Multifields.clone(),
-          el,
-          items;
-
-      Multifields.el.insertAdjacentElement('afterend', clone);
-
-      if (Multifields.el.dataset['autoincrement']) {
-        items = Multifields.el.parentElement.children;
-        let j = 1;
-        for (let i = 0; i < items.length; i++) {
-          el = items[i].querySelector('[data-type="' + Multifields.el.dataset['autoincrement'] + '"] > input');
-          if (el && items[i].dataset['name'] === Multifields.name) {
-            el.value = j++;
+      Multifields.getTemplate(function(data) {
+        Multifields.el.insertAdjacentHTML('afterend', data.html);
+        let clone = Multifields.el.nextElementSibling,
+            el,
+            items;
+        if (Multifields.el.dataset['autoincrement']) {
+          items = Multifields.el.parentElement.children;
+          let j = 1;
+          for (let i = 0; i < items.length; i++) {
+            el = items[i].querySelector('[data-type="' + Multifields.el.dataset['autoincrement'] + '"] > input');
+            if (el && items[i].dataset['name'] === Multifields.name) {
+              el.value = j++;
+            }
           }
         }
-      }
-      Multifields.setDatepicker(clone);
-      Multifields.draggable(clone.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
+        Multifields.setDatepicker(clone);
+        Multifields.draggable(clone.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
+      });
     }
   },
 
   actionDel: function() {
-    if (!Multifields.el.offsetParent.classList.contains('mf-row-group') && Multifields.el.parentElement.querySelectorAll('.mf-row[data-name="' + Multifields.name + '"]').length === 1) {
-      Multifields.el.insertAdjacentElement('afterend', Multifields.clone());
+    if (!Multifields.el.parentElement.parentElement.classList.contains('multifields')
+        && (
+            (
+                !Multifields.el.parentElement.parentElement.classList.contains('mf-row-group')
+                && Multifields.el.parentElement.querySelectorAll('.mf-row[data-name="' + Multifields.name + '"]').length === 1
+            )
+            ||
+            (
+                !Multifields.el.parentElement.parentElement.querySelector('.mf-templates [data-template-name="' + Multifields.name + '"]'
+                )
+            )
+        )
+    ) {
+      if (Multifields.el.classList.contains('mf-row-group')) {
+        Multifields.el.querySelector('.mf-items').innerHTML = '';
+      } else {
+        Multifields.getTemplate(function(data) {
+          Multifields.el.insertAdjacentHTML('afterend', data.html);
+          Multifields.element('row').deleteRow();
+        });
+      }
+    } else {
+      Multifields.element('row').deleteRow();
     }
+  },
 
+  deleteRow: function() {
     let el,
         items = Multifields.el.parentElement.children;
 
@@ -64,13 +87,7 @@ Multifields.element('row', {
   },
 
   template: function(id) {
-    Multifields.getAction({
-      action: 'template',
-      class: this.class,
-      tpl: id,
-      tvid: Multifields.container.dataset['tvId'],
-      tvname: Multifields.container.dataset['tvName']
-    }, function(data) {
+    Multifields.getTemplate(id, function(data) {
       let template = document.createElement('template');
       template.innerHTML = data.html;
       Multifields.setDatepicker(template.content);

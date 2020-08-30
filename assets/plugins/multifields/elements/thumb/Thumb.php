@@ -15,10 +15,11 @@ class Thumb extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div class="mf-thumb row [+class+]" data-type="thumb" data-name="[+name+]" [+attr+]>
+        <div class="col p-1 mf-thumb [+class+]" data-type="thumb" data-name="[+name+]" [+attr+]>
+            [+title+]
             [+value+]
             [+actions+]
-            <div class="mf-items row [+items.class+]">
+            <div class="row mx-0 mb-2 col-12 p-0 mf-items [+items.class+]">
                 [+items+]
             </div>
         </div>';
@@ -30,7 +31,7 @@ class Thumb extends \Multifields\Base\Elements
     {
         $params['value'] = '
             <div class="mf-value mf-hidden">
-                <input type="hidden" class="form-control form-control-sm" id="' . $params['id'] . '_value" name="' . $params['id'] . '_value" value="' . $params['value'] . '">
+                <input type="hidden" id="' . $params['id'] . '_value" name="' . $params['id'] . '_value" value="' . $params['value'] . '">
             </div>';
     }
 
@@ -58,6 +59,12 @@ class Thumb extends \Multifields\Base\Elements
     {
         $this->items($params, $data);
         $this->getValue($params);
+
+        if (!empty($params['title'])) {
+            $params['title'] = '<div class="px-2 py-1 mf-title">' . $params['title'] . '</div>';
+        } else {
+            $params['title'] = '';
+        }
 
         if (!empty($params['multi'])) {
             $params['attr'] .= ' data-multi="' . $params['multi'] . '"';

@@ -24,7 +24,8 @@ class Table extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div id="[+id+]" class="mf-table row [+class+]" data-type="table" data-name="[+name+]" [+attr+]>
+        <div id="[+id+]" class="mf-table col-12 p-1 row m-0 [+class+]" data-type="table" data-name="[+name+]" [+attr+]>
+            [+title+]
             [+value+]
             [+actions+]
             <div class="row m-0 col-12 p-0">
@@ -38,10 +39,10 @@ class Table extends \Multifields\Base\Elements
                     [+types+]
                 </div>
             </div>
-            <div class="mf-items mf-items-table row [+items.class+]">
+            <div class="mf-items mf-items-table row m-0 col-12 p-0 [+items.class+]">
                 <div class="position-relative w-100 m-0 p-0">
                     <div class="col-resize"></div>
-                    <table class="table table-sm data table-hover table-bordered mb-3">
+                    <table class="table table-sm data table-hover table-bordered">
                         [+items+]
                     </table>
                 </div>
@@ -59,8 +60,8 @@ class Table extends \Multifields\Base\Elements
             }
 
             $params['value'] = '
-            <div class="mf-value mf-text">
-                <input type="text" class="form-control form-control-sm" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
+            <div class="row m-0 col-12 p-2 mf-value mf-text">
+                <input type="text" class="form-control" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
             </div>';
         }
     }
@@ -94,6 +95,12 @@ class Table extends \Multifields\Base\Elements
     {
         if (!isset($params['items'])) {
             $params['items'] = '';
+        }
+
+        if (!empty($params['title'])) {
+            $params['title'] = '<div class="row mx-0 col px-2 py-1 mf-title">' . $params['title'] . '</div>';
+        } else {
+            $params['title'] = '';
         }
 
         $this->getValue($params);

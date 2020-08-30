@@ -6,3 +6,13 @@ spl_autoload_register(function ($class) {
         require $file;
     }
 });
+
+function mfc($params = [])
+{
+    return \Multifields\Base\Core::getInstance($params);
+}
+
+function mff($params = [])
+{
+    return \Multifields\Base\Front::getInstance($params);
+}

@@ -14,6 +14,7 @@ class Elements
     protected $scripts;
     protected $styles;
     protected $disabled = false;
+    protected $file_has_changed = null;
 
     /**
      * Elements constructor.
@@ -49,18 +50,26 @@ class Elements
      */
     public function getStartScripts()
     {
+        $out = '';
+        $cache_styles = dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css';
+        $cache_scripts = dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js';
+
         $styles = [
             '@' => [
-                $this->setFileUrl('view/css/core.css', dirname(__DIR__) . '/elements/multifields/')
+                $this->setFileUrl('view/css/core.css', dirname(__DIR__) . '/elements/multifields/', true, true)
             ]
         ];
+
+        $this->removeFile($cache_styles, $this->hasFileChanged($styles['@'][0]));
 
         $scripts = [
             '@' => [
                 $this->setFileUrl('view/js/Sortable.min.js', dirname(__DIR__) . '/elements/multifields/'),
-                $this->setFileUrl('view/js/core.js', dirname(__DIR__) . '/elements/multifields/')
+                $this->setFileUrl('view/js/core.js', dirname(__DIR__) . '/elements/multifields/', true, true)
             ]
         ];
+
+        $this->removeFile($cache_scripts, $this->hasFileChanged($scripts['@'][1]));
 
         if ($elements = glob(Core::getParams('basePath') . 'elements/*', GLOB_ONLYDIR)) {
             foreach ($elements as $element) {
@@ -76,14 +85,16 @@ class Elements
                         if (is_array($files)) {
                             foreach ($files as $style) {
                                 if ($style = $this->setFileUrl($style, self::element($name)
-                                    ->path())) {
+                                    ->path(), true, true)) {
                                     $styles[$name][] = $style;
+                                    $this->removeFile($cache_styles, $this->hasFileChanged($style));
                                 }
                             }
                         } else {
                             if ($style = $this->setFileUrl($files, self::element($name)
-                                ->path())) {
+                                ->path(), true, true)) {
                                 $styles[$name][] = $style;
+                                $this->removeFile($cache_styles, $this->hasFileChanged($style));
                             }
                         }
                     }
@@ -95,14 +106,16 @@ class Elements
                         if (is_array($files)) {
                             foreach ($files as $script) {
                                 if ($script = $this->setFileUrl($script, self::element($name)
-                                    ->path())) {
+                                    ->path(), true, true)) {
                                     $scripts[$name][] = $script;
+                                    $this->removeFile($cache_scripts, $this->hasFileChanged($script));
                                 }
                             }
                         } else {
                             if ($script = $this->setFileUrl($files, self::element($name)
-                                ->path())) {
+                                ->path(), true, true)) {
                                 $scripts[$name][] = $script;
+                                $this->removeFile($cache_scripts, $this->hasFileChanged($script));
                             }
                         }
                     }
@@ -110,9 +123,7 @@ class Elements
             }
         }
 
-        $out = '';
-
-        if (Core::DEBUG) {
+        if (Core::getParams('debug')) {
             foreach ($styles as $files) {
                 foreach ($files as $style) {
                     $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $style . '"/>';
@@ -125,15 +136,11 @@ class Elements
                 }
             }
 
-            if (is_file(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css')) {
-                unlink(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css');
-            }
-
-            if (is_file(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js')) {
-                unlink(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js');
-            }
+            $this->removeFile($cache_styles);
+            $this->removeFile($cache_scripts);
         } else {
-            if (!is_file(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css') || !is_file(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js')) {
+            if (!is_file($cache_styles) || !is_file($cache_scripts)) {
+
                 $__ = '';
                 foreach ($styles as $files) {
                     foreach ($files as $style) {
@@ -141,7 +148,7 @@ class Elements
                     }
                 }
 
-                file_put_contents(dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css', Compress::css($__));
+                file_put_contents($cache_styles, Compress::css($__));
 
                 $__ = '';
                 foreach ($scripts as $files) {
@@ -150,11 +157,11 @@ class Elements
                     }
                 }
 
-                file_put_contents(dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js', Compress::js($__));
+                file_put_contents($cache_scripts, Compress::js($__));
             }
 
-            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl('elements/multifields/view/css/styles.min.css', dirname(__DIR__) . '/') . '"/>';
-            $out .= "\n" . '<script src="' . $this->setFileUrl('elements/multifields/view/js/scripts.min.js', dirname(__DIR__) . '/') . '"></script>';
+            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl($cache_styles, dirname(__DIR__) . '/') . '"/>';
+            $out .= "\n" . '<script src="' . $this->setFileUrl($cache_scripts, dirname(__DIR__) . '/') . '"></script>';
         }
 
         return $out;
@@ -163,24 +170,64 @@ class Elements
     /**
      * @param string $url
      * @param string $parent
+     * @param bool $timestamp
+     * @param bool $check_cache
      * @return string
      */
-    protected function setFileUrl($url = '', $parent = '')
+    protected function setFileUrl($url = '', $parent = '', $timestamp = true, $check_cache = false)
     {
         if (!empty($url)) {
+            $url = str_replace(dirname(__DIR__), '', $url);
             $url = trim(str_replace(DIRECTORY_SEPARATOR, '/', $url), '\\/');
             $parent = trim(str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', $parent)), '\\/');
 
             $url = $parent . '/' . $url;
 
-            if (is_file(MODX_BASE_PATH . $url)) {
-                //$url .= '?time=' . filemtime(MODX_BASE_PATH . $url);
+            if (is_file(MODX_BASE_PATH . $url) && $timestamp) {
+                if (is_bool($timestamp)) {
+                    $timestamp = filemtime(MODX_BASE_PATH . $url);
+                }
+                if ($check_cache) {
+                    if (Core::getParams('debug')) {
+                        $this->removeFile(MODX_BASE_PATH . $url . '.cache');
+                    } else {
+                        $this->file_has_changed[MODX_SITE_URL . $url] = !is_file(MODX_BASE_PATH . $url . '.cache') || (is_file(MODX_BASE_PATH . $url . '.cache') && $timestamp != file_get_contents(MODX_BASE_PATH . $url . '.cache'));
+                        if ($this->file_has_changed[MODX_SITE_URL . $url]) {
+                            file_put_contents(MODX_BASE_PATH . $url . '.cache', $timestamp);
+                        }
+                    }
+                }
+                if (!Core::getParams('debug')) {
+                    $url .= '?time=' . $timestamp;
+                }
             } else {
                 $url = '';
             }
         }
 
-        return MODX_SITE_URL . $url;
+        $url = MODX_SITE_URL . $url;
+
+        return $url;
+    }
+
+    /**
+     * @param $file
+     * @param bool $remove
+     */
+    protected function removeFile($file, $remove = true)
+    {
+        if ($remove && is_file($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @param $url
+     * @return bool
+     */
+    protected function hasFileChanged($url)
+    {
+        return !empty($this->file_has_changed[explode('?', $url)[0]]);
     }
 
     /**

@@ -16,11 +16,12 @@ class Row extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div id="[+id+]" class="mf-row row [+class+]" data-type="row" data-name="[+name+]" [+attr+]>
+        <div id="[+id+]" class="col p-1 mf-row [+class+]" data-type="row" data-name="[+name+]" [+attr+]>
+            [+title+]
             [+templates+]
             [+value+]
             [+actions+]
-            <div class="mf-items row [+items.class+]">
+            <div class="row m-0 col-12 p-1 mf-items [+items.class+]">
                 [+items+]
             </div>
         </div>';
@@ -36,9 +37,9 @@ class Row extends \Multifields\Base\Elements
             }
 
             $params['value'] = '
-            <div class="mf-value mf-text">
-                <input type="text" class="form-control form-control-sm" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
-            </div>';
+                <div class="row m-0 col-12 p-2 mf-value">
+                    <input type="text" class="form-control" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
+                </div>';
         }
     }
 
@@ -70,7 +71,7 @@ class Row extends \Multifields\Base\Elements
                     }
 
                     $out .= '
-                    <div class="mf-option" onclick="Multifields.elements.row.template(\'' . $k . '\');">
+                    <div class="mf-option" onclick="Multifields.elements.row.template(\'' . $k . '\');" data-template-name="' . $k . '">
                         <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
                     </div>';
                     $i++;
@@ -99,6 +100,12 @@ class Row extends \Multifields\Base\Elements
 
         if (!empty($params['autoincrement'])) {
             $params['attr'] .= ' data-autoincrement="' . $params['autoincrement'] . '"';
+        }
+
+        if (!empty($params['title'])) {
+            $params['title'] = '<div class="row mx-0 col px-2 py-1 mf-title">' . $params['title'] . '</div>';
+        } else {
+            $params['title'] = '';
         }
 
         return parent::render($params, $data);

@@ -19,7 +19,7 @@ class Front
     protected static $data;
     private static $instance;
 
-    public function __construct()
+    public function __construct($params = [])
     {
         $evo = evolutionCMS();
 
@@ -28,23 +28,26 @@ class Front
             $pluginParams = json_decode($evo->pluginCache['multifieldsProps'], true);
         }
 
-        self::setParams([
+        self::setParams(array_merge([
             'basePath' => str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__)) . '/',
             'storage' => empty($pluginParams['multifields_storage']) ? 'files' : $pluginParams['multifields_storage'],
             'docid' => $evo->documentIdentifier,
             'tvId' => 0,
             'tvName' => '',
             'api' => null
-        ]);
+        ], $params));
     }
 
     /**
+     * @param array $params
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance($params = [])
     {
         if (self::$instance === null) {
-            self::$instance = new static();
+            self::$instance = new static($params);
+        } else {
+            self::setParams($params);
         }
 
         return self::$instance;

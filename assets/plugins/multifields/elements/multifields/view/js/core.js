@@ -43,6 +43,11 @@
 
   __.prototype = {
     elements: {},
+
+    /**
+     * Инициализация
+     * @param el
+     */
     init: function(el) {
       el.addEventListener('mousedown', function(e) {
         Multifields.container = el;
@@ -52,9 +57,18 @@
       });
 
       for (let k in Multifields.elements) {
-        Multifields.elements[k].init(el);
+        if (Multifields.elements.hasOwnProperty(k)) {
+          Multifields.elements[k].init(el);
+        }
       }
     },
+
+    /**
+     * Добавляем новый элемент и регистрируем его, дополняя его базовыми методами или возвращаем уже существующий
+     * @param type
+     * @param obj
+     * @returns {*}
+     */
     element: function(type, obj) {
       if (Multifields.elements[type]) {
         return Multifields.elements[type];
@@ -69,9 +83,11 @@
         __.prototype = {
           init: function() {},
           actionAdd: function() {
-            let clone = Multifields.clone();
-            Multifields.draggable(clone.querySelectorAll('.mf-draggable > .mf-items'));
-            Multifields.el.insertAdjacentElement('afterend', clone);
+            Multifields.getTemplate(function(data) {
+              Multifields.el.insertAdjacentHTML('afterend', data.html);
+              Multifields.draggable(Multifields.el.nextElementSibling.querySelectorAll('.mf-draggable > .mf-items'));
+              Multifields.setDatepicker(Multifields.el.nextElementSibling);
+            });
           },
           actionDel: function() {
             Multifields.el.parentElement.removeChild(Multifields.el);
@@ -81,6 +97,42 @@
         Multifields.elements[type] = new __();
       }
     },
+
+    /**
+     * Загружаем код шаблона по его названию, либо клониурем.
+     * @param template
+     * @param callback
+     */
+    getTemplate: function(template, callback) {
+      if (typeof template === 'function') {
+        callback = template;
+        template = false;
+      }
+      Multifields.getAction({
+        action: 'template',
+        class: 'Multifields\\Base\\Elements',
+        tpl: template || Multifields.name,
+        tvid: Multifields.container.dataset['tvId'],
+        tvname: Multifields.container.dataset['tvName']
+      }, function(data) {
+        if (typeof callback === 'function') {
+          if (data.html) {
+            callback.call(Multifields, data);
+          } else {
+            callback.call(Multifields, {
+              html: Multifields.clone().outerHTML
+            });
+          }
+        }
+      });
+    },
+
+    /**
+     * Клонируем элемент с очисткой данных
+     * @param clear
+     * @param clone
+     * @returns {ActiveX.IXMLDOMNode|Node}
+     */
     clone: function(clear, clone) {
       clear = typeof clear !== 'undefined' ? clear : true;
       clone = !clone ? Multifields.el.cloneNode(true) : clone.cloneNode(true);
@@ -122,12 +174,22 @@
       });
       return clone;
     },
+
+    /**
+     * Собираем данные
+     */
     build: function() {
       if (Multifields.container) {
         let data = Multifields.buildItems(Multifields.container.querySelector('.mf-items').children);
         Multifields.container.nextElementSibling.value = data.length && JSON.stringify(data) || '';
       }
     },
+
+    /**
+     * Собираем данные из вложенных полей
+     * @param els
+     * @returns {[]}
+     */
     buildItems: function(els) {
       let data = [];
       if (els) {
@@ -172,9 +234,20 @@
       }
       return data;
     },
+
+    /**
+     * Уникальный ID
+     * @returns {string}
+     */
     uniqid: function() {
       return 'id' + (new Date()).getTime() + (Math.floor(Math.random() * (99999 + 1)));
     },
+
+    /**
+     * Обращаемся через аякс к методу класса
+     * @param data
+     * @param callback
+     */
     getAction: function(data, callback) {
       if (!data.action) {
         return;
@@ -201,6 +274,11 @@
       };
       xhr.send(data.join('&'));
     },
+
+    /**
+     * Закрываем открытые элементы
+     * @param ignore
+     */
     closeOpened: function(ignore) {
       document.querySelectorAll('.multifields.open, .multifields .open').forEach(function(el) {
         if (ignore !== el) {
@@ -208,20 +286,40 @@
         }
       });
     },
+
+    /**
+     * Устанавливаем календарь для элементов с датой
+     * @param el
+     */
     setDatepicker: function(el) {
       if (el) {
-        el.querySelectorAll('.DatePicker').forEach(function(el) {
-          let format = el.dataset['format'];
+        if (el.classList && el.classList.contains('DatePicker')) {
           new DatePicker(el, {
             yearOffset: dpOffset,
-            format: format !== null ? format : dpformat,
+            format: el.dataset['format'] || dpformat,
             dayNames: dpdayNames,
             monthNames: dpmonthNames,
             startDay: dpstartDay
           });
-        });
+        } else {
+          el.querySelectorAll('.DatePicker').forEach(function(el) {
+            new DatePicker(el, {
+              yearOffset: dpOffset,
+              format: el.dataset['format'] || dpformat,
+              dayNames: dpdayNames,
+              monthNames: dpmonthNames,
+              startDay: dpstartDay
+            });
+          });
+        }
       }
     },
+
+    /**
+     * Устанавливаем перетаксивание элементов
+     * @param els
+     * @returns {{length}|*}
+     */
     draggable: function(els) {
       if (els.length) {
         els.forEach(function(el) {

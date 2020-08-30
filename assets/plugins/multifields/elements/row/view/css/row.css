@@ -1,12 +1,8 @@
-.multifields .mf-row { margin: 0; padding: .5rem .25rem 0 !important; flex: 0 0 100%; }
-.multifields .mf-templates.open { opacity: 1; visibility: visible; }
-.multifields .mf-row > .mf-actions .mf-actions-add { opacity: 0; visibility: hidden; transform: scale(.8); transition: opacity .15s, visibility .15s, transform .15s; }
-.multifields .mf-row:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
 .multifields .mf-row-group { min-height: 3rem }
 .multifields .mf-row-group:hover > .mf-actions::before { border-color: #0a5; }
 .multifields .mf-row-group > .mf-actions .mf-actions-add { color: #0a5; }
-.multifields .mf-value { position: relative; z-index: 1; max-width: 100%; flex: 0 0 100%; margin: -.5rem 0 .5rem; padding: .5rem 1rem; background-color: #f2f2f2; }
-.multifields .mf-value::after { content: ""; position: absolute; left: 1px; bottom: 0; right: 1px; height: 1px; background-color: #d4d4d4; }
-.multifields .mf-row > .mf-value ~ .mf-actions i.mf-actions-move { top: 1.25rem; }
-.multifields .mf-row > .mf-value ~ .mf-actions i.mf-actions-del { top: 1.25rem; }
-.multifields .mf-row > .mf-value ~ .mf-items { margin: 0 .25rem; }
+.multifields .mf-row > .mf-value, .multifields .mf-row > .mf-title { z-index: 1; background-color: #f2f2f2; border-bottom: 1px solid #ddd; transition: all .25s; }
+.multifields .mf-row > .mf-actions .mf-actions-add { transform: scale(.8); transform-origin: center; }
+.multifields .mf-row:hover > .mf-actions .mf-actions-add { transform: scale(1); }
+/* darkness */
+.darkness .multifields .mf-row > .mf-value, .darkness .multifields .mf-row > .mf-title { background-color: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .1); }

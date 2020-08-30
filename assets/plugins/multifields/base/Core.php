@@ -12,25 +12,24 @@ namespace Multifields\Base;
 class Core
 {
     const VERSION = '2.0.1';
-    const DEBUG = true;
 
     private static $instance;
     private static $params = [];
     private static $config = [];
     private static $data = [];
 
-    public function __construct()
+    public function __construct($params = [])
     {
         $pluginParams = [];
         if (!empty(evolutionCMS()->pluginCache['multifieldsProps'])) {
             $pluginParams = json_decode(evolutionCMS()->pluginCache['multifieldsProps'], true);
         }
 
-        self::setParams([
+        self::setParams(array_merge([
             'basePath' => str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__)) . '/',
-            'theme' => empty($pluginParams['multifields_theme']) ? 'default' : $pluginParams['multifields_theme'],
-            'storage' => empty($pluginParams['multifields_storage']) ? 'files' : $pluginParams['multifields_storage']
-        ]);
+            'storage' => empty($pluginParams['multifields_storage']) ? 'files' : $pluginParams['multifields_storage'],
+            'debug' => empty($pluginParams['multifields_debug']) ? false : ($pluginParams['multifields_debug'] == 'no' ? false : true),
+        ], $params));
 
         require_once MODX_MANAGER_PATH . 'includes/tmplvars.inc.php';
         require_once MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php';
@@ -38,12 +37,15 @@ class Core
     }
 
     /**
+     * @param array $params
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance($params = [])
     {
         if (self::$instance === null) {
-            self::$instance = new static();
+            self::$instance = new static($params);
+        } else {
+            self::setParams($params);
         }
 
         return self::$instance;

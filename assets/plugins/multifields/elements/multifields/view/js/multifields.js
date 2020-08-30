@@ -21,13 +21,7 @@ Multifields.element('multifields', {
   },
 
   template: function(id) {
-    Multifields.getAction({
-      action: 'template',
-      class: this.class,
-      tpl: id,
-      tvid: Multifields.container.dataset['tvId'],
-      tvname: Multifields.container.dataset['tvName']
-    }, function(data) {
+    Multifields.getTemplate(id, function(data) {
       let template = document.createElement('template');
       template.innerHTML = data.html;
       Multifields.setDatepicker(template.content);
