@@ -3,9 +3,8 @@
 .multifields .mf-table > .mf-value::after { display: none }
 .multifields .mf-table:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff; }
 /* actions */
-.multifields .mf-table .mf-actions { left: 0; right: 0; }
-.multifields .mf-table .mf-items .mf-actions { border: none; }
 .multifields .mf-table > .mf-actions { left: .25rem; right: .25rem; background-color: #fff; border: none; }
+.multifields .mf-table .mf-items th > .mf-actions { left: 0; right: 0; border: none; }
 .multifields .mf-table .mf-items .mf-table-head:hover .mf-actions::before { z-index: 1 !important; border-color: #d4d4d4 !important }
 .multifields .mf-table:hover > .mf-actions::before, .multifields .mf-table .mf-items .mf-row:hover .mf-actions::before { z-index: 10; border-color: #2196f3; }
 .multifields .mf-table > .mf-actions .mf-actions-add { opacity: 0; visibility: hidden; transform: scale(.8); transition: opacity .15s, visibility .15s, transform .15s; }
@@ -27,7 +26,8 @@
 .multifields .mf-table .mf-columns input, .multifields .mf-table > .mf-items input { background-color: transparent; }
 .multifields .mf-table > .mf-items { margin: 0; }
 .multifields .mf-table > .mf-items .mf-items { margin: 0 1rem; border-left: 1px solid transparent; border-right: 1px solid transparent; }
-.multifields .mf-table > .mf-items .col { margin: 0 0 0 -1px !important; padding: 0 !important; }
+.multifields .mf-table > .mf-items .col { display: flex; margin: 0 0 0 -1px !important; padding: 0 !important; height: 100% }
+.multifields .mf-table > .mf-items thead .col { display: block }
 .multifields .mf-table .mf-items .mf-row { margin: -1px 0 0 !important; padding: 0 !important; }
 .multifields .mf-table .mf-table-head { background-color: #f2f2f2 }
 /* table */
@@ -39,12 +39,12 @@
 .multifields .mf-table > .mf-items .table thead th, .multifields .mf-table > .mf-items .table thead td { border-top-color: inherit }
 .multifields .mf-table > .mf-items .table .mf-table-row th, .multifields .mf-table > .mf-items .table .mf-table-row td { padding: 0 !important; border-color: transparent; }
 .multifields .mf-table > .mf-items .table thead .mf-actions { display: none }
-.multifields .mf-table > .mf-items .table .mf-actions { position: relative; width: 100%; }
-.multifields .mf-table > .mf-items .table .mf-actions::before { display: none }
-.multifields .mf-table > .mf-items .table .mf-actions i { left: .5rem; top: .7rem; width: 1rem; opacity: 0; }
-.multifields .mf-table > .mf-items .table tr:hover .mf-actions i { opacity: 1; }
-.multifields .mf-table > .mf-items .table .mf-actions i.mf-actions-add { top: 1.6rem; left: 100%; margin: -12px -7px; }
-.multifields .mf-table > .mf-items .table .mf-actions i.mf-actions-add::after { font-size: 15px }
+.multifields .mf-table > .mf-items .table th > .mf-actions { position: relative; width: 100%; }
+.multifields .mf-table > .mf-items .table th > .mf-actions::before { display: none }
+.multifields .mf-table > .mf-items .table th > .mf-actions i { left: .5rem; top: .7rem; width: 1rem; opacity: 0; }
+.multifields .mf-table > .mf-items .table tr:hover th > .mf-actions i { opacity: 1; }
+.multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add { top: 1.6rem; left: 100%; margin: -12px -7px; }
+.multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add::after { font-size: 15px }
 .multifields .mf-table > .mf-items .table .mf-active td { background-color: #ffecb3 }
 .multifields .mf-table > .mf-items .table input { background-color: transparent; border-color: transparent; border-radius: 0; border: none !important; }
 /* */
