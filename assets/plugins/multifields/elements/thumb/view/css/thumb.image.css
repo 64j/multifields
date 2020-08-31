@@ -1,0 +1,2 @@
+.multifields .mf-thumb.mf-thumb-image > .mf-actions .mf-actions-edit::before { content: "\f03e"; }
+.multifields .mf-thumb.mf-thumb-image[data-multi] > .mf-actions .mf-actions-edit::before { content: "\f302"; }

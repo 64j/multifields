@@ -2,10 +2,10 @@
 
 namespace Multifields\Elements\Thumb;
 
-class Thumb extends \Multifields\Base\Elements
+class Image extends \Multifields\Base\Elements
 {
-    protected $styles = 'view/css/thumb.css';
-    protected $scripts = 'view/js/thumb.js';
+    protected $styles = 'view/css/thumb.image.css';
+    protected $scripts = 'view/js/thumb.image.js';
 
     protected $actions = [
         'add',
@@ -15,13 +15,10 @@ class Thumb extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div class="col p-1 mf-thumb [+class+]" data-type="thumb" data-name="[+name+]" [+attr+]>
+        <div class="col p-1 mf-thumb mf-thumb-image [+class+]" data-type="thumb:image" data-name="[+name+]" [+attr+]>
             [+title+]
             [+value+]
             [+actions+]
-            <div class="row mx-0 mb-2 col-12 p-0 mf-items [+items.class+]">
-                [+items+]
-            </div>
         </div>';
 
     /**
@@ -65,36 +62,10 @@ class Thumb extends \Multifields\Base\Elements
             $params['attr'] .= ' data-multi="' . $params['multi'] . '"';
         }
 
-        if (!empty($params['image'])) {
-            $params['attr'] .= ' data-image="' . $params['image'] . '"';
-        }
-
-        if (!empty($data) && !empty($data['items'])) {
-            $params['class'] .= 'mf-group';
+        if (isset($params['items'])) {
+            unset($params['items']);
         }
 
         return parent::render($params, $data);
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    protected function findImage($data = [])
-    {
-        $out = [];
-        foreach ($data as $k => $v) {
-            if (empty($v['items'])) {
-                if ($v['type'] == 'image' && !empty($v['thumb'])) {
-                    foreach ($v['thumb'] as $thumb) {
-                        $out[$thumb] = $v['value'];
-                    }
-                }
-            } else {
-                $out = $this->findImage($v['items']);
-            }
-        }
-
-        return $out;
     }
 }
