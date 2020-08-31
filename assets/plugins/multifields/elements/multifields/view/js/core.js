@@ -201,18 +201,27 @@
               if (els[i].querySelector('.mf-items')) {
                 el = els[i].querySelector(':scope > .mf-value input');
               } else {
-                el = els[i].querySelector('[name]');
+                el = els[i].querySelectorAll('[name]');
               }
             } else {
               el = els[i].querySelector(':scope > input');
             }
-            item.value = false;
             if (el) {
-              if (!el.hidden) {
-                item.value = el.value || el.innerHTML || '';
-              }
-              if (el.placeholder !== '') {
-                item.placeholder = el.placeholder;
+              if (el.length) {
+                let value = [];
+                [...el].map(function(el) {
+                  if (!el.hidden && el.checked && (el.type === 'checkbox' || el.type === 'radio')) {
+                    value.push(el.value);
+                  }
+                });
+                item.value = value.join('||');
+              } else {
+                if (!el.hidden) {
+                  item.value = el.value || el.innerHTML || '';
+                }
+                if (el.placeholder !== '') {
+                  item.placeholder = el.placeholder;
+                }
               }
             }
             item.items = els[i].querySelector('.mf-items');

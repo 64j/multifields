@@ -559,6 +559,10 @@ class Elements
                         'attr' => 'data-type="' . $params['type'] . '" data-name="' . $params['name'] . '" ' . $params['attr'],
                         'items' => $element
                     ]);
+
+                if (in_array($params['type'], ['option', 'checkbox'])) {
+                    $out = str_replace(['id="tv', 'for="tv'], ['id="tv' . $params['id'], 'for="tv' . $params['id']], $out);
+                }
             }
         }
 
