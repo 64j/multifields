@@ -73,49 +73,58 @@ class Elements
 
         if ($elements = glob(Core::getParams('basePath') . 'elements/*', GLOB_ONLYDIR)) {
             foreach ($elements as $element) {
-                $name = basename($element);
+                if ($elements_elements = glob($element . '/*.php')) {
+                    $namespace = ucfirst(basename($element));
 
-                if (!self::element($name)) {
-                    continue;
-                }
+                    foreach ($elements_elements as $elements_element) {
+                        $name = rtrim(basename($elements_element), '.php');
 
-                if ($files = self::element($name)
-                    ->getStyles()) {
-                    if (!isset($styles[$name])) {
-                        if (is_array($files)) {
-                            foreach ($files as $style) {
-                                if ($style = $this->setFileUrl($style, self::element($name)
-                                    ->path(), true, true)) {
-                                    $styles[$name][] = $style;
-                                    $this->removeFile($cache_styles, $this->hasFileChanged($style));
+                        $name = $namespace . ':' . $name;
+
+                        if (!self::element($name)) {
+                            continue;
+                        }
+
+                        if ($files = self::element($name)
+                            ->getStyles()) {
+                            if (!isset($styles[$name])) {
+                                if (is_array($files)) {
+                                    foreach ($files as $style) {
+                                        if ($style = $this->setFileUrl($style, self::element($name)
+                                            ->path(), true, true)) {
+                                            $styles[$name][] = $style;
+                                            $this->removeFile($cache_styles, $this->hasFileChanged($style));
+                                        }
+                                    }
+                                } else {
+                                    if ($style = $this->setFileUrl($files, self::element($name)
+                                        ->path(), true, true)) {
+                                        $styles[$name][] = $style;
+                                        $this->removeFile($cache_styles, $this->hasFileChanged($style));
+                                    }
                                 }
-                            }
-                        } else {
-                            if ($style = $this->setFileUrl($files, self::element($name)
-                                ->path(), true, true)) {
-                                $styles[$name][] = $style;
-                                $this->removeFile($cache_styles, $this->hasFileChanged($style));
                             }
                         }
-                    }
-                }
 
-                if ($files = self::element($name)
-                    ->getScripts()) {
-                    if (!isset($scripts[$name])) {
-                        if (is_array($files)) {
-                            foreach ($files as $script) {
-                                if ($script = $this->setFileUrl($script, self::element($name)
-                                    ->path(), true, true)) {
-                                    $scripts[$name][] = $script;
-                                    $this->removeFile($cache_scripts, $this->hasFileChanged($script));
+                        if ($files = self::element($name)
+                            ->getScripts()) {
+
+                            if (!isset($scripts[$name])) {
+                                if (is_array($files)) {
+                                    foreach ($files as $script) {
+                                        if ($script = $this->setFileUrl($script, self::element($name)
+                                            ->path(), true, true)) {
+                                            $scripts[$name][] = $script;
+                                            $this->removeFile($cache_scripts, $this->hasFileChanged($script));
+                                        }
+                                    }
+                                } else {
+                                    if ($script = $this->setFileUrl($files, self::element($name)
+                                        ->path(), true, true)) {
+                                        $scripts[$name][] = $script;
+                                        $this->removeFile($cache_scripts, $this->hasFileChanged($script));
+                                    }
                                 }
-                            }
-                        } else {
-                            if ($script = $this->setFileUrl($files, self::element($name)
-                                ->path(), true, true)) {
-                                $scripts[$name][] = $script;
-                                $this->removeFile($cache_scripts, $this->hasFileChanged($script));
                             }
                         }
                     }
@@ -246,6 +255,10 @@ class Elements
             }
         }
 
+        if (substr($name, 0, 5) == 'Front') {
+            return null;
+        }
+
         if (!isset($className)) {
             $className = get_called_class();
         } elseif (strpos($className, '\\') === false) {
@@ -305,7 +318,7 @@ class Elements
                         if ($action == 'move') {
                             $params['class'] .= ' mf-draggable';
                         }
-                        $params['actions'] .= '<i class="mf-actions-' . $action . ' fa" onclick="Multifields.elements.' . $params['type'] . '.action' . ucfirst($action) . '(event);"></i>';
+                        $params['actions'] .= '<i class="mf-actions-' . $action . ' fa" onclick="Multifields.elements[\'' . $params['type'] . '\'].action' . ucfirst($action) . '(event);"></i>';
                     }
                 }
             }
@@ -574,7 +587,9 @@ class Elements
      */
     protected function classBasename()
     {
-        return basename(str_replace('\\', '/', static::class));
+        $className = explode('\\', static::class);
+
+        return $className[count($className) - 2];
     }
 
     /**
