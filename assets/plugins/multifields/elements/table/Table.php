@@ -98,7 +98,7 @@ class Table extends \Multifields\Base\Elements
         }
 
         if (!empty($params['title'])) {
-            $params['title'] = '<div class="row mx-0 col px-2 py-1 mf-title">' . $params['title'] . '</div>';
+            $params['title'] = '<div class="row mx-0 col mf-title">' . $params['title'] . '</div>';
         } else {
             $params['title'] = '';
         }

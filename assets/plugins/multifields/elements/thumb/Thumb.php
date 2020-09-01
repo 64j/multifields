@@ -56,7 +56,7 @@ class Thumb extends \Multifields\Base\Elements
         $this->getValue($params);
 
         if (!empty($params['title'])) {
-            $params['title'] = '<div class="px-2 py-1 mf-title">' . $params['title'] . '</div>';
+            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
         } else {
             $params['title'] = '';
         }
