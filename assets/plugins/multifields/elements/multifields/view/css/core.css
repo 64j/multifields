@@ -7,6 +7,7 @@
 .multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
+.multifields input[type="checkbox"], .multifields input[type="radio"] { display: inline-block }
 .multifields select, .multifields select[size] { width: 100% }
 .multifields .fa { min-width: 1rem; min-height: 1rem; }
 /* actions */
