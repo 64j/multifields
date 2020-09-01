@@ -559,7 +559,7 @@ class Elements
 
                 $out = self::element('element')
                     ->render([
-                        'class' => !empty($params['class']) ? $params['class'] : 'col',
+                        'class' => 'col ' . $params['class'],
                         'attr' => 'data-type="' . $params['type'] . '" data-name="' . $params['name'] . '" ' . $params['attr'],
                         'items' => $element
                     ]);
