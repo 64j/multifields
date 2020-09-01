@@ -10,7 +10,7 @@
 .multifields .mf-table > .mf-actions .mf-actions-add { opacity: 0; visibility: hidden; transform: scale(.8); transition: opacity .15s, visibility .15s, transform .15s; }
 .multifields .mf-table:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
 /* columns */
-.multifields .mf-table .mf-column-settings { position: relative; z-index: 9; float: right; margin: .5rem .25rem; width: .7rem; height: .7rem; text-align: center; cursor: pointer; }
+.multifields .mf-table .mf-column-settings { position: relative; z-index: 9; float: right; margin: .5rem .25rem .5rem -1rem; width: .7rem; height: .7rem; text-align: center; cursor: pointer; }
 .multifields .mf-table .mf-column-settings:hover { color: #2196f3; }
 .multifields .mf-table th[data-type="id"] .mf-column-settings { display: none }
 .multifields .mf-table .mf-column-menu { top: 1.7rem; left: 50%; bottom: auto; margin-left: -12.1rem; min-width: 12rem; opacity: 0; visibility: hidden; font-size: .75rem; transition: opacity .1s, visibility .1s, bottom .1s; }
