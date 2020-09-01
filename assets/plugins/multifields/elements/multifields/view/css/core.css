@@ -2,7 +2,7 @@
 .multifields { position: relative; margin: 0 -.25rem 1.5rem !important; padding: 0 !important; }
 .multifields .row { margin-left: -1rem; margin-right: -1rem }
 .multifields .col { padding: .25rem !important; }
-.multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { background-color: #fff }
+.multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
 .multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
