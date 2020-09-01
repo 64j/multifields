@@ -44,16 +44,11 @@ Multifields.element('row', {
 
   actionDel: function() {
     if (!Multifields.el.parentElement.parentElement.classList.contains('multifields')
+        && Multifields.el.parentElement.querySelectorAll('.mf-row[data-name="' + Multifields.name + '"]').length === 1
         && (
-            (
-                !Multifields.el.parentElement.parentElement.classList.contains('mf-row-group')
-                && Multifields.el.parentElement.querySelectorAll('.mf-row[data-name="' + Multifields.name + '"]').length === 1
-            )
+            !Multifields.el.parentElement.parentElement.classList.contains('mf-row-group')
             ||
-            (
-                !Multifields.el.parentElement.parentElement.querySelector('.mf-templates [data-template-name="' + Multifields.name + '"]'
-                )
-            )
+            !Multifields.el.parentElement.parentElement.querySelector('.mf-templates [data-template-name="' + Multifields.name + '"]')
         )
     ) {
       if (Multifields.el.classList.contains('mf-row-group')) {
