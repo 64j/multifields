@@ -1,7 +1,7 @@
 .mf-thumb { align-self: flex-start; background: transparent -10000% -10000% no-repeat; }
 .mf-thumb:not([class*="col-"]) { flex: 0 0 auto; width: 7rem; max-width: 100%; }
 .multifields .mf-thumb::before { content: ""; display: block; padding-top: 100%; }
-.multifields .mf-thumb > .mf-title { position: absolute; left: .25rem; top: .25rem; right: .25rem; background-color: #f2f2f2; border-bottom: 1px solid #ddd; transition: all .25s; }
+.multifields .mf-thumb > .mf-title { position: absolute; left: .25rem; top: .25rem; right: .25rem; width: auto; background-color: #f2f2f2; border-bottom: 1px solid #ddd; transition: all .25s; }
 .multifields .mf-thumb:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff !important; }
 .multifields .mf-thumb.mf-group:hover > .mf-title { background-color: #0a5 !important; border-color: #0a5 !important; color: #fff !important; }
 .multifields .mf-thumb.mf-group:hover > .mf-actions::before { border-color: #0a5 !important; }
