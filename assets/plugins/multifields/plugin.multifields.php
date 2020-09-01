@@ -10,12 +10,12 @@ require_once '__autoload.php';
 
 switch ($e->name) {
     case 'OnManagerMainFrameHeaderHTMLBlock':
+        (new \Multifields\Base\Updater)->run();
+
         if (in_array($modx->manager->action, [3, 4, 17, 27, 72, 112])) {
             \Multifields\Base\Core::getInstance();
 
             $e->addOutput((new \Multifields\Base\Elements())->getStartScripts());
-
-            (new \Multifields\Base\Updater)->run();
         }
         break;
 

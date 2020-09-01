@@ -46,7 +46,7 @@ class Updater200 extends Updater
                 $config = str_replace("'type' => 'thumb'", "'type' => 'thumb'," . "\n" . "'actions' => false", $config);
 
                 // fix type thumb:image
-                $config = str_replace('thumb:image', 'thumb', $config);
+                //$config = str_replace('thumb:image', 'thumb', $config);
 
                 // fix type => group
                 $config = str_replace("'type' => 'group'", "'type' => 'row'", $config);
