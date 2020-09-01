@@ -1,6 +1,7 @@
 .multifields .mf-row-group { min-height: 3rem }
 .multifields .mf-row-group:hover > .mf-actions::before { border-color: #0a5; }
 .multifields .mf-row-group > .mf-actions .mf-actions-add { color: #0a5; }
+.multifields .mf-row.col:not([class*="col-"]) { max-width: 100%; flex: 0 0 100%; }
 .multifields .mf-row > .mf-value, .multifields .mf-row > .mf-title { z-index: 1; background-color: #f2f2f2; border-bottom: 1px solid #ddd; transition: all .25s; }
 .multifields .mf-row > .mf-actions .mf-actions-add { transform: scale(.8); transform-origin: center; }
 .multifields .mf-row:hover > .mf-actions .mf-actions-add { transform: scale(1); }
