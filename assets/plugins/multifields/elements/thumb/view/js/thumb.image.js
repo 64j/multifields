@@ -9,9 +9,11 @@ Multifields.element('thumb:image', {
     ) {
       Multifields.getTemplate(function(data) {
         Multifields.el.insertAdjacentHTML('afterend', data.html);
+        Multifields.el.parentElement.removeChild(Multifields.el);
       });
+    } else {
+      Multifields.el.parentElement.removeChild(Multifields.el);
     }
-    Multifields.el.parentElement.removeChild(Multifields.el);
   },
 
   actionEdit: function() {
