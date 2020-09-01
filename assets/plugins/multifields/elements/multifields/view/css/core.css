@@ -1,7 +1,7 @@
 [data-multifields] { display: none !important; }
 .multifields { position: relative; margin: 0 -.25rem 1.5rem !important; padding: 0 !important; }
 .multifields .row { margin-left: -1rem; margin-right: -1rem }
-.multifields .col { padding: .25rem !important; flex-wrap: wrap; flex-direction: row; }
+.multifields .col { padding: .25rem !important; flex-wrap: wrap; flex-direction: row; background-clip: content-box; }
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
 .multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
