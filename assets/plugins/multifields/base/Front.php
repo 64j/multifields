@@ -59,8 +59,17 @@ class Front
      */
     public function render($params = [])
     {
-        $params['file'] = self::getParams('basePath') . 'data/' . self::getParams('docid') . '__' . self::getParams('tvId') . '.json';
+        if (!isset($params['tvId'])) {
+            $params['tvId'] = 0;
+        }
+
+        if (!isset($params['tvName'])) {
+            $params['tvName'] = '';
+        }
+
         self::setParams($params);
+        self::setConfig(null);
+        self::setData(null);
 
         $out = '';
 
@@ -116,10 +125,20 @@ class Front
     }
 
     /**
+     * @param array $data
+     * @return array
+     */
+    public static function setData($data = [])
+    {
+        return self::$data = $data;
+    }
+
+    /**
      * @return array
      */
     protected static function getData()
     {
+
         if (empty(self::$data)) {
             if (!is_null(self::getParams('data'))) {
                 self::$data = json_decode(self::getParams('data', '{}'), true);
@@ -268,7 +287,6 @@ class Front
     protected function renderData($data = [], $level = 0, $config = [])
     {
         $out = [];
-        $find = [];
         $level++;
         $i = 1;
 
@@ -284,7 +302,7 @@ class Front
                 $v['value'] = '';
             }
 
-            $this->findData($v['name'], $config, $find);
+            $find = $this->findData($v['name'], $config);
 
             if ($this->element($v['type'])) {
                 $v = $this->element($v['type'])
@@ -317,7 +335,7 @@ class Front
                 $v = array_merge($v, $this->renderData($v['items'], $level, $find));
                 $this->prepare($prepare, $v);
             }
-            $out[] = $this->tpl($tpl, $v);
+            $out[$k] = $this->tpl($tpl, $v);
         }
 
         if (!empty($out)) {
@@ -330,21 +348,26 @@ class Front
 
     /**
      * @param $key
-     * @param $arr
-     * @param $find
+     * @param $config
+     * @return array|mixed
      */
-    protected function findData($key, $arr, &$find)
+    protected function findData($key, $config)
     {
-        if (isset($arr[$key])) {
-            $find = $arr[$key];
+        $result = [];
 
-            return;
-        }
-        foreach ($arr as $k => $v) {
-            if ($k == 'items') {
-                $this->findData($key, $v, $find);
+        if (isset($config[$key])) {
+            $result = $config[$key];
+        } elseif (isset(self::getConfig('templates')[$key])) {
+            $result = self::getConfig('templates')[$key];
+        } elseif (is_array($config)) {
+            foreach ($config as $k => $v) {
+                if ($k == 'items') {
+                    $result = self::findData($key, $v);
+                }
             }
         }
+
+        return $result;
     }
 
     /**
@@ -416,17 +439,26 @@ class Front
     }
 
     /**
+     * @param array $data
+     * @return array
+     */
+    public static function setConfig($data = [])
+    {
+        return self::$config = $data;
+    }
+
+    /**
      * @param null $key
      * @return array|mixed
      */
     protected static function getConfig($key = null)
     {
-        self::$config = [];
-
-        if (file_exists(self::getParams('basePath') . 'config/' . self::getParams('tvName') . '.php')) {
-            self::$config = require_once self::getParams('basePath') . 'config/' . self::getParams('tvName') . '.php';
-        } elseif (file_exists(self::getParams('basePath') . 'config/' . self::getParams('tvId') . '.php')) {
-            self::$config = require_once self::getParams('basePath') . 'config/' . self::getParams('tvId') . '.php';
+        if (empty(self::$config)) {
+            if (file_exists(self::getParams('basePath') . 'config/' . self::getParams('tvName') . '.php')) {
+                self::$config = require_once self::getParams('basePath') . 'config/' . self::getParams('tvName') . '.php';
+            } elseif (file_exists(self::getParams('basePath') . 'config/' . self::getParams('tvId') . '.php')) {
+                self::$config = require_once self::getParams('basePath') . 'config/' . self::getParams('tvId') . '.php';
+            }
         }
 
         if (isset(self::$config[$key])) {
