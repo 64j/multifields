@@ -10,6 +10,15 @@ class Richtext extends \Multifields\Base\Elements
 
     protected $disabled = false;
 
+    public function render($params = [], $data = [])
+    {
+        if ($params['title'] != '') {
+            $params['title'] = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>';
+        }
+
+        return parent::render($params, $data);
+    }
+
     public function actionDisplay()
     {
         $evo = evolutionCMS();

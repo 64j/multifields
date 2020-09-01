@@ -553,7 +553,7 @@ class Elements
 
                 $element = str_replace('id="', $params['item.attr'] . ' id="', $element);
 
-                if ($params['title']) {
+                if ($params['title'] != '') {
                     $element = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>' . $element;
                 }
 

@@ -18,6 +18,10 @@ class File extends \Multifields\Base\Elements
     {
         $params['button.class'] = 'far fa-file';
 
+        if ($params['title'] != '') {
+            $params['title'] = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>';
+        }
+
         return parent::render($params, $data);
     }
 }

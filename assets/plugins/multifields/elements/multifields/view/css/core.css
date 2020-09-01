@@ -1,7 +1,7 @@
 [data-multifields] { display: none !important; }
 .multifields { position: relative; margin: 0 -.25rem 1.5rem !important; padding: 0 !important; }
 .multifields .row { margin-left: -1rem; margin-right: -1rem }
-.multifields .col { padding: .25rem !important; }
+.multifields .col { padding: .25rem !important; flex-wrap: wrap; flex-direction: row; }
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
 .multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
@@ -34,6 +34,7 @@
 /* title */
 .multifields .mf-value, .multifields .mf-title { position: relative; padding: .5rem !important; width: 100%; }
 .multifields .mf-title { padding-top: .25rem !important; padding-bottom: .25rem !important; }
+.multifields label.mf-title { margin: 0; padding: 0 !important; }
 .multifields .mf-row:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff !important; }
 .multifields .mf-row-group:hover > .mf-title { background-color: #0a5 !important; border-color: #0a5 !important; color: #fff !important; }
 /* draggable */

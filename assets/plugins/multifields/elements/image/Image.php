@@ -19,6 +19,10 @@ class Image extends \Multifields\Base\Elements
         $params['onchange'] = '';
         $params['onclick'] = '';
 
+        if ($params['title'] != '') {
+            $params['title'] = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>';
+        }
+
         if (!empty($params['thumb'])) {
             $thumb = is_array($params['thumb']) ? implode(',', $params['thumb']) : $params['thumb'];
             $params['attr'] .= ' data-thumb="' . $thumb . '"';
