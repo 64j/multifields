@@ -10,7 +10,7 @@
     this.name = null;
 
     document.addEventListener('click', function() {
-      document.querySelectorAll('.multifields.open, .multifields .open').forEach(function(el) {
+      [...document.querySelectorAll('.multifields.open, .multifields .open')].map(function(el) {
         el.classList.remove('open');
       });
     });
@@ -19,16 +19,16 @@
       let form = document.getElementById('mutate');
       if (form) {
         form.addEventListener('submit', function() {
-          document.querySelectorAll('.multifields').forEach(function(el) {
+          [...document.querySelectorAll('.multifields')].map(function(el) {
             Multifields.container = el;
             Multifields.build();
           });
-          document.querySelectorAll('.multifields [name]').forEach(function(el) {
+          [...document.querySelectorAll('.multifields [name]')].map(function(el) {
             el.disabled = true;
           });
         });
       }
-      document.querySelectorAll('.multifields').forEach(function(el) {
+      [...document.querySelectorAll('.multifields')].map(function(el) {
         Multifields.init(el);
       });
       Multifields.draggable(document.querySelectorAll('.multifields .mf-items'));
@@ -139,11 +139,11 @@
       clone.style.backgroundImage = '';
       clone.id = clone.id && Multifields.uniqid() || '';
       if (clear) {
-        clone.querySelectorAll('[style^="background-image"]').forEach(function(el) {
+        [...clone.querySelectorAll('[style^="background-image"]')].map(function(el) {
           el.style.backgroundImage = '';
         });
       }
-      clone.querySelectorAll('[name]').forEach(function(el) {
+      [...clone.querySelectorAll('[name]')].map(function(el) {
         let _id = el.id,
             id = Multifields.uniqid();
         if (el.name.substr(0, 2) === 'tv') {
@@ -169,7 +169,7 @@
             el.nextElementSibling.setAttribute('onclick', el.nextElementSibling.getAttribute('onclick').replace(new RegExp(_id, 'g'), id));
           }
         }
-        clone.querySelectorAll('[for="' + _id + '"]').forEach(function(label) {
+        [...clone.querySelectorAll('[for="' + _id + '"]')].map(function(label) {
           label.setAttribute('for', id);
         });
       });
@@ -322,7 +322,7 @@
      * @param ignore
      */
     closeOpened: function(ignore) {
-      document.querySelectorAll('.multifields.open, .multifields .open').forEach(function(el) {
+      [...document.querySelectorAll('.multifields.open, .multifields .open')].map(function(el) {
         if (ignore !== el) {
           el.classList.remove('open');
         }
@@ -344,7 +344,7 @@
             startDay: dpstartDay
           });
         } else {
-          el.querySelectorAll('.DatePicker').forEach(function(el) {
+          [...el.querySelectorAll('.DatePicker')].map(function(el) {
             new DatePicker(el, {
               yearOffset: dpOffset,
               format: el.dataset['format'] || dpformat,
@@ -364,7 +364,7 @@
      */
     draggable: function(els) {
       if (els.length) {
-        els.forEach(function(el) {
+        [...els].map(function(el) {
           if (Multifields.elements[el.parentElement.dataset.type] && typeof Multifields.elements[el.parentElement.dataset.type]['draggable'] === 'function') {
             Multifields.elements[el.parentElement.dataset.type]['draggable'](el);
           } else {
@@ -386,7 +386,7 @@
                 handle: '.mf-actions-move',
                 tableDisplay: parseInt(el.dataset['display']),
                 onEnd: function(e) {
-                  e.item.parentElement.querySelectorAll('[data-autoincrement]').forEach(function(item, i) {
+                  [...e.item.parentElement.querySelectorAll('[data-autoincrement]')].map(function(item, i) {
                     let el = item.querySelector('[data-type="' + item.dataset['autoincrement'] + '"] > input');
                     if (el) {
                       el.value = i + 1;
