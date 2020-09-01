@@ -53,15 +53,41 @@ class Updater
         }
 
         if ($evo->getConfig('multifields_version')) {
-            $evo->db->update([
-                'setting_value' => $evo->db->escape($version)
-            ], '[+prefix+]system_settings', 'setting_name = \'multifields_version\'');
+            if (version_compare($evo->getConfig('settings_version'), '2.0', '<')) {
+                $evo->db->update([
+                    'setting_value' => $evo->db->escape($version)
+                ], '[+prefix+]system_settings', 'setting_name = \'multifields_version\'');
+
+                $evo->config['multifields_version'] = $version;
+            } else {
+                \EvolutionCMS\Models\SystemSetting::query()
+                    ->where('setting_name', '=', 'multifields_version')
+                    ->update([
+                        'setting_value' => $version
+                    ]);
+
+                $evo->setConfig('multifields_version', $version);
+            }
         } else {
-            $evo->db->insert([
-                'setting_name' => 'multifields_version',
-                'setting_value' => $evo->db->escape($version)
-            ], '[+prefix+]system_settings');
+            if (version_compare($evo->getConfig('settings_version'), '2.0', '<')) {
+                $evo->db->insert([
+                    'setting_name' => 'multifields_version',
+                    'setting_value' => $evo->db->escape($version)
+                ], '[+prefix+]system_settings');
+
+                $evo->config['multifields_version'] = $version;
+            } else {
+                \EvolutionCMS\Models\SystemSetting::query()
+                    ->insert([
+                        'setting_name' => 'multifields_version',
+                        'setting_value' => $version
+                    ]);
+
+                $evo->setConfig('multifields_version', $version);
+            }
         }
+
+        $evo->clearCache('full');
 
         return $version;
     }
