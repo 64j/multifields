@@ -37,7 +37,7 @@ class Row extends \Multifields\Base\Elements
             }
 
             $params['value'] = '
-                <div class="row m-0 col-12 p-2 mf-value">
+                <div class="mf-value">
                     <input type="text" class="form-control" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
                 </div>';
         }
@@ -103,7 +103,7 @@ class Row extends \Multifields\Base\Elements
         }
 
         if (!empty($params['title'])) {
-            $params['title'] = '<div class="row mx-0 col mf-title">' . $params['title'] . '</div>';
+            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
         } else {
             $params['title'] = '';
         }

@@ -7,6 +7,7 @@
 .multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
+.multifields select, .multifields select[size] { width: 100% }
 .multifields .fa { min-width: 1rem; min-height: 1rem; }
 /* actions */
 .multifields .mf-actions { position: absolute; left: .25rem; top: .25rem; right: .25rem; bottom: .25rem; }
@@ -31,7 +32,7 @@
 .multifields .mf-templates.open { opacity: 1; visibility: visible; }
 .multifields .mf-templates.contextMenu .fa { margin-right: .25rem; }
 /* title */
-.multifields .mf-value, .multifields .mf-title { padding: .5rem !important; }
+.multifields .mf-value, .multifields .mf-title { position: relative; padding: .5rem !important; width: 100%; }
 .multifields .mf-title { padding-top: .25rem !important; padding-bottom: .25rem !important; }
 .multifields .mf-row:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff !important; }
 .multifields .mf-row-group:hover > .mf-title { background-color: #0a5 !important; border-color: #0a5 !important; color: #fff !important; }
