@@ -18,6 +18,7 @@ class Th extends \Multifields\Base\Elements
                 $type = isset($v['type']) ? $v['type'] : (isset($find['items'][$k]['type']) ? $find['items'][$k]['type'] : null);
                 if (!empty($type)) {
                     $item['@type'] = $type;
+                    $v['type'] = $type;
                     if ($v['type'] != 'id') {
                         $v['type'] = 'text';
                     }
