@@ -1,5 +1,21 @@
 Multifields.element('thumb:file', {
 
+  actionDel: function() {
+    if (!Multifields.el.parentElement.parentElement.classList.contains('multifields')
+        && (
+            !Multifields.el.parentElement.parentElement.classList.contains('mf-row-group')
+            && Multifields.el.parentElement.querySelectorAll('.mf-thumb[data-name="' + Multifields.name + '"]').length === 1
+        )
+    ) {
+      Multifields.getTemplate(function(data) {
+        Multifields.el.insertAdjacentHTML('afterend', data.html);
+        Multifields.el.parentElement.removeChild(Multifields.el);
+      });
+    } else {
+      Multifields.el.parentElement.removeChild(Multifields.el);
+    }
+  },
+
   actionEdit: function() {
     let els = Multifields.el.querySelector('.mf-items');
     if (els && els.children.length) {
