@@ -7,8 +7,8 @@ class Date extends \Multifields\Base\Elements
     //protected $disabled = true;
 
     protected $template = '
-        <div class="col [+class+]" data-type="date" data-name="[+name+]" [+attr+]>
-            <input type="text" id="[+id+]" class="form-control DatePicker" name="tv[+id+]" value="[+value+]" placeholder="[+placeholder+]" [+item.attr+]>
+        <div class="col [+class+]" data-type="date" data-name="[+name+]" data-id="[+id+]" [+attr+]>
+            <input type="text" id="tv[+id+]" class="form-control DatePicker" name="tv[+id+]" value="[+value+]" placeholder="[+placeholder+]" [+item.attr+]>
             <a onclick="document.forms[\'mutate\'].elements[\'tv[+id+]\'].value=\'\';document.forms[\'mutate\'].elements[\'tv[+id+]\'].blur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer;"><i class="fa fa-calendar-times-o"></i></a>
         </div>';
 }

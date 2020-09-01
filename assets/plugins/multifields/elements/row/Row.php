@@ -16,7 +16,7 @@ class Row extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div id="[+id+]" class="col mf-row [+class+]" data-type="row" data-name="[+name+]" [+attr+]>
+        <div class="col mf-row [+class+]" data-type="row" data-name="[+name+]" data-id="[+id+]" [+attr+]>
             [+title+]
             [+templates+]
             [+value+]

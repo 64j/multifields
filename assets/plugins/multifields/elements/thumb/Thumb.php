@@ -15,7 +15,7 @@ class Thumb extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div id="[+id+]" class="col mf-thumb [+class+]" data-type="thumb" data-name="[+name+]" [+attr+]>
+        <div class="col mf-thumb [+class+]" data-type="thumb" data-name="[+name+]" data-id="[+id+]" [+attr+]>
             [+title+]
             [+value+]
             [+actions+]

@@ -137,6 +137,7 @@
       clear = typeof clear !== 'undefined' ? clear : true;
       clone = !clone ? Multifields.el.cloneNode(true) : clone.cloneNode(true);
       clone.style.backgroundImage = '';
+      clone.id = clone.id && Multifields.uniqid() || '';
       if (clear) {
         clone.querySelectorAll('[style^="background-image"]').forEach(function(el) {
           el.style.backgroundImage = '';
@@ -181,7 +182,7 @@
     build: function() {
       if (Multifields.container) {
         let data = Multifields.buildItems(Multifields.container.querySelector('.mf-items').children);
-        Multifields.container.nextElementSibling.value = data.length && JSON.stringify(data) || '';
+        Multifields.container.nextElementSibling.value = Object.values(data).length && JSON.stringify(data) || '';
       }
     },
 
@@ -191,7 +192,7 @@
      * @returns {[]}
      */
     buildItems: function(els) {
-      let data = [];
+      let data = {};
       if (els) {
         for (let i = 0; i < els.length; i++) {
           if (els[i].tagName === 'DIV') {
@@ -221,7 +222,7 @@
 
                       case 'select':
                       case 'select-multiple':
-                        for(let i = 0; i < el.length; i++) {
+                        for (let i = 0; i < el.length; i++) {
                           if (el[i].selected) {
                             value.push(el[i].value || el[i].text);
                           }
@@ -256,7 +257,7 @@
             if (Multifields.elements[item.type] && typeof Multifields.elements[item.type]['build'] === 'function') {
               item = Multifields.elements[item.type]['build'](els[i], item, i);
             }
-            data.push(item);
+            data[item.name + (item.id && '#' + item.id || '')] = item;
           }
         }
       }
