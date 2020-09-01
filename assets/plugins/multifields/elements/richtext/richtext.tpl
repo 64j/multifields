@@ -1,4 +1,4 @@
-<div class="col p-1 input-group [+class+]" data-type="richtext" data-name="[+name+]" [+attr+]>
+<div class="col input-group [+class+]" data-type="richtext" data-name="[+name+]" [+attr+]>
     [+title+]
     <textarea name="[+id+]" id="[+id+]" class="form-control" rows="4" placeholder="[+placeholder+]" onchange="documentDirty=true;">[+value+]</textarea>
     <div class="input-group-append">

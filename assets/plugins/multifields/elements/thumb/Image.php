@@ -15,7 +15,7 @@ class Image extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div class="col p-1 mf-thumb mf-thumb-image [+class+]" data-type="thumb:image" data-name="[+name+]" [+attr+]>
+        <div class="col mf-thumb mf-thumb-image [+class+]" data-type="thumb:image" data-name="[+name+]" [+attr+]>
             [+title+]
             [+value+]
             [+actions+]
