@@ -15,7 +15,7 @@ class Element extends \Multifields\Base\Elements
         }
 
         if (isset($params['id']) && $params['id'] != '') {
-            $params['attr'] = ' id="' . $params['id'] . '"';
+            $params['attr'] .= ' id="' . $params['id'] . '"';
         }
 
         if (isset($params['class']) && $params['class'] != '') {
