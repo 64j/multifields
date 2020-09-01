@@ -547,6 +547,10 @@ class Elements
                     $params['item.attr'] .= ' placeholder="' . $params['placeholder'] . '"';
                 }
 
+                if (in_array($params['type'], ['option', 'checkbox'])) {
+                    $element = str_replace(['id="tv', 'for="tv'], ['id="tv' . $params['id'], 'for="tv' . $params['id']], $element);
+                }
+
                 $element = str_replace('id="', $params['item.attr'] . ' id="', $element);
 
                 if ($params['title']) {
@@ -559,10 +563,6 @@ class Elements
                         'attr' => 'data-type="' . $params['type'] . '" data-name="' . $params['name'] . '" ' . $params['attr'],
                         'items' => $element
                     ]);
-
-                if (in_array($params['type'], ['option', 'checkbox'])) {
-                    $out = str_replace(['id="tv', 'for="tv'], ['id="tv' . $params['id'], 'for="tv' . $params['id']], $out);
-                }
             }
         }
 
