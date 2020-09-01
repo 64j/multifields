@@ -210,10 +210,27 @@
               if (el.length) {
                 let value = [];
                 [...el].map(function(el) {
-                  if (!el.hidden && el.checked && (el.type === 'checkbox' || el.type === 'radio')) {
-                    value.push(el.value);
-                  } else {
-                    value.push(el.value || el.innerHTML || '');
+                  if (!el.hidden) {
+                    switch (el.type) {
+                      case 'checkbox':
+                      case 'radio':
+                        if (el.checked) {
+                          value.push(el.value);
+                        }
+                        break;
+
+                      case 'select':
+                      case 'select-multiple':
+                        for(let i = 0; i < el.length; i++) {
+                          if (el[i].selected) {
+                            value.push(el[i].value || el[i].text);
+                          }
+                        }
+                        break;
+
+                      default:
+                        value.push(el.value || el.innerHTML || '');
+                    }
                   }
                 });
                 item.value = value.join('||');
