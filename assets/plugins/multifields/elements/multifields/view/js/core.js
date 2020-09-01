@@ -192,12 +192,17 @@
      * @returns {[]}
      */
     buildItems: function(els) {
-      let data = {};
+      let data = {},
+          counters = {};
       if (els) {
         for (let i = 0; i < els.length; i++) {
           if (els[i].tagName === 'DIV') {
             let item = Object.assign({}, els[i].dataset),
                 el;
+            if (!counters[item.name]) {
+              counters[item.name] = 0;
+            }
+            counters[item.name]++;
             if (item.type) {
               if (els[i].querySelector('.mf-items')) {
                 el = els[i].querySelector(':scope > .mf-value input');
@@ -257,7 +262,15 @@
             if (Multifields.elements[item.type] && typeof Multifields.elements[item.type]['build'] === 'function') {
               item = Multifields.elements[item.type]['build'](els[i], item, i);
             }
-            data[item.name + (item.id && '#' + item.id || '')] = item;
+            if (!data[item.name] && !data[item.name + '#1']) {
+              data[item.name] = item;
+            } else {
+              if (data[item.name]) {
+                data[item.name + '#1'] = data[item.name];
+                delete data[item.name];
+              }
+              data[item.name + (counters[item.name] && '#' + counters[item.name] || '')] = item;
+            }
           }
         }
       }

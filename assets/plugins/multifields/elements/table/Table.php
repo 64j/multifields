@@ -24,7 +24,7 @@ class Table extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div class="mf-table col col-12 row m-0 [+class+]" data-type="table" data-name="[+name+]" data-id="[+id+]" [+attr+]>
+        <div id="[+id+]" class="mf-table col col-12 row m-0 [+class+]" data-type="table" data-name="[+name+]" [+attr+]>
             [+title+]
             [+value+]
             [+actions+]

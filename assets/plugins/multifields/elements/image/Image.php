@@ -8,7 +8,7 @@ class Image extends \Multifields\Base\Elements
     protected $scripts = 'image.js';
 
     protected $template = '
-        <div class="col [+class+]" data-type="image" data-name="[+name+]" data-id="[+id+]" [+attr+]>
+        <div class="col [+class+]" data-type="image" data-name="[+name+]" [+attr+]>
             [+title+]
             <input type="text" id="tv[+id+]" class="form-control" name="tv[+id+]" value="[+value+]" placeholder="[+placeholder+]" onchange="documentDirty=true;[+onchange+]">
             <i class="[+button.class+]" onclick="BrowseServer(\'tv[+id+]\');[+onclick+]"></i>
