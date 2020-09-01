@@ -212,6 +212,8 @@
                 [...el].map(function(el) {
                   if (!el.hidden && el.checked && (el.type === 'checkbox' || el.type === 'radio')) {
                     value.push(el.value);
+                  } else {
+                    value.push(el.value || el.innerHTML || '');
                   }
                 });
                 item.value = value.join('||');
