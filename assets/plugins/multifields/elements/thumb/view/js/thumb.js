@@ -28,7 +28,7 @@ Multifields.element('thumb', {
           icon: 'fa-layer-group',
           delay: 0,
           overlay: 1,
-          draggable: 0,
+          overlayclose: 1,
           hide: 0,
           hover: 0,
           width: '80%',
@@ -71,6 +71,22 @@ Multifields.element('thumb', {
             });
             Multifields.elements.thumb.parent.replaceChild(this.querySelector('.mf-items'), Multifields.elements.thumb.parent.querySelector('.mf-items'));
             this.close();
+          }
+        });
+        Multifields.elements.thumb.popup.el.addEventListener('change', function(e) {
+          let target = e.target;
+          switch (target.type) {
+            case 'select':
+            case 'select-one':
+            case 'select-multiple':
+              [...target.options].map(function(el, i) {
+                if (i === target.selectedIndex) {
+                  el.setAttribute('selected', true);
+                } else {
+                  el.removeAttribute('selected');
+                }
+              });
+              break;
           }
         });
       } else {
