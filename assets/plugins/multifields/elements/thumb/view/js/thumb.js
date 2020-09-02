@@ -23,7 +23,7 @@ Multifields.element('thumb', {
       let clone = Multifields.clone(false);
       if (parent.modx) {
         Multifields.elements.thumb.popup = parent.modx.popup({
-          title: Multifields.type,
+          title: Multifields.el.querySelector('.mf-title') && Multifields.el.querySelector('.mf-title').innerHTML || Multifields.type,
           content: '<div class="multifields"><div class="mf-items"></div><div class="px-1"><span class="btn btn-success w-100 mf-save">OK</span></div></div>',
           icon: 'fa-layer-group',
           delay: 0,
