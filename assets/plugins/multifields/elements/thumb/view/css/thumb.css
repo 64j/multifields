@@ -14,6 +14,7 @@
 .multifields .mf-thumb > .mf-actions .mf-actions-edit { left: 50%; top: 50%; font-size: 1rem; opacity: .8; }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit:hover { opacity: 1; }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit::before { content: "\f03e"; }
+.multifields .mf-thumb.mf-group > .mf-actions .mf-actions-edit::before { content: "\f044"; }
 .multifields .mf-thumb[data-multi] > .mf-actions .mf-actions-edit::before { content: "\f302"; }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit::after { font-size: 2rem; opacity: .5; }
 .multifields .mf-thumb > .mf-items { display: none !important }

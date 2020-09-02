@@ -70,7 +70,7 @@ class Thumb extends \Multifields\Base\Elements
         }
 
         if (!empty($data) && !empty($data['items'])) {
-            $params['class'] .= 'mf-group';
+            $params['class'] .= ' mf-group';
         }
 
         return parent::render($params, $data);
