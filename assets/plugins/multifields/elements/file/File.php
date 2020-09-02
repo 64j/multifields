@@ -9,7 +9,7 @@ class File extends \Multifields\Base\Elements
 
     protected $template = '
         <div class="col [+class+]" data-type="file" data-name="[+name+]" [+attr+]>
-            [+title+]
+            [+label+]
             <input type="text" id="tv[+id+]" class="form-control" name="tv[+id+]" value="[+value+]" placeholder="[+placeholder+]" onchange="documentDirty=true;">
             <i class="[+button.class+]" onclick="BrowseFileServer(\'tv[+id+]\');"></i>
         </div>';
@@ -18,8 +18,8 @@ class File extends \Multifields\Base\Elements
     {
         $params['button.class'] = 'far fa-file';
 
-        if ($params['title'] != '') {
-            $params['title'] = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>';
+        if ($params['label'] != '') {
+            $params['label'] = '<label for="tv' . $params['id'] . '" ' . $params['label.attr'] . '>' . $params['label'] . '</label>';
         }
 
         return parent::render($params, $data);

@@ -1,10 +1,11 @@
 [data-multifields] { display: none !important; }
 .multifields { position: relative; margin: 0 -.25rem 1.5rem !important; padding: 0 !important; }
 .multifields .row { margin-left: -1rem; margin-right: -1rem }
-.multifields .col { padding: .25rem !important; flex-wrap: wrap; flex-direction: row; background-clip: content-box; }
+.multifields .col { padding: .25rem; flex-wrap: wrap; flex-direction: row; background-clip: content-box; }
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
 .multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
+.multifields .mf-items { display: flex; flex-wrap: wrap; padding: .25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
 .multifields input[type="checkbox"], .multifields input[type="radio"] { display: inline-block }
@@ -33,7 +34,7 @@
 .multifields .mf-templates.open { opacity: 1; visibility: visible; }
 .multifields .mf-templates.contextMenu .fa { margin-right: .25rem; }
 /* title */
-.multifields .col[data-type] > label { width: 100%; }
+.multifields .col[data-type] > label { margin: 0; width: 100%; }
 .multifields .mf-value, .multifields .mf-title { position: relative; padding: .5rem !important; width: 100%; }
 .multifields .mf-title { overflow: hidden; padding-top: .25rem !important; padding-bottom: .25rem !important; text-overflow: ellipsis; }
 .multifields label.mf-title { margin: 0; padding: 0 !important; }

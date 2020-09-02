@@ -12,8 +12,8 @@ class Richtext extends \Multifields\Base\Elements
 
     public function render($params = [], $data = [])
     {
-        if ($params['title'] != '') {
-            $params['title'] = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>';
+        if ($params['label'] != '') {
+            $params['label'] = '<label for="tv' . $params['id'] . '" ' . $data['label.attr'] . '>' . $params['label'] . '</label>';
         }
 
         return parent::render($params, $data);

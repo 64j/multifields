@@ -526,10 +526,12 @@ class Elements
             'attr' => '',
             'value' => '',
             'title' => '',
+            'label' => '',
             'style' => '',
             'class' => '',
             'default' => '',
             'elements' => '',
+            'label.attr' => '',
             'item.attr' => '',
             'items.class' => '',
             'placeholder' => '',
@@ -553,8 +555,8 @@ class Elements
 
                 $element = str_replace('id="', $params['item.attr'] . ' id="', $element);
 
-                if ($params['title'] != '') {
-                    $element = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>' . $element;
+                if ($params['label'] != '') {
+                    $element = '<label for="tv' . $params['id'] . '" ' . $params['label.attr'] . '>' . $params['label'] . '</label>' . $element;
                 }
 
                 $out = self::element('element')

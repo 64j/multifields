@@ -17,11 +17,11 @@ class Row extends \Multifields\Base\Elements
 
     protected $template = '
         <div id="[+id+]" class="col mf-row [+class+]" data-type="row" data-name="[+name+]" [+attr+]>
-            [+title+]
+            [+label+]
             [+templates+]
             [+value+]
             [+actions+]
-            <div class="row m-0 col-12 p-1 mf-items [+items.class+]">
+            <div class="mf-items [+items.class+]">
                 [+items+]
             </div>
         </div>';
@@ -102,10 +102,8 @@ class Row extends \Multifields\Base\Elements
             $params['attr'] .= ' data-autoincrement="' . $params['autoincrement'] . '"';
         }
 
-        if (!empty($params['title'])) {
-            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
-        } else {
-            $params['title'] = '';
+        if (!empty($params['label'])) {
+            $params['label'] = '<div class="mf-title" ' . $params['label'] . '>' . $params['label'] . '</div>';
         }
 
         return parent::render($params, $data);

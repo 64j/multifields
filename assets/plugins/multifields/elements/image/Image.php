@@ -9,7 +9,7 @@ class Image extends \Multifields\Base\Elements
 
     protected $template = '
         <div class="col [+class+]" data-type="image" data-name="[+name+]" [+attr+]>
-            [+title+]
+            [+label+]
             <input type="text" id="tv[+id+]" class="form-control" name="tv[+id+]" value="[+value+]" placeholder="[+placeholder+]" onchange="documentDirty=true;[+onchange+]">
             <i class="[+button.class+]" onclick="BrowseServer(\'tv[+id+]\');[+onclick+]"></i>
         </div>';
@@ -19,8 +19,8 @@ class Image extends \Multifields\Base\Elements
         $params['onchange'] = '';
         $params['onclick'] = '';
 
-        if ($params['title'] != '') {
-            $params['title'] = '<label for="tv' . $params['id'] . '">' . $params['title'] . '</label>';
+        if ($params['label'] != '') {
+            $params['label'] = '<label for="tv' . $params['id'] . '" ' . $params['label.attr'] . '>' . $params['label'] . '</label>';
         }
 
         if (!empty($params['thumb'])) {
