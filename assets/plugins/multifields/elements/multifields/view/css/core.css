@@ -33,6 +33,7 @@
 .multifields .mf-templates.open { opacity: 1; visibility: visible; }
 .multifields .mf-templates.contextMenu .fa { margin-right: .25rem; }
 /* title */
+.multifields .col[data-type] > label { width: 100%; }
 .multifields .mf-value, .multifields .mf-title { position: relative; padding: .5rem !important; width: 100%; }
 .multifields .mf-title { overflow: hidden; padding-top: .25rem !important; padding-bottom: .25rem !important; text-overflow: ellipsis; }
 .multifields label.mf-title { margin: 0; padding: 0 !important; }
