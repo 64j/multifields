@@ -333,6 +333,28 @@ class MultiFields
                     $v['value'] = '';
                 }
 
+                // перестраиваем данные под конфиг
+                if (is_array($v['items'])) {
+                    $__items = [];
+                    foreach ($v['items'] as $keyItem => $item) {
+                        $item['name'] = $keyItem;
+
+                        $count = 0;
+                        foreach ($items as $i) {
+                            if ($i['name'] == $keyItem) {
+                                $__items[] = array_merge($item, $i);
+                                $count++;
+                            }
+                        }
+
+                        if (!$count) {
+                            $__items[] = $item;
+                        }
+                    }
+
+                    $items = $__items;
+                }
+
                 $v['items'] = !empty($items) ? $this->replaceData($items, $result) : '';
 
                 $out .= $this->renderElement($v);
