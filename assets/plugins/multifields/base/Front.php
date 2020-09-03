@@ -295,6 +295,7 @@ class Front
                 $v['name'] = $k;
             }
             $v['mf.name'] = $v['name'];
+            $v['mf.type'] = $v['type'];
             $v['mf.level'] = $level;
             $v['mf.iteration'] = $i++;
 
