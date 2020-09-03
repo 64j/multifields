@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="[+lang+]">
 <head>
+    <base href="[+MODX_SITE_URL+]">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MultiFields:: RichText</title>
-    <link rel="stylesheet" href="media/style/[+manager_theme+]/style.css">
+    <link rel="stylesheet" href="[+MGR_DIR+]/media/style/[+manager_theme+]/style.css">
     <style>
         html, body, body > form { position: relative; margin: 0; padding: 0; height: 100%; background: none }
         #table-layout { position: relative; width: 100%; height: 100%; padding: 0; border: none; border-collapse: collapse; }
