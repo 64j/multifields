@@ -318,7 +318,8 @@ class Elements
                         if ($action == 'move') {
                             $params['class'] .= ' mf-draggable';
                         }
-                        $params['actions'] .= '<i class="mf-actions-' . $action . ' fa" onclick="Multifields.elements[\'' . $params['type'] . '\'].action' . ucfirst($action) . '(event);"></i>';
+                        $params['actions'] .= self::element($params['type'])
+                            ->renderAction($action, $params['type']);
                     }
                 }
             }
@@ -329,6 +330,16 @@ class Elements
         $class = empty($params['actions']) ? ' mf-empty-actions' : '';
 
         $params['actions'] = '<div id="mf-actions-' . $params['id'] . '" class="mf-actions' . $class . '">' . $params['actions'] . '</div>';
+    }
+
+    /**
+     * @param $action
+     * @param $type
+     * @return string
+     */
+    protected function renderAction($action, $type)
+    {
+        return '<i class="mf-actions-' . $action . ' fa" onclick="Multifields.elements[\'' . $type . '\'].action' . ucfirst($action) . '(event);"></i>';
     }
 
     /**
