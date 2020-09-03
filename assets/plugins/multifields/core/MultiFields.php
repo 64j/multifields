@@ -813,6 +813,7 @@ class MultiFields
 
         print $this->view('window.richtext', [
             'mxla' => $mxla,
+            'MODX_SITE_URL' => MODX_SITE_URL,
             'MGR_DIR' => MODX_BASE_URL . MGR_DIR,
             'manager_theme' => $this->evo->config['manager_theme'],
             'body_class' => $body_class,
