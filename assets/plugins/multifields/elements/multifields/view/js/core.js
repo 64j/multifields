@@ -4,7 +4,7 @@
 }(function() {
   'use strict';
 
-  let __ = function() {
+  return new (function() {
     this.container = null;
     this.el = null;
     this.name = null;
@@ -39,9 +39,7 @@
         jQuery('[data-type="custom_tv:multifields"] > .tvimage').remove();
       }
     });
-  };
-
-  __.prototype = {
+  })().prototype = {
     elements: {},
 
     /**
@@ -70,32 +68,36 @@
      * @returns {*}
      */
     element: function(type, obj) {
-      if (Multifields.elements[type]) {
-        return Multifields.elements[type];
-      } else {
-        let __ = function() {
+      if (!Multifields.elements[type]) {
+        Multifields.elements[type] = new function() {
+          this.class = 'Multifields\\Elements\\' + (type + ':' + type).split(':', 2).map(function(str) {
+            return str[0].toUpperCase() + str.slice(1).toLowerCase();
+          }).join('\\');
+
+          this.init = function() {};
+
+          this.actionAdd = function() {
+            Multifields.getTemplate(function(data) {
+              Multifields.el.insertAdjacentHTML('afterend', data.html);
+              Multifields.draggable(Multifields.el.nextElementSibling.querySelectorAll('.mf-draggable > .mf-items'));
+              Multifields.setDatepicker(Multifields.el.nextElementSibling);
+            });
+          };
+
+          this.actionDel = function() {
+            Multifields.el.parentElement.removeChild(Multifields.el);
+          };
+
+          this.actionMove = function() {};
+
           for (let k in obj) {
             if (obj.hasOwnProperty(k)) {
               this[k] = obj[k];
             }
           }
         };
-        __.prototype = {
-          init: function() {},
-          actionAdd: function() {
-            Multifields.getTemplate(function(data) {
-              Multifields.el.insertAdjacentHTML('afterend', data.html);
-              Multifields.draggable(Multifields.el.nextElementSibling.querySelectorAll('.mf-draggable > .mf-items'));
-              Multifields.setDatepicker(Multifields.el.nextElementSibling);
-            });
-          },
-          actionDel: function() {
-            Multifields.el.parentElement.removeChild(Multifields.el);
-          },
-          actionMove: function() {}
-        };
-        Multifields.elements[type] = new __();
       }
+      return Multifields.elements[type];
     },
 
     /**
@@ -401,6 +403,4 @@
       return els;
     }
   };
-
-  return new __();
 });

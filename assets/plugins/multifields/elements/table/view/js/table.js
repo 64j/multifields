@@ -1,5 +1,4 @@
 Multifields.element('table', {
-  class: 'Multifields\\Elements\\Table\\Table',
   el: null,
   menu: null,
   target: null,

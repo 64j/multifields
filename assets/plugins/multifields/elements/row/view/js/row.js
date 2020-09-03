@@ -1,5 +1,4 @@
 Multifields.element('row', {
-  class: 'Multifields\\Elements\\Row\\Row',
   index: 1,
 
   actionAdd: function(e) {
