@@ -5,5 +5,9 @@
 .multifields .mf-row > .mf-value, .multifields .mf-row > .mf-title { z-index: 1; background: rgba(0, 0, 0, .03); border-bottom: 1px solid rgba(0, 0, 0, .1); transition: all .25s; }
 .multifields .mf-row > .mf-actions .mf-actions-add { transform: scale(.8); transform-origin: center; }
 .multifields .mf-row:hover > .mf-actions .mf-actions-add { transform: scale(1); }
+.multifields .mf-row > .mf-actions .mf-actions-resize-offset, .multifields .mf-row > .mf-actions .mf-actions-resize-col { overflow: hidden; z-index: 9; left: 0; top: 0; bottom: 0; margin: 0; padding: 0; width: 4px; min-width: auto; height: 100%; background-color: #2196f3; cursor: col-resize; transition: opacity .25s, background-color .25s; }
+.multifields .mf-row > .mf-actions .mf-actions-resize-col { left: auto; right: 0; }
+.multifields .mf-row > .mf-actions .mf-actions-resize-offset::after, .multifields .mf-row > .mf-actions .mf-actions-resize-col::after { content: "..."; left: -1px; top: 50%; height: 4px; transform: rotate(90deg); font-family: monospace; font-size: 10px; }
+.multifields .mf-row-group > .mf-actions .mf-actions-resize-offset, .multifields .mf-row-group > .mf-actions .mf-actions-resize-col { background-color: #0a5; }
 /* darkness */
 .darkness .multifields .mf-row > .mf-value, .darkness .multifields .mf-row > .mf-title { background-color: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .1); }

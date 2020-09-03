@@ -81,6 +81,93 @@ Multifields.element('row', {
     }
   },
 
+  actionResizeCol: function(e) {
+    if (e.button) {
+      return true;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    window.getSelection().removeAllRanges();
+
+    let drag = false,
+        parent = e.target.parentElement.parentElement,
+        widthCol = parent.parentElement.offsetWidth / 12,
+        col = Math.round(parent.offsetWidth / widthCol),
+        className = parent.className.replace(/col-[\d]+/g, ''),
+        x = e.clientX - parent.offsetWidth;
+
+    document.onmousemove = function(e) {
+      if (Math.round((e.clientX - x) / widthCol) !== col) {
+        col = Math.round((e.clientX - x) / widthCol);
+        if (col >= 12) {
+          col = 12;
+        } else if (col < 1) {
+          col = 1;
+        }
+        drag = true;
+        parent.className = className + ' col-' + col;
+      }
+    };
+
+    document.onmouseup = function(e) {
+      if (!drag) {
+        return false;
+      }
+      drag = false;
+      parent.className = className + ' col-' + col;
+      parent.setAttribute('data-mf.col', col);
+      document.onmousemove = null;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  },
+
+  actionResizeOffset: function(e) {
+    if (e.button) {
+      return true;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    window.getSelection().removeAllRanges();
+
+    let drag = false,
+        parent = e.target.parentElement.parentElement,
+        widthCol = parent.parentElement.offsetWidth / 12,
+        offset = Math.round(parent.offsetLeft / widthCol),
+        className = parent.className.replace(/offset-[\d]+/g, ''),
+        x = e.clientX - parent.offsetLeft;
+
+    document.onmousemove = function(e) {
+      if (Math.round((e.clientX - x) / widthCol) !== offset) {
+        offset = Math.round((e.clientX - x) / widthCol);
+        if (offset >= 11) {
+          offset = 11;
+        } else if (offset < 1) {
+          offset = 0;
+        }
+        drag = true;
+        parent.className = className + (offset ? ' offset-' + offset : '');
+      }
+    };
+
+    document.onmouseup = function(e) {
+      if (!drag) {
+        return false;
+      }
+      drag = false;
+      if (offset) {
+        parent.className = className + ' offset-' + offset;
+        parent.setAttribute('data-mf.offset', offset);
+      } else {
+        parent.className = className;
+        parent.removeAttribute('data-mf.offset');
+      }
+      document.onmousemove = null;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  },
+
   template: function(id) {
     Multifields.getTemplate(id, function(data) {
       let template = document.createElement('template');
