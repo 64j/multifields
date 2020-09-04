@@ -55,11 +55,11 @@ Multifields.element('row', {
       } else {
         Multifields.getTemplate(function(data) {
           Multifields.el.insertAdjacentHTML('afterend', data.html);
-          Multifields.element('row').deleteRow();
+          Multifields.elements.row.deleteRow();
         });
       }
     } else {
-      Multifields.element('row').deleteRow();
+      Multifields.elements.row.deleteRow();
     }
   },
 
