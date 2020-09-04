@@ -1,5 +1,7 @@
 .multifields > .mf-actions .mf-actions-add { bottom: -1rem; font-size: .7rem; opacity: 1; color: #0a5; }
 .multifields > .mf-actions .mf-actions-add::after { font-size: 1.4rem; }
+.multifields .mf-templates .mf-icon.mf-icon-image { float: left; margin-right: .25rem; height: 1rem; width: 1rem; background: 50% 50% no-repeat; background-size: contain; }
+.multifields .mf-templates .mf-icon.mf-icon-image > * { display: block; margin: auto; max-height: 100%; max-width: 100%; height: auto; width: auto; }
 .multifields.mf-view-icons { margin-bottom: 0 !important; padding: .5rem 0 !important; }
 .multifields.mf-view-icons > .mf-actions { display: none; }
 .multifields.mf-view-icons > .mf-templates { position: relative; left: 0; top: 0; right: 0; bottom: 0; margin: 0 .25rem .5rem; padding: 0; width: 100% !important; max-width: none; opacity: 1; visibility: visible; box-shadow: none; background: none; display: flex !important; flex-wrap: wrap; flex-direction: row; align-items: stretch; justify-content: center; }
