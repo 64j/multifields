@@ -28,7 +28,7 @@ Multifields.element('thumb', {
           icon: 'fa-layer-group',
           delay: 0,
           overlay: 1,
-          overlayclose: 1,
+          overlayclose: 0,
           hide: 0,
           hover: 0,
           width: '80%',
