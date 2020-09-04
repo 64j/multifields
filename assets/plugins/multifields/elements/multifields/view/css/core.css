@@ -32,7 +32,7 @@
 /* templates */
 .multifields .mf-templates { top: auto; left: 50%; bottom: 0; margin-left: -13rem; min-width: 12rem; opacity: 0; visibility: hidden; font-size: .75rem; transition: opacity .1s, visibility .1s, bottom .1s; }
 .multifields .mf-templates.open { opacity: 1; visibility: visible; }
-.multifields .mf-templates.contextMenu .fa { margin-right: .25rem; }
+.multifields .mf-templates.contextMenu .fa { margin-right: .25rem; width: 1.2rem; }
 /* title */
 .multifields .col[data-type] > label { margin: 0; width: 100%; }
 .multifields .mf-value, .multifields .mf-title { position: relative; padding: .5rem !important; width: 100%; }
