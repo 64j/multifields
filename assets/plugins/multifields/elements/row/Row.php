@@ -61,7 +61,7 @@ class Row extends \Multifields\Base\Elements
                     $icon_class = '';
                     $icon_image = '';
 
-                    if ($v['icon'][0] == '<') {
+                    if (!empty($v['icon']) && $v['icon'][0] == '<') {
                         $icon = $v['icon'];
                         $icon_class = 'mf-icon mf-icon-image';
                     } elseif (stripos($v['icon'], '/') !== false) {

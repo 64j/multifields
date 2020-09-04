@@ -421,6 +421,10 @@ class Elements
 
                 $find = self::findElements($v['name'], $config);
 
+                if (!isset($find['items'])) {
+                    $find['items'] = [];
+                }
+
                 if (!empty($find)) {
                     $v = array_merge($find, $v);
                 }
@@ -572,6 +576,7 @@ class Elements
 
                 $out = self::element('element')
                     ->render([
+                        'id' => $params['id'],
                         'class' => 'col ' . $params['class'],
                         'attr' => 'data-type="' . $params['type'] . '" data-name="' . $params['name'] . '" ' . $params['attr'],
                         'items' => $element
