@@ -287,6 +287,12 @@ class Elements
     {
         $this->getActions($params);
 
+        foreach ($params as $k => $param) {
+            if (substr($k, 0, 3) == 'mf.') {
+                $params['attr'] .= str_replace('mf.', ' data-mf-', strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $k))) . '="' . $param . '"';
+            }
+        }
+
         return $this->view($params);
     }
 
