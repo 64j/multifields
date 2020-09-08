@@ -75,6 +75,7 @@ class Multifields extends \Multifields\Base\Elements
         $this->toolbar = !empty(Core::getConfig('settings')['toolbar']) ? Core::getConfig('settings')['toolbar'] : [];
 
         $params['toolbar'] = '';
+        $params['grid'] = '';
 
         if (!empty($this->toolbar)) {
             if (!empty($this->toolbar['breakpoints'])) {
@@ -129,6 +130,10 @@ class Multifields extends \Multifields\Base\Elements
                             }
                         }
 
+                        if ($v['value']) {
+                            $params['grid'] .= '<div style="max-width: ' . $v['value'] . 'px;"></div>';
+                        }
+
                         $v = '
                         <a href="javascript:;" class="mf-breakpoint mf-btn' . $active . '" title="' . $v['label'] . '" onclick="Multifields.elements.multifields.actionToolbarBreakpoint.call(this, \'' . $v['value'] . '\');" data-breakpoint-key="' . $v['value'] . '" data-breakpoint-name="' . $v['name'] . '">
                             <span class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</span>
@@ -148,6 +153,10 @@ class Multifields extends \Multifields\Base\Elements
 
             if ($params['toolbar']) {
                 $params['toolbar'] = '<div class="mf-toolbar">' . $params['toolbar'] . '</div>';
+            }
+
+            if ($params['grid']) {
+                $params['grid'] = '<div class="mf-grid">' . $params['grid'] . '</div>';
             }
         }
     }

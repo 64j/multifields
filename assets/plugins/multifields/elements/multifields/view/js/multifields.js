@@ -93,9 +93,11 @@ Multifields.element('multifields', {
 
   actionToolbarFullscreen: function() {
     if (Multifields.container.hasAttribute('data-mf-fullscreen')) {
+      document.body.style.overflow = '';
       Multifields.container.removeAttribute('data-mf-fullscreen');
       this.classList.remove('active');
     } else {
+      document.body.style.overflow = 'hidden';
       Multifields.container.setAttribute('data-mf-fullscreen', '');
       this.classList.add('active');
     }

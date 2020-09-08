@@ -2,9 +2,10 @@
 .multifields { position: relative; justify-content: center; margin: 0 -.25rem 1.5rem !important; padding: 0 !important; }
 .multifields .row { margin-left: -1rem; margin-right: -1rem }
 .multifields .col { padding: .25rem; flex-wrap: wrap; flex-direction: row; background-clip: content-box; }
+.form-row .multifields .col-auto { padding: .25rem; }
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
-.multifields > .mf-items { margin-left: -.25rem; margin-right: -.25rem; }
+.multifields > .mf-items { position: relative; z-index: 1; margin: .25rem -.25rem !important; background: #f9f9f9 }
 .multifields .mf-items { display: flex; flex-wrap: wrap; padding: .25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
@@ -30,11 +31,12 @@
 .multifields .mf-actions .mf-actions-move::after { font-size: 100%; opacity: .5; }
 .multifields .mf-actions.mf-empty-actions + .mf-items { margin: 0 .25rem; }
 /* templates */
-.multifields .mf-templates { top: auto; left: 50%; bottom: 0; margin-left: -13rem; min-width: 12rem; opacity: 0; visibility: hidden; font-size: .75rem; transition: opacity .1s, visibility .1s, bottom .1s; }
+.multifields .mf-templates { top: auto; left: 50%; bottom: 0; margin-left: -6.5rem; width: 13rem !important; opacity: 0; visibility: hidden; display: block !important; font-size: .75rem; transition: opacity .1s, visibility .1s, bottom .1s; }
 .multifields .mf-templates.open { opacity: 1; visibility: visible; }
 .multifields .mf-templates.contextMenu .fa { margin-right: .25rem; width: 1.2rem; }
 /* title */
 .multifields .col[data-type] > label { margin: 0; width: 100%; }
+.multifields .col[data-type] > input + label { width: auto }
 .multifields .mf-value, .multifields .mf-title { position: relative; padding: .5rem !important; width: 100%; }
 .multifields .mf-title { overflow: hidden; padding-top: .25rem !important; padding-bottom: .25rem !important; text-overflow: ellipsis; }
 .multifields label.mf-title { margin: 0; padding: 0 !important; }
@@ -46,6 +48,9 @@
 .multifields .mf-active > * { pointer-events: none; }
 /* types */
 .multifields [data-type="date"] input { width: 100% }
+/* lightness */
+.lightness .multifields > .mf-items { background-color: #fff }
 /* darkness */
+.darkness .multifields > .mf-items { background-color: #282c34 }
 .darkness .multifields .mf-actions::before { border-color: rgba(255, 255, 255, .1); }
 .darkness .multifields input[disabled], .darkness .multifields select[disabled], .darkness .multifields textarea[disabled] { background-color: #202329 }
