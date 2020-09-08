@@ -24,7 +24,7 @@
 .multifields .mf-toolbar .mf-btn-toolbar-save + .mf-btn-toolbar-fullscreen { margin-left: .25rem; }
 .multifields > .mf-toolbar ~ .mf-items { transition: max-width .25s; }
 .multifields > .mf-grid { display: flex; justify-content: center; position: absolute; z-index: 0; left: 0; top: .5rem; right: 0; bottom: 0; pointer-events: none; }
-.multifields > .mf-grid > div { position: absolute; left: auto; top: 0; right: auto; bottom: 0; width: 100%; border-left: 1px dashed rgba(0, 0, 0, .1); border-right: 1px dashed rgba(0, 0, 0, .1); }
+.multifields > .mf-grid > div { position: absolute; left: auto; top: 0; right: auto; bottom: 0; width: 100%; border-left: 1px dashed #c6c6c6; border-right: 1px dashed #c6c6c6; }
 .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) { background: #dcdcdc; }
 .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) > .mf-items { background: #f9f9f9; }
 .multifields[data-mf-fullscreen] { position: fixed; z-index: 1050; left: 0; top: 0; right: 0; bottom: 0; margin: 0 !important; padding: 2.15rem 15rem 0 0 !important; flex-direction: column; flex-wrap: nowrap; align-items: center; background-color: #dcdcdc; }
@@ -46,6 +46,6 @@
 .darkness .multifields.mf-view-icons > .mf-templates .mf-option { background-color: rgba(255, 255, 255, .1); }
 .darkness .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]), .darkness .multifields[data-mf-fullscreen] { background: #202329; }
 .darkness .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) > .mf-items, .darkness .multifields[data-mf-fullscreen] > .mf-items { background: #282c34 }
-.darkness .multifields > .mf-grid > div { border-color: rgba(255, 255, 255, .1) }
+.darkness .multifields > .mf-grid > div { border-color: #37393f }
 .darkness .multifields[data-mf-fullscreen] > .mf-templates { background: #1a1c21 }
 .darkness .multifields.mf-view-icons[data-mf-fullscreen] > .mf-templates .mf-option { background: none }

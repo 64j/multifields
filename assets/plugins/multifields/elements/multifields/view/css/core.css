@@ -5,7 +5,7 @@
 .form-row .multifields .col-auto { padding: .25rem; }
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
-.multifields > .mf-items { position: relative; z-index: 1; margin: 0 -.25rem !important; background: #f9f9f9 }
+.multifields > .mf-items { position: relative; margin: 0 -.25rem !important; background: #f9f9f9 }
 .multifields .mf-items { display: flex; flex-wrap: wrap; padding: .25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
