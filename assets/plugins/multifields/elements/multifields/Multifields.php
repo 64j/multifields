@@ -63,7 +63,8 @@ class Multifields extends \Multifields\Base\Elements
                 'value' => '',
                 'label' => 'Fullscreen',
                 'icon' => '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.40061 1.40625H5.80078V0H0V5.80078H1.40625V2.40061L6.22266 7.21702L7.21702 6.22266L2.40061 1.40625ZM7.21702 11.7773L6.22266 10.783L1.40625 15.5994V12.1992H0V18H5.80078V16.5938H2.40061L7.21702 11.7773ZM12.1992 0V1.40625H15.5994L10.783 6.22266L11.7773 7.21702L16.5938 2.40061V5.80078H18V0H12.1992ZM16.5938 12.1992V15.5994L11.7773 10.783L10.783 11.7773L15.5994 16.5938H12.1992V18H18V12.1992H16.5938Z" fill="#C4C4C4"/></svg>'
-            ]
+            ],
+            'save' => true,
         ],
     ];
 
@@ -144,9 +145,21 @@ class Multifields extends \Multifields\Base\Elements
                 }
             }
 
-            if (!empty($this->toolbar['fullscreen'])) {
+            if ((!isset($this->toolbar['save']) && $this->settings['toolbar']['save']) || !empty($this->toolbar['save'])) {
                 $params['toolbar'] .= '
-                    <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['fullscreen']['name'] . '" title="' . $this->settings['toolbar']['fullscreen']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarFullscreen.call(this);">
+                <a href="javascript:;" class="mf-btn mf-btn-toolbar-save" onclick="actions.save();">
+                    <i class="mf-icon fa fa-floppy-o"></i>
+                </a>';
+            }
+
+            if (!empty($this->toolbar['fullscreen'])) {
+                $active = '';
+                if (!empty($_COOKIE['data-mf-fullscreen-' . Core::getParams('tv')['id']])) {
+                    $params['attr'] .= ' data-mf-fullscreen';
+                    $active = ' active';
+                }
+                $params['toolbar'] .= '
+                    <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['fullscreen']['name'] . $active . '" title="' . $this->settings['toolbar']['fullscreen']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarFullscreen.call(this);">
                         <span>' . $this->settings['toolbar']['fullscreen']['icon'] . '</span>
                     </a>';
             }

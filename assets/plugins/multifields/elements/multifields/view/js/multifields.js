@@ -96,10 +96,12 @@ Multifields.element('multifields', {
       document.body.style.overflow = '';
       Multifields.container.removeAttribute('data-mf-fullscreen');
       this.classList.remove('active');
+      Multifields.cookie.del('data-mf-fullscreen-' + Multifields.container.dataset.tvId);
     } else {
       document.body.style.overflow = 'hidden';
       Multifields.container.setAttribute('data-mf-fullscreen', '');
       this.classList.add('active');
+      Multifields.cookie.set('data-mf-fullscreen-' + Multifields.container.dataset.tvId, 1);
     }
   }
 
