@@ -130,7 +130,7 @@ Multifields.element('row', {
         }
       }
       [...parent.attributes].map(function(attr) {
-        if ((attr.name === 'data-mf-col' && typeof Multifields.toolbar.breakpoints[''] === 'undefined') || (attr.name.substr(0, 12) === 'data-mf-col-' && typeof Multifields.toolbar.breakpoints[attr.name.substr(12)] === 'undefined')) {
+        if (attr.name.substr(0, 12) === 'data-mf-col-' && typeof Multifields.toolbar.breakpoints[attr.name.substr(12)] === 'undefined') {
           parent.removeAttribute(attr.name);
         }
       });
@@ -189,7 +189,7 @@ Multifields.element('row', {
         parent.removeAttribute('data-mf-offset' + breakpoint);
       }
       [...parent.attributes].map(function(attr) {
-        if ((attr.name === 'data-mf-offset' && typeof Multifields.toolbar.breakpoints[''] === 'undefined') || (attr.name.substr(0, 15) === 'data-mf-offset-' && typeof Multifields.toolbar.breakpoints[attr.name.substr(15)] === 'undefined')) {
+        if (attr.name.substr(0, 15) === 'data-mf-offset-' && typeof Multifields.toolbar.breakpoints[attr.name.substr(15)] === 'undefined') {
           parent.removeAttribute(attr.name);
         }
       });
