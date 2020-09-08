@@ -89,7 +89,7 @@ class Multifields extends \Multifields\Base\Elements
                 }
 
                 if (!empty($breakpoints)) {
-                    $cookie_breakpoint = !empty($_COOKIE['data-mf-breakpoint-' . Core::getParams('tv')['id']]) ? $_COOKIE['data-mf-breakpoint-' . Core::getParams('tv')['id']] : '';
+                    $cookie_breakpoint = !empty($_COOKIE['mf-breakpoint-' . Core::getParams('tv')['id']]) ? $_COOKIE['mf-breakpoint-' . Core::getParams('tv')['id']] : '';
                     foreach ($breakpoints as &$v) {
                         if (!is_array($v)) {
                             $v = $this->settings['toolbar']['breakpoints'][array_search($v, array_column($this->settings['toolbar']['breakpoints'], 'name'))];
@@ -154,7 +154,7 @@ class Multifields extends \Multifields\Base\Elements
 
             if (!empty($this->toolbar['fullscreen'])) {
                 $active = '';
-                if (!empty($_COOKIE['data-mf-fullscreen-' . Core::getParams('tv')['id']])) {
+                if (!empty($_COOKIE['mf-fullscreen-' . Core::getParams('tv')['id']])) {
                     $params['attr'] .= ' data-mf-fullscreen';
                     $active = ' active';
                 }

@@ -4,14 +4,14 @@
 .multifields .mf-templates .mf-icon.mf-icon-image > * { display: block; margin: auto; max-height: 100%; max-width: 100%; height: auto; width: auto; }
 .multifields.mf-view-icons { margin-bottom: 0 !important; }
 .multifields.mf-view-icons > .mf-actions { display: none; }
-.multifields.mf-view-icons > .mf-templates { position: relative; z-index: 1; left: 0; top: 0; right: 0; bottom: 0; margin: 0; padding: 0 0 .25rem; width: 100% !important; max-width: none; opacity: 1; visibility: visible; box-shadow: none; background: none; display: flex !important; flex-wrap: wrap; flex-direction: row; align-items: stretch; justify-content: center; background: #f9f9f9; }
+.multifields.mf-view-icons > .mf-templates { position: relative; z-index: 1; left: 0; top: 0; right: 0; bottom: 0; margin: 0; padding: 0 0 .5rem; width: 100% !important; max-width: none; opacity: 1; visibility: visible; box-shadow: none; background: none; display: flex !important; flex-wrap: wrap; flex-direction: row; align-items: stretch; justify-content: center; background: #f9f9f9; }
 .multifields.mf-view-icons > .mf-templates .mf-option { flex: 0 0 8rem; width: auto; max-width: 8rem; padding: .5rem; margin: .5rem .25rem 0; background-color: #fff; border: 1px solid rgba(0, 0, 0, .1); border-radius: 0.25rem; text-align: center; cursor: pointer; transition: background-color .25s; }
 .multifields.mf-view-icons > .mf-templates .mf-option:hover { background-color: #1976d2 !important; color: #fff }
 .multifields.mf-view-icons > .mf-templates .mf-icon { display: block; width: 100%; margin-bottom: .25rem; }
 .multifields.mf-view-icons > .mf-templates .mf-icon.mf-icon-image { height: 4rem; background: 50% 50% no-repeat; background-size: contain; }
 .multifields.mf-view-icons > .mf-templates .mf-icon.mf-icon-image > * { display: block; margin: auto; max-height: 100%; max-width: 100%; height: auto; width: auto; }
 .multifields.mf-view-icons > .mf-templates.contextMenu .mf-icon { font-size: 1.5rem; }
-.multifields .mf-toolbar { position: relative; z-index: 1; display: flex; align-items: center; flex-wrap: wrap; flex-direction: row; padding: .25rem; width: 100%; background: #ececec }
+.multifields .mf-toolbar { position: relative; z-index: 2; display: flex; align-items: center; flex-wrap: wrap; flex-direction: row; padding: .25rem; width: 100%; background: #ececec }
 .multifields .mf-toolbar .mf-icon { display: flex; align-items: center; justify-content: center; height: 1.125rem; width: 1.125rem; }
 .multifields .mf-toolbar .mf-btn { display: flex; align-items: center; justify-content: center; margin: 0 .05rem; width: 1.625rem; height: 1.625rem; border-radius: .15rem; text-decoration: none; }
 .multifields .mf-toolbar .mf-btn:hover, .multifields .mf-toolbar .mf-btn.active { background-color: #1976d2; color: #fff; }
@@ -27,8 +27,9 @@
 .multifields > .mf-grid > div { position: absolute; left: auto; top: 0; right: auto; bottom: 0; width: 100%; border-left: 1px dashed rgba(0, 0, 0, .1); border-right: 1px dashed rgba(0, 0, 0, .1); }
 .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) { background: #dcdcdc; }
 .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) > .mf-items { background: #f9f9f9; }
-.multifields[data-mf-fullscreen] { position: fixed; z-index: 1010; left: 0; top: 0; right: 0; bottom: 0; margin: 0 !important; padding: 2.15rem 15rem 0 0 !important; flex-direction: column; flex-wrap: nowrap; align-items: center; background-color: #dcdcdc; }
-.multifields[data-mf-fullscreen] > .mf-items { overflow: auto; overflow-x: hidden; align-content: start; background-color: #f9f9f9 }
+.multifields[data-mf-fullscreen] { position: fixed; z-index: 1050; left: 0; top: 0; right: 0; bottom: 0; margin: 0 !important; padding: 2.15rem 15rem 0 0 !important; flex-direction: column; flex-wrap: nowrap; align-items: center; background-color: #dcdcdc; }
+.mf-mode-fullscreen { overflow: hidden; }
+.multifields[data-mf-fullscreen] > .mf-items { overflow: auto; overflow-x: hidden; margin: 0 !important; align-content: start; background-color: #f9f9f9 }
 .multifields[data-mf-fullscreen] > .mf-toolbar { position: absolute; left: 0; top: 0; }
 .multifields[data-mf-fullscreen] > .mf-actions { display: none }
 .multifields[data-mf-fullscreen] > .mf-toolbar > .mf-btn-toolbar-save { display: flex; }

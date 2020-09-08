@@ -5,13 +5,14 @@
 .form-row .multifields .col-auto { padding: .25rem; }
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
-.multifields > .mf-items { position: relative; z-index: 1; margin: .25rem -.25rem !important; background: #f9f9f9 }
+.multifields > .mf-items { position: relative; z-index: 1; margin: 0 -.25rem !important; background: #f9f9f9 }
 .multifields .mf-items { display: flex; flex-wrap: wrap; padding: .25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
 .multifields input[type="checkbox"], .multifields input[type="radio"] { display: inline-block }
 .multifields select, .multifields select[size] { width: 100% }
 .multifields .fa { min-width: 1rem; min-height: 1rem; }
+.dp_container { z-index: 1050; }
 /* actions */
 .multifields .mf-actions { position: absolute; left: .25rem; top: .25rem; right: .25rem; bottom: .25rem; }
 .multifields .mf-actions::before { content: ""; position: absolute; z-index: 1; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid rgba(0, 0, 0, .15); pointer-events: none; transition: all .25s; }
