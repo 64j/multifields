@@ -11,5 +11,21 @@
 .multifields.mf-view-icons > .mf-templates .mf-icon.mf-icon-image { height: 4rem; background: 50% 50% no-repeat; background-size: contain; }
 .multifields.mf-view-icons > .mf-templates .mf-icon.mf-icon-image > * { display: block; margin: auto; max-height: 100%; max-width: 100%; height: auto; width: auto; }
 .multifields.mf-view-icons > .mf-templates.contextMenu .mf-icon { font-size: 1.5rem; }
+.multifields .mf-toolbar { position: relative; z-index: 1; display: flex; align-items: center; flex-wrap: wrap; flex-direction: row; padding: .25rem; width: 100%; background: #ececec }
+.multifields .mf-toolbar .mf-icon { display: flex; align-items: center; justify-content: center; height: 1.125rem; width: 1.125rem; }
+.multifields .mf-toolbar .mf-btn { display: flex; align-items: center; margin: 0 .05rem; padding: .25rem; border-radius: .15rem; }
+.multifields .mf-toolbar .mf-btn:hover, .multifields .mf-toolbar .mf-btn.active { background-color: #1976d2; color: #fff; }
+.multifields .mf-toolbar .mf-btn:hover svg path, .multifields .mf-toolbar .mf-btn.active svg path { fill: #fff }
+.multifields .mf-toolbar .mf-btn .mf-icon { }
+.multifields .mf-toolbar .mf-breakpoints { display: flex; flex-direction: row; flex-wrap: wrap; margin-right: auto; }
+.multifields .mf-toolbar .mf-btn-toolbar-fullscreen { margin-left: auto; }
+.multifields > .mf-toolbar ~ .mf-items { transition: max-width .25s; }
+.multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) { background: #dcdcdc; }
+.multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) > .mf-items { background: #f9f9f9; }
+.multifields[data-mf-fullscreen] { position: fixed; z-index: 1010; left: 0; top: 0; right: 0; bottom: 0; margin: 0 !important; flex-direction: column; flex-wrap: nowrap; align-items: center; background-color: #dcdcdc; }
+.multifields[data-mf-fullscreen] > .mf-items { overflow: auto; overflow-x: hidden; align-content: start; flex: 0 0 calc(100% - 2.3rem); background-color: #f9f9f9 }
 /* darkness */
 .darkness .multifields.mf-view-icons > .mf-templates .mf-option { background-color: rgba(255, 255, 255, .1); }
+.darkness .multifields .mf-toolbar { background: #3e4249; }
+.darkness .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]), .darkness .multifields[data-mf-fullscreen] { background: #202329; }
+.darkness .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) > .mf-items, .darkness .multifields[data-mf-fullscreen] > .mf-items { background: #282c34 }

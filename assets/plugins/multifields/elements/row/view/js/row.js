@@ -84,37 +84,58 @@ Multifields.element('row', {
     if (e.button) {
       return true;
     }
-    e.preventDefault();
-    e.stopPropagation();
     window.getSelection().removeAllRanges();
-
-    let drag = false,
-        parent = e.target.parentElement.parentElement,
+    let parent = e.target.parentElement.parentElement,
         widthCol = parent.parentElement.offsetWidth / 12,
         col = Math.round(parent.offsetWidth / widthCol),
-        className = parent.className.replace(/col-[\d]+/g, ''),
-        x = e.clientX - parent.offsetWidth;
+        className = parent.className = parent.className.replace(/col-[\d|auto]+/g, '').trim() + (col && ' col-' + col || '') + ' mf-active',
+        x = e.clientX - parent.offsetWidth,
+        helper = parent.querySelector(':scope > .mf-helper') || document.createElement('div'),
+        breakpoint = Multifields.toolbar.breakpoint || '';
+
+    if (breakpoint) {
+      breakpoint = '-' + breakpoint;
+    }
+
+    if (!helper.classList.contains('mf-helper')) {
+      helper.className = 'mf-helper';
+      parent.appendChild(helper);
+    }
+
+    parent.setAttribute('data-mf-disable-col', '');
 
     document.onmousemove = function(e) {
-      if (Math.round((e.clientX - x) / widthCol) !== col) {
-        col = Math.round((e.clientX - x) / widthCol);
-        if (col >= 12) {
-          col = 12;
+      window.getSelection().removeAllRanges();
+      helper.className = 'mf-helper show';
+      helper.innerHTML = 'col' + breakpoint + (col && '-' + col || '');
+      if (Math.ceil((e.clientX - x) / widthCol) !== col) {
+        col = Math.ceil((e.clientX - x) / widthCol);
+        if (col > 12) {
+          col = 0;
         } else if (col < 1) {
-          col = 1;
+          col = 'auto';
         }
-        drag = true;
-        parent.className = className + ' col-' + col;
+        parent.className = className.replace(/col-[\d|auto]+/g, '').trim() + (col && ' col-' + col || '');
       }
     };
 
     document.onmouseup = function(e) {
-      if (!drag) {
-        return false;
+      parent.className = className.replace(/col-[\d|auto]+/g, '').replace('mf-active', '').trim() + (col ? ' col-' + col : ' col');
+      parent.setAttribute('data-mf-col' + breakpoint, col || '');
+      for (let k in Multifields.toolbar.breakpoints) {
+        if (Multifields.toolbar.breakpoints.hasOwnProperty(k)) {
+          if (parent.getAttribute('data-mf-col' + (k && '-' + k || '')) === null) {
+            parent.setAttribute('data-mf-col' + (k && '-' + k || ''), '12');
+          }
+        }
       }
-      drag = false;
-      parent.className = className + ' col-' + col;
-      parent.setAttribute('data-mf.col', col);
+      [...parent.attributes].map(function(attr) {
+        if ((attr.name === 'data-mf-col' && typeof Multifields.toolbar.breakpoints[''] === 'undefined') || (attr.name.substr(0, 12) === 'data-mf-col-' && typeof Multifields.toolbar.breakpoints[attr.name.substr(12)] === 'undefined')) {
+          parent.removeAttribute(attr.name);
+        }
+      });
+      parent.removeAttribute('data-mf-disable-col');
+      helper.className = 'mf-helper';
       document.onmousemove = null;
       e.preventDefault();
       e.stopPropagation();
@@ -125,42 +146,55 @@ Multifields.element('row', {
     if (e.button) {
       return true;
     }
-    e.preventDefault();
-    e.stopPropagation();
     window.getSelection().removeAllRanges();
-
-    let drag = false,
-        parent = e.target.parentElement.parentElement,
+    let parent = e.target.parentElement.parentElement,
         widthCol = parent.parentElement.offsetWidth / 12,
         offset = Math.round(parent.offsetLeft / widthCol),
-        className = parent.className.replace(/offset-[\d]+/g, ''),
-        x = e.clientX - parent.offsetLeft;
+        className = parent.className = parent.className.replace(/offset-[\d|auto]+/g, '').trim() + (offset && ' offset-' + offset || '') + ' mf-active',
+        x = e.clientX - parent.offsetLeft,
+        helper = parent.querySelector(':scope > .mf-helper') || document.createElement('div'),
+        breakpoint = Multifields.toolbar.breakpoint || '';
+
+    if (breakpoint) {
+      breakpoint = '-' + breakpoint;
+    }
+
+    if (!helper.classList.contains('mf-helper')) {
+      helper.className = 'mf-helper';
+      parent.appendChild(helper);
+    }
+
+    parent.setAttribute('data-mf-disable-offset', '');
 
     document.onmousemove = function(e) {
+      window.getSelection().removeAllRanges();
+      helper.className = 'mf-helper show';
+      helper.innerHTML = 'offset' + breakpoint + (offset && '-' + offset || '');
       if (Math.round((e.clientX - x) / widthCol) !== offset) {
         offset = Math.round((e.clientX - x) / widthCol);
-        if (offset >= 11) {
-          offset = 11;
+        if (offset > 11) {
+          offset = 12;
         } else if (offset < 1) {
           offset = 0;
         }
-        drag = true;
-        parent.className = className + (offset ? ' offset-' + offset : '');
+        parent.className = className.replace(/offset-[\d|auto]+/g, '').trim() + (offset && ' offset-' + offset || '');
       }
     };
 
     document.onmouseup = function(e) {
-      if (!drag) {
-        return false;
-      }
-      drag = false;
+      parent.className = className.replace(/offset-[\d|auto]+/g, '').replace('mf-active', '') + (offset && ' offset-' + offset || '');
       if (offset) {
-        parent.className = className + ' offset-' + offset;
-        parent.setAttribute('data-mf.offset', offset);
+        parent.setAttribute('data-mf-offset' + breakpoint, offset || '');
       } else {
-        parent.className = className;
-        parent.removeAttribute('data-mf.offset');
+        parent.removeAttribute('data-mf-offset' + breakpoint);
       }
+      [...parent.attributes].map(function(attr) {
+        if ((attr.name === 'data-mf-offset' && typeof Multifields.toolbar.breakpoints[''] === 'undefined') || (attr.name.substr(0, 15) === 'data-mf-offset-' && typeof Multifields.toolbar.breakpoints[attr.name.substr(15)] === 'undefined')) {
+          parent.removeAttribute(attr.name);
+        }
+      });
+      parent.removeAttribute('data-mf-disable-offset');
+      helper.className = 'mf-helper';
       document.onmousemove = null;
       e.preventDefault();
       e.stopPropagation();
@@ -182,5 +216,14 @@ Multifields.element('row', {
       item.autoincrement = el.dataset['autoincrement'];
     }
     return item;
+  },
+
+  onmousedown: function(e) {
+    if (e.target.classList.contains('mf-actions-resize-col')) {
+      Multifields.elements.row.actionResizeCol(e);
+    }
+    if (e.target.classList.contains('mf-actions-resize-offset')) {
+      Multifields.elements.row.actionResizeOffset(e);
+    }
   }
 });

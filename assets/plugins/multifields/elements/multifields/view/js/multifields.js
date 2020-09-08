@@ -1,5 +1,44 @@
 Multifields.element('multifields', {
 
+  init: function() {
+    Multifields.toolbar = {};
+
+    [...document.querySelectorAll('.multifields')].map(function(el) {
+      Multifields.container = el;
+
+      if (!el.querySelector('.mf-breakpoints') && Multifields.cookie.get('data-mf-breakpoint-' + Multifields.container.dataset.tvId)) {
+        Multifields.cookie.del('data-mf-breakpoint-' + Multifields.container.dataset.tvId);
+      }
+
+      el.addEventListener('mousedown', function(e) {
+        Multifields.container = el;
+        Multifields.el = e.target.closest('[data-type]');
+        Multifields.name = Multifields.el.dataset['name'];
+        Multifields.type = Multifields.el.dataset['type'];
+
+        Multifields.toolbar = {
+          breakpoints: {},
+          breakpoint: null
+        };
+
+        [...Multifields.container.querySelectorAll('.mf-toolbar > .mf-breakpoints .mf-breakpoint')].map(function(item) {
+          if (item.classList.contains('active')) {
+            Multifields.toolbar.breakpoint = item.dataset.breakpointName;
+          }
+          Multifields.toolbar.breakpoints[item.dataset.breakpointName] = {
+            key: item.dataset.breakpointKey
+          };
+        });
+
+        for (let k in Multifields.elements) {
+          if (Multifields.elements.hasOwnProperty(k) && k !== 'multifields') {
+            Multifields.elements[k]['onmousedown'](e);
+          }
+        }
+      });
+    });
+  },
+
   actionAdd: function(e) {
     e.stopPropagation();
     let menu = document.getElementById('mf-templates-' + Multifields.el.id);
@@ -32,5 +71,34 @@ Multifields.element('multifields', {
         Multifields.el.querySelector('.mf-items').appendChild(template.content);
       }
     });
+  },
+
+  actionToolbarBreakpoint: function(key) {
+    [...this.parentElement.querySelectorAll('.active')].map(function(item) {
+      item.classList.remove('active');
+    });
+    this.classList.add('active');
+    if (parseInt(key)) {
+      Multifields.container.querySelector('.mf-items').style.maxWidth = key + 'px';
+      Multifields.container.setAttribute('data-mf-breakpoint', this.dataset.breakpointName);
+      Multifields.toolbar.breakpoint = this.dataset.breakpointName;
+      Multifields.cookie.set('data-mf-breakpoint-' + Multifields.container.dataset.tvId, this.dataset.breakpointName);
+    } else {
+      Multifields.container.querySelector('.mf-items').style.maxWidth = '';
+      Multifields.container.removeAttribute('data-mf-breakpoint');
+      Multifields.toolbar.breakpoint = null;
+      Multifields.cookie.del('data-mf-breakpoint-' + Multifields.container.dataset.tvId);
+    }
+  },
+
+  actionToolbarFullscreen: function() {
+    if (Multifields.container.hasAttribute('data-mf-fullscreen')) {
+      Multifields.container.removeAttribute('data-mf-fullscreen');
+      this.classList.remove('active');
+    } else {
+      Multifields.container.setAttribute('data-mf-fullscreen', '');
+      this.classList.add('active');
+    }
   }
+
 });

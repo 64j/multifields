@@ -1,7 +1,7 @@
 .multifields .mf-row-group { min-height: 3rem }
 .multifields .mf-row-group:hover > .mf-actions::before { border-color: #0a5; }
 .multifields .mf-row-group > .mf-actions .mf-actions-add { color: #0a5; }
-.multifields .mf-row.col:not([class*="col-"]) { max-width: 100%; flex: 0 0 100%; }
+.multifields .mf-row.col:not([class*="col-"]):not([data-mf-disable-col]) { max-width: 100%; flex: 0 0 100%; }
 .multifields .mf-row > .mf-value, .multifields .mf-row > .mf-title { z-index: 1; background: rgba(0, 0, 0, .03); border-bottom: 1px solid rgba(0, 0, 0, .1); transition: all .25s; }
 .multifields .mf-row > .mf-actions .mf-actions-add { transform: scale(.8); transform-origin: center; }
 .multifields .mf-row:hover > .mf-actions .mf-actions-add { transform: scale(1); }
@@ -9,5 +9,8 @@
 .multifields .mf-row > .mf-actions .mf-actions-resize-col { left: auto; right: 0; }
 .multifields .mf-row > .mf-actions .mf-actions-resize-offset::after, .multifields .mf-row > .mf-actions .mf-actions-resize-col::after { content: "..."; left: -1px; top: 50%; height: 4px; transform: rotate(90deg); font-family: monospace; font-size: 10px; }
 .multifields .mf-row-group > .mf-actions .mf-actions-resize-offset, .multifields .mf-row-group > .mf-actions .mf-actions-resize-col { background-color: #0a5; }
+.multifields .mf-row > .mf-helper { position: absolute; opacity: 0; visibility: hidden; z-index: 1; bottom: 100%; left: 50%; transform: translateX(-50%); margin: -.25rem .25rem; padding: .5rem; background-color: rgba(0, 0, 0, .2); color: #222; font-size: 1.2rem; white-space: nowrap; transition: .5s; }
+.multifields .mf-row > .mf-helper.show { opacity: 1; visibility: visible; }
 /* darkness */
 .darkness .multifields .mf-row > .mf-value, .darkness .multifields .mf-row > .mf-title { background-color: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .1); }
+.darkness .multifields .mf-row > .mf-helper { background: rgba(255, 255, 255, 2); }

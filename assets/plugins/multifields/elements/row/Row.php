@@ -109,12 +109,10 @@ class Row extends \Multifields\Base\Elements
 
         if (!empty($params['mf.col'])) {
             $params['class'] = trim(preg_replace('/col-[\d]+/', '', $params['class'])) . ' col-' . $params['mf.col'];
-            $params['attr'] .= ' data-mf.col="' . $params['mf.col'] . '"';
         }
 
         if (!empty($params['mf.offset'])) {
             $params['class'] = trim(preg_replace('/offset-[\d]+/', '', $params['class'])) . ' offset-' . $params['mf.offset'];
-            $params['attr'] .= ' data-mf.offset="' . $params['mf.offset'] . '"';
         }
 
         return parent::render($params, $data);
@@ -124,8 +122,8 @@ class Row extends \Multifields\Base\Elements
     {
         if ($action == 'resize') {
             return '
-                <i class="mf-actions-' . $action . '-offset fa" onmousedown="Multifields.elements[\'' . $type . '\'].action' . ucfirst($action) . 'Offset(event);"></i>
-                <i class="mf-actions-' . $action . '-col fa" onmousedown="Multifields.elements[\'' . $type . '\'].action' . ucfirst($action) . 'Col(event);"></i>';
+                <i class="mf-actions-' . $action . '-offset fa"></i>
+                <i class="mf-actions-' . $action . '-col fa"></i>';
         }
 
         return parent::renderAction($action, $type);
