@@ -211,10 +211,6 @@ class Multifields extends \Multifields\Base\Elements
     {
         $params['css'] = '';
 
-        if (!isset($params['items.attr'])) {
-            $params['items.attr'] = '';
-        }
-
         $this->getToolbar($params);
         $this->getTemplates($params);
 

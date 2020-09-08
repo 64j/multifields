@@ -548,15 +548,16 @@ class Elements
             'value' => '',
             'title' => '',
             'label' => '',
+            'label.attr' => '',
+            'placeholder' => '',
             'style' => '',
             'class' => '',
             'default' => '',
             'elements' => '',
-            'label.attr' => '',
             'item.attr' => '',
+            'items' => '',
             'items.class' => '',
-            'placeholder' => '',
-            'items' => ''
+            'items.attr' => ''
         ], $params);
 
         if (!empty($params['type'])) {
