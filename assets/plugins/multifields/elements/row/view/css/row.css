@@ -3,6 +3,7 @@
 .multifields .mf-row-group > .mf-actions .mf-actions-add { color: #0a5; }
 .multifields .mf-row.col:not([class*="col-"]):not([data-mf-disable-col]) { max-width: 100%; flex: 0 0 100%; }
 .multifields .mf-row > .mf-value, .multifields .mf-row > .mf-title { z-index: 1; background: rgba(0, 0, 0, .03); border-bottom: 1px solid rgba(0, 0, 0, .1); transition: all .25s; }
+.multifields .mf-row > .mf-title { padding: .25rem .5rem; }
 .multifields .mf-row > .mf-actions .mf-actions-add { transform: scale(.8); transform-origin: center; }
 .multifields .mf-row:hover > .mf-actions .mf-actions-add { transform: scale(1); }
 .multifields .mf-row > .mf-actions .mf-actions-resize-offset, .multifields .mf-row > .mf-actions .mf-actions-resize-col { overflow: hidden; z-index: 9; left: 0; top: 0; bottom: 0; margin: 0; padding: 0; width: 4px; min-width: auto; height: 100%; background-color: #2196f3; cursor: col-resize; transition: opacity .25s, background-color .25s; }

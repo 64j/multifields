@@ -286,7 +286,6 @@ class Elements
     public function render()
     {
         $this->setAttr();
-        $this->setLabel();
         $this->setTitle();
 
         return $this->view();
@@ -542,9 +541,9 @@ class Elements
             'name' => '',
             'attr' => '',
             'value' => '',
-            'title' => '',
             'label' => '',
-            'label.attr' => '',
+            'title' => '',
+            'title.attr' => '',
             'placeholder' => '',
             'style' => '',
             'class' => '',
@@ -573,8 +572,8 @@ class Elements
 
                 $element = str_replace('id="', self::$params['item.attr'] . ' id="', $element);
 
-                if (self::$params['label'] != '') {
-                    $element = '<label for="tv' . self::$params['id'] . '" ' . self::$params['label.attr'] . '>' . self::$params['label'] . '</label>' . $element;
+                if (self::$params['title'] != '') {
+                    $element = '<div class="mf-title" ' . self::$params['title.attr'] . '>' . self::$params['title'] . '</div>' . $element;
                 }
 
                 self::$params['class'] = 'col ' . self::$params['class'];
@@ -642,17 +641,35 @@ class Elements
 
     }
 
-    protected function setLabel()
+    /**
+     * @param $icon
+     * @return string
+     */
+    protected function setIcon($icon)
     {
-        if (self::$params['label'] != '') {
-            self::$params['label'] = '<label for="tv' . self::$params['id'] . '" ' . self::$params['label.attr'] . '>' . self::$params['label'] . '</label>';
+        if (!empty($icon)) {
+            $attr = '';
+            if ($icon[0] == '<') {
+                $attr .= ' class="mf-icon mf-icon-image"';
+            } elseif (stripos($icon, '/') !== false) {
+                $attr .= ' class="mf-icon mf-icon-image"';
+                $attr .= ' style="background-image: url(\'' . $icon . '\');"';
+                $icon = '';
+            } elseif ($icon) {
+                $attr .= ' class="mf-icon ' . $icon . '"';
+                $icon = '';
+            }
+
+            $icon = '<div' . $attr . '>' . $icon . '</div>';
         }
+
+        return $icon;
     }
 
     protected function setTitle()
     {
         if (self::$params['title'] != '') {
-            self::$params['title'] = '<div class="mf-title">' . self::$params['title'] . '</div>';
+            self::$params['title'] = '<div class="mf-title" ' . self::$params['title.attr'] . '>' . self::$params['title'] . '</div>';
         }
     }
 

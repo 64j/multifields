@@ -64,25 +64,12 @@ class Row extends \Multifields\Base\Elements
             $i = 0;
             foreach (Core::getConfig('templates') as $k => $v) {
                 if ((empty($v['hidden']) && empty(self::$params['templates'])) || (self::$params['templates'] === true || (is_array(self::$params['templates']) && (isset(self::$params['templates'][$k]) || in_array($k, self::$params['templates']))))) {
-                    $v['title'] = isset($v['title']) ? $v['title'] : $k;
+                    $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
-                    $icon = '';
-                    $icon_class = '';
-                    $icon_image = '';
-
-                    if (!empty($v['icon']) && $v['icon'][0] == '<') {
-                        $icon = $v['icon'];
-                        $icon_class = 'mf-icon mf-icon-image';
-                    } elseif (stripos($v['icon'], '/') !== false) {
-                        $icon_image = ' style="background-image: url(\'' . $v['icon'] . '\');"';
-                        $icon_class = 'mf-icon mf-icon-image';
-                    } elseif ($v['icon']) {
-                        $icon_class = 'mf-icon ' . $v['icon'];
-                    }
 
                     $out .= '
                     <div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">
-                        <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
+                        ' . self::setIcon($v['icon']) . $v['label'] . '
                     </div>';
                     $i++;
                 }

@@ -92,20 +92,9 @@ class Multifields extends \Multifields\Base\Elements
                             $v = $this->settings['toolbar']['breakpoints'][array_search($v, array_column($this->settings['toolbar']['breakpoints'], 'name'))];
                         }
 
-                        $active = '';
-                        $icon = '';
-                        $icon_class = '';
-                        $icon_image = '';
+                        $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
 
-                        if (!empty($v['icon']) && $v['icon'][0] == '<') {
-                            $icon = $v['icon'];
-                            $icon_class = 'mf-icon mf-icon-image';
-                        } elseif (stripos($v['icon'], '/') !== false) {
-                            $icon_image = ' style="background-image: url(\'' . $v['icon'] . '\');"';
-                            $icon_class = 'mf-icon mf-icon-image';
-                        } elseif ($v['icon']) {
-                            $icon_class = 'mf-icon ' . $v['icon'];
-                        }
+                        $active = '';
 
                         if (($v['value'] == 0 && !$cookie_breakpoint) || ($cookie_breakpoint && $cookie_breakpoint == $v['name'])) {
                             $active = ' active';
@@ -134,7 +123,7 @@ class Multifields extends \Multifields\Base\Elements
 
                         $v = '
                         <a href="javascript:;" class="mf-breakpoint mf-btn' . $active . '" title="' . $v['label'] . '" onclick="Multifields.elements.multifields.actionToolbarBreakpoint.call(this, \'' . $v['value'] . '\');" data-breakpoint-key="' . $v['value'] . '" data-breakpoint-name="' . $v['name'] . '">
-                            <span class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</span>
+                            ' . self::setIcon($v['icon']) . '
                         </a>';
                     }
 
@@ -179,25 +168,12 @@ class Multifields extends \Multifields\Base\Elements
             $i = 0;
             foreach (Core::getConfig('templates') as $k => $v) {
                 if (empty($v['hidden'])) {
-                    $v['title'] = isset($v['title']) ? $v['title'] : $k;
+                    $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
-                    $icon = '';
-                    $icon_class = '';
-                    $icon_image = '';
-
-                    if (!empty($v['icon']) && $v['icon'][0] == '<') {
-                        $icon = $v['icon'];
-                        $icon_class = 'mf-icon mf-icon-image';
-                    } elseif (stripos($v['icon'], '/') !== false) {
-                        $icon_image = ' style="background-image: url(\'' . $v['icon'] . '\');"';
-                        $icon_class = 'mf-icon mf-icon-image';
-                    } elseif ($v['icon']) {
-                        $icon_class = 'mf-icon ' . $v['icon'];
-                    }
 
                     $out .= '
                     <div class="mf-option" onclick="Multifields.elements.multifields.setTemplate(\'' . $k . '\');">
-                        <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
+                        ' . self::setIcon($v['icon']) . $v['label'] . '
                     </div>';
                     $i++;
                 }
