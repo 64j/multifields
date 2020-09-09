@@ -509,10 +509,6 @@ class Elements
         if (is_array($data)) {
             foreach ($data as $k => $v) {
                 $_v = $v;
-//                if ($v['type'] == 'table:row') {
-//                    unset($v['items']);
-//                    //self::dd($v);
-//                }
                 if (!empty($v['items']) && self::element($v['type'])) {
                     $v['items'] = self::element($v['type'])
                         ->renderData($v['items']);
