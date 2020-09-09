@@ -108,11 +108,11 @@ class Row extends \Multifields\Base\Elements
         }
 
         if (!empty($params['mf.col'])) {
-            $params['class'] = trim(preg_replace('/col-[\d]+/', '', $params['class'])) . ' col-' . $params['mf.col'];
+            $params['class'] = trim(preg_replace('/col-[\d|auto]+/', '', $params['class']) . ' col-' . $params['mf.col']);
         }
 
         if (!empty($params['mf.offset'])) {
-            $params['class'] = trim(preg_replace('/offset-[\d]+/', '', $params['class'])) . ' offset-' . $params['mf.offset'];
+            $params['class'] = trim(preg_replace('/offset-[\d|auto]+/', '', $params['class']) . ' offset-' . $params['mf.offset']);
         }
 
         return parent::render($params, $data);

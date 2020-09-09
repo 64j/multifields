@@ -121,7 +121,7 @@ class Multifields extends \Multifields\Base\Elements
                         $data_breakpoint = $v['name'] ? '[data-mf-breakpoint="' . $v['name'] . '"]' : ':not([data-mf-breakpoint])';
                         $data_col = $v['name'] ? '-' . $v['name'] : '';
 
-                        $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="auto"]:not([data-mf-disable-col]) { flex: 0 0 auto; max-width: none; }';
+                        $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="auto"]:not([data-mf-disable-col]) { flex: 0 0 auto; max-width: none; width: auto; }';
                         $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '=""]:not([data-mf-disable-col]) { flex-basis: 0; flex-grow: 1; }';
                         for ($i = 1; $i <= 12; $i++) {
                             $n = (float)number_format(100 / 12 * $i, 6);
