@@ -285,8 +285,11 @@ class Elements
      */
     public function render()
     {
-        $this->setAttr();
-        $this->setTitle();
+        self::element(self::$params['type'])
+            ->setAttr();
+
+        self::element(self::$params['type'])
+            ->setTitle();
 
         return $this->view();
     }

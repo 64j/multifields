@@ -32,6 +32,8 @@ class Image extends \Multifields\Base\Elements
         if (!empty(self::$params['multi'])) {
             self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
         }
+
+        parent::setAttr();
     }
 
     /**
@@ -39,8 +41,6 @@ class Image extends \Multifields\Base\Elements
      */
     public function render()
     {
-        $this->setAttr();
-
         if (isset(self::$params['items'])) {
             unset(self::$params['items']);
         }

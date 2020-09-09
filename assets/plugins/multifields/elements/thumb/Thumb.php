@@ -43,6 +43,8 @@ class Thumb extends \Multifields\Base\Elements
         if (!empty(self::$data) && !empty(self::$data['items'])) {
             self::$params['class'] .= ' mf-group';
         }
+
+        parent::setAttr();
     }
 
     /**
@@ -50,8 +52,6 @@ class Thumb extends \Multifields\Base\Elements
      */
     public function render()
     {
-        $this->setAttr();
-
         parent::setActions();
 
         return parent::render();

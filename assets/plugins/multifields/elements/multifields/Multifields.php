@@ -171,10 +171,7 @@ class Multifields extends \Multifields\Base\Elements
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
 
-                    $out .= '
-                    <div class="mf-option" onclick="Multifields.elements.multifields.setTemplate(\'' . $k . '\');">
-                        ' . self::setIcon($v['icon']) . $v['label'] . '
-                    </div>';
+                    $out .= '<div class="mf-option" onclick="Multifields.elements.multifields.setTemplate(\'' . $k . '\');">' . self::setIcon($v['icon']) . $v['label'] . '</div>';
                     $i++;
                 }
             }
@@ -209,7 +206,6 @@ class Multifields extends \Multifields\Base\Elements
         }
 
         parent::setActions();
-        parent::setAttr();
 
         return parent::render();
     }

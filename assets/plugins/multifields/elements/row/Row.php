@@ -40,20 +40,8 @@ class Row extends \Multifields\Base\Elements
         if (!empty(self::$params['mf.offset'])) {
             self::$params['class'] = trim(preg_replace('/offset-[\d|auto]+/', '', self::$params['class']) . ' offset-' . self::$params['mf.offset']);
         }
-    }
 
-    protected function setValue()
-    {
-        if (isset(self::$params['value']) && self::$params['value'] !== false) {
-            if (is_bool(self::$params['value'])) {
-                self::$params['value'] = '';
-            }
-
-            self::$params['value'] = '
-                <div class="mf-value">
-                    <input type="text" class="form-control" name="' . self::$params['id'] . '_value" value="' . stripcslashes(self::$params['value']) . '"' . (isset(self::$params['placeholder']) ? ' placeholder="' . self::$params['placeholder'] . '"' : '') . ' data-value>
-                </div>';
-        }
+        parent::setAttr();
     }
 
     protected function setTemplates()
@@ -67,10 +55,7 @@ class Row extends \Multifields\Base\Elements
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
 
-                    $out .= '
-                    <div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">
-                        ' . self::setIcon($v['icon']) . $v['label'] . '
-                    </div>';
+                    $out .= '<div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . self::setIcon($v['icon']) . $v['label'] . '</div>';
                     $i++;
                 }
             }
@@ -90,11 +75,10 @@ class Row extends \Multifields\Base\Elements
      */
     public function render()
     {
-        $this->setAttr();
-        $this->setValue();
         $this->setTemplates();
 
         parent::setActions();
+        parent::setValue();
 
         return parent::render();
     }
