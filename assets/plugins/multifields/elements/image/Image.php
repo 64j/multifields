@@ -14,29 +14,25 @@ class Image extends \Multifields\Base\Elements
             <i class="[+button.class+]" onclick="BrowseServer(\'tv[+id+]\');[+onclick+]"></i>
         </div>';
 
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $params['onchange'] = '';
-        $params['onclick'] = '';
+        self::$params['onchange'] = '';
+        self::$params['onclick'] = '';
 
-        if ($params['label'] != '') {
-            $params['label'] = '<label for="tv' . $params['id'] . '" ' . $params['label.attr'] . '>' . $params['label'] . '</label>';
+        if (!empty(self::$params['thumb'])) {
+            $thumb = is_array(self::$params['thumb']) ? implode(',', self::$params['thumb']) : self::$params['thumb'];
+            self::$params['attr'] .= ' data-thumb="' . $thumb . '"';
+            self::$params['onchange'] = 'Multifields.elements.image.setValue(event);';
         }
 
-        if (!empty($params['thumb'])) {
-            $thumb = is_array($params['thumb']) ? implode(',', $params['thumb']) : $params['thumb'];
-            $params['attr'] .= ' data-thumb="' . $thumb . '"';
-            $params['onchange'] = 'Multifields.elements.image.setValue(event);';
-        }
-
-        if (!empty($params['multi'])) {
-            $params['attr'] .= ' data-multi="' . $params['multi'] . '"';
-            $params['onclick'] = 'Multifields.elements.image.MultiBrowseServer(event)';
-            $params['button.class'] = 'far fa-images';
+        if (!empty(self::$params['multi'])) {
+            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
+            self::$params['onclick'] = 'Multifields.elements.image.MultiBrowseServer(event)';
+            self::$params['button.class'] = 'far fa-images';
         } else {
-            $params['button.class'] = 'far fa-image';
+            self::$params['button.class'] = 'far fa-image';
         }
 
-        return parent::render($params, $data);
+        return parent::render();
     }
 }

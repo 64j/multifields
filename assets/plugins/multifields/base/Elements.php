@@ -7,6 +7,8 @@ use DLTemplate;
 class Elements
 {
     private static $elements;
+    protected static $params;
+    protected static $data;
     protected static $lang;
     protected $tpl;
     protected $actions;
@@ -183,7 +185,7 @@ class Elements
      * @param bool $check_cache
      * @return string
      */
-    protected function setFileUrl($url = '', $parent = '', $timestamp = true, $check_cache = false)
+    private function setFileUrl($url = '', $parent = '', $timestamp = true, $check_cache = false)
     {
         if (!empty($url)) {
             $url = str_replace(dirname(__DIR__), '', $url);
@@ -223,7 +225,7 @@ class Elements
      * @param $file
      * @param bool $remove
      */
-    protected function removeFile($file, $remove = true)
+    private function removeFile($file, $remove = true)
     {
         if ($remove && is_file($file)) {
             unlink($file);
@@ -234,7 +236,7 @@ class Elements
      * @param $url
      * @return bool
      */
-    protected function hasFileChanged($url)
+    private function hasFileChanged($url)
     {
         return !empty($this->file_has_changed[explode('?', $url)[0]]);
     }
@@ -279,31 +281,22 @@ class Elements
     }
 
     /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $this->getActions($params);
+        $this->setAttr();
+        $this->setLabel();
+        $this->setTitle();
 
-        foreach ($params as $k => $param) {
-            if (substr($k, 0, 3) == 'mf.') {
-                $params['attr'] .= str_replace('mf.', ' data-mf-', strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $k))) . '="' . $param . '"';
-            }
-        }
-
-        return $this->view($params);
+        return $this->view();
     }
 
-    /**
-     * @param $params
-     */
-    protected function getActions(&$params)
+    protected function setActions()
     {
         if (!empty($this->actions)) {
             $actions = !empty($this->actions) && is_array($this->actions) ? array_flip($this->actions) : [];
-            $_actions = isset($params['actions']) ? (!empty($params['actions']) ? $params['actions'] : $actions) : true;
+            $_actions = isset(self::$params['actions']) ? (!empty(self::$params['actions']) ? self::$params['actions'] : $actions) : true;
 
             if (is_array($_actions)) {
                 $_actions = array_flip($_actions);
@@ -316,26 +309,26 @@ class Elements
                 }
             }
 
-            $params['actions'] = '';
+            self::$params['actions'] = '';
 
             if (is_array($this->actions)) {
                 foreach ($this->actions as $action) {
                     if (isset($_actions[$action])) {
                         if ($action == 'move') {
-                            $params['class'] .= ' mf-draggable';
+                            self::$params['class'] .= ' mf-draggable';
                         }
-                        $params['actions'] .= self::element($params['type'])
-                            ->renderAction($action, $params['type']);
+                        self::$params['actions'] .= self::element(self::$params['type'])
+                            ->renderAction($action, self::$params['type']);
                     }
                 }
             }
         } else {
-            $params['actions'] = '';
+            self::$params['actions'] = '';
         }
 
-        $class = empty($params['actions']) ? ' mf-empty-actions' : '';
+        $class = empty(self::$params['actions']) ? ' mf-empty-actions' : '';
 
-        $params['actions'] = '<div id="mf-actions-' . $params['id'] . '" class="mf-actions' . $class . '">' . $params['actions'] . '</div>';
+        self::$params['actions'] = '<div id="mf-actions-' . self::$params['id'] . '" class="mf-actions' . $class . '">' . self::$params['actions'] . '</div>';
     }
 
     /**
@@ -355,21 +348,22 @@ class Elements
     protected function view($params = [])
     {
         $lang = self::lang();
+        self::$params = array_merge(is_array(self::$params) ? self::$params : [], $params);
 
         if (is_array($lang)) {
             foreach ($lang as $k => $v) {
-                $params['lang.' . $k] = $v;
+                self::$params['lang.' . $k] = $v;
             }
         }
 
         return class_exists('DLTemplate') ? DLTemplate::getInstance(evolutionCMS())
-            ->parseChunk('@CODE:' . $this->getTemplate(), $params, false, true) : evolutionCMS()->parseText($this->getTemplate(), $params);
+            ->parseChunk('@CODE:' . $this->getTemplate(), self::$params, false, true) : evolutionCMS()->parseText($this->getTemplate(), self::$params);
     }
 
     /**
      * @return string
      */
-    protected function getTemplate()
+    private function getTemplate()
     {
         if (empty($this->template)) {
             if (empty($this->tpl)) {
@@ -464,7 +458,7 @@ class Elements
      * @param array $config
      * @return array
      */
-    protected static function findElements($key = '', $config = [])
+    private static function findElements($key = '', $config = [])
     {
         $result = [];
 
@@ -515,6 +509,10 @@ class Elements
         if (is_array($data)) {
             foreach ($data as $k => $v) {
                 $_v = $v;
+//                if ($v['type'] == 'table:row') {
+//                    unset($v['items']);
+//                    //self::dd($v);
+//                }
                 if (!empty($v['items']) && self::element($v['type'])) {
                     $v['items'] = self::element($v['type'])
                         ->renderData($v['items']);
@@ -541,7 +539,9 @@ class Elements
     {
         $out = '';
 
-        $params = array_merge([
+        self::$data = $data;
+
+        self::$params = array_merge([
             'id' => self::uniqid(),
             'name' => '',
             'attr' => '',
@@ -560,34 +560,33 @@ class Elements
             'items.attr' => ''
         ], $params);
 
-        if (!empty($params['type'])) {
-            if (self::element($params['type'])) {
-                $out = self::element($params['type'])
-                    ->render($params, $data);
+        if (!empty(self::$params['type'])) {
+            if (self::element(self::$params['type'])) {
+                $out = self::element(self::$params['type'])
+                    ->render();
             } else {
-                $element = renderFormElement($params['type'], $params['id'], $params['default'], $params['elements'], $params['value'], $params['style']);
+                $element = renderFormElement(self::$params['type'], self::$params['id'], self::$params['default'], self::$params['elements'], self::$params['value'], self::$params['style']);
 
-                if ($params['placeholder']) {
-                    $params['item.attr'] .= ' placeholder="' . $params['placeholder'] . '"';
+                if (self::$params['placeholder']) {
+                    self::$params['item.attr'] .= ' placeholder="' . self::$params['placeholder'] . '"';
                 }
 
-                if (in_array($params['type'], ['option', 'checkbox'])) {
-                    $element = str_replace(['id="tv', 'for="tv'], ['id="tv' . $params['id'], 'for="tv' . $params['id']], $element);
+                if (in_array(self::$params['type'], ['option', 'checkbox'])) {
+                    $element = str_replace(['id="tv', 'for="tv'], ['id="tv' . self::$params['id'], 'for="tv' . self::$params['id']], $element);
                 }
 
-                $element = str_replace('id="', $params['item.attr'] . ' id="', $element);
+                $element = str_replace('id="', self::$params['item.attr'] . ' id="', $element);
 
-                if ($params['label'] != '') {
-                    $element = '<label for="tv' . $params['id'] . '" ' . $params['label.attr'] . '>' . $params['label'] . '</label>' . $element;
+                if (self::$params['label'] != '') {
+                    $element = '<label for="tv' . self::$params['id'] . '" ' . self::$params['label.attr'] . '>' . self::$params['label'] . '</label>' . $element;
                 }
+
+                self::$params['class'] = 'col ' . self::$params['class'];
+                self::$params['attr'] = 'data-type="' . self::$params['type'] . '" data-name="' . self::$params['name'] . '" ' . self::$params['attr'];
+                self::$params['items'] = $element;
 
                 $out = self::element('element')
-                    ->render([
-                        'id' => $params['id'],
-                        'class' => 'col ' . $params['class'],
-                        'attr' => 'data-type="' . $params['type'] . '" data-name="' . $params['name'] . '" ' . $params['attr'],
-                        'items' => $element
-                    ]);
+                    ->render();
             }
         }
 
@@ -606,7 +605,7 @@ class Elements
      * @param string $dir
      * @return string
      */
-    protected function path($dir = '')
+    private function path($dir = '')
     {
         return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__) . '/elements/' . strtolower($this->classBasename()) . '/' . $dir);
     }
@@ -614,7 +613,7 @@ class Elements
     /**
      * @return string
      */
-    protected function classBasename()
+    private function classBasename()
     {
         $className = explode('\\', static::class);
 
@@ -624,7 +623,7 @@ class Elements
     /**
      * @return array
      */
-    protected function getStyles()
+    private function getStyles()
     {
         return $this->styles;
     }
@@ -632,7 +631,7 @@ class Elements
     /**
      * @return array
      */
-    protected function getScripts()
+    private function getScripts()
     {
         return $this->scripts;
     }
@@ -645,6 +644,43 @@ class Elements
     protected function preFillData(&$item = [], $config = [], $find = [])
     {
 
+    }
+
+    protected function setLabel()
+    {
+        if (self::$params['label'] != '') {
+            self::$params['label'] = '<label for="tv' . self::$params['id'] . '" ' . self::$params['label.attr'] . '>' . self::$params['label'] . '</label>';
+        }
+    }
+
+    protected function setTitle()
+    {
+        if (self::$params['title'] != '') {
+            self::$params['title'] = '<div class="mf-title">' . self::$params['title'] . '</div>';
+        }
+    }
+
+    protected function setAttr()
+    {
+        foreach (self::$params as $k => $param) {
+            if (strpos($k, 'mf.') !== false) {
+                self::$params['attr'] .= str_replace('mf.', ' data-mf-', strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $k))) . '="' . $param . '"';
+            }
+        }
+    }
+
+    protected function setValue()
+    {
+        if (isset(self::$params['value']) && self::$params['value'] !== false) {
+            if (is_bool(self::$params['value'])) {
+                self::$params['value'] = '';
+            }
+
+            self::$params['value'] = '
+            <div class="mf-value">
+                <input type="text" class="form-control" name="' . self::$params['id'] . '_value" value="' . stripcslashes(self::$params['value']) . '"' . (isset(self::$params['placeholder']) ? ' placeholder="' . self::$params['placeholder'] . '"' : '') . ' data-value>
+            </div>';
+        }
     }
 
     /**

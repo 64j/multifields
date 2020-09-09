@@ -18,7 +18,7 @@ class Core
     private static $config = [];
     private static $data = [];
 
-    public function __construct($params = [])
+    private function __construct($params = [])
     {
         $pluginParams = [];
         if (!empty(evolutionCMS()->pluginCache['multifieldsProps'])) {
@@ -98,7 +98,9 @@ class Core
                 ]
             ]);
 
-            //echo microtime(true) - $start . ' s.';
+            if (self::getParams('debug')) {
+                echo microtime(true) - $start . ' s.';
+            }
 
             if (!empty($ResourceManagerLoaded)) {
                 $ResourceManagerLoaded = $tmp_ResourceManagerLoaded;
@@ -218,7 +220,7 @@ class Core
      * @param array $data
      * @return array
      */
-    protected static function configNormalize($data = [])
+    private static function configNormalize($data = [])
     {
         foreach ($data as $k => &$v) {
             if (!is_array($v)) {
@@ -270,7 +272,7 @@ class Core
      * @param null $tv_id
      * @return array
      */
-    protected static function fileData($doc_id = 0, $tv_id = null)
+    private static function fileData($doc_id = 0, $tv_id = null)
     {
         self::$data = [];
 

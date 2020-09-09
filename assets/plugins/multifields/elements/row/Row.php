@@ -18,7 +18,7 @@ class Row extends \Multifields\Base\Elements
 
     protected $template = '
         <div id="[+id+]" class="col mf-row [+class+]" data-type="row" data-name="[+name+]" [+attr+]>
-            [+label+]
+            [+title+]
             [+templates+]
             [+value+]
             [+actions+]
@@ -27,34 +27,43 @@ class Row extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    /**
-     * @param $params
-     */
-    protected function getValue(&$params)
+    protected function setAttr()
     {
-        if (isset($params['value']) && $params['value'] !== false) {
-            if (is_bool($params['value'])) {
-                $params['value'] = '';
+        if (!empty(self::$params['autoincrement'])) {
+            self::$params['attr'] .= ' data-autoincrement="' . self::$params['autoincrement'] . '"';
+        }
+
+        if (!empty(self::$params['mf.col'])) {
+            self::$params['class'] = trim(preg_replace('/col-[\d|auto]+/', '', self::$params['class']) . ' col-' . self::$params['mf.col']);
+        }
+
+        if (!empty(self::$params['mf.offset'])) {
+            self::$params['class'] = trim(preg_replace('/offset-[\d|auto]+/', '', self::$params['class']) . ' offset-' . self::$params['mf.offset']);
+        }
+    }
+
+    protected function setValue()
+    {
+        if (isset(self::$params['value']) && self::$params['value'] !== false) {
+            if (is_bool(self::$params['value'])) {
+                self::$params['value'] = '';
             }
 
-            $params['value'] = '
+            self::$params['value'] = '
                 <div class="mf-value">
-                    <input type="text" class="form-control" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
+                    <input type="text" class="form-control" name="' . self::$params['id'] . '_value" value="' . stripcslashes(self::$params['value']) . '"' . (isset(self::$params['placeholder']) ? ' placeholder="' . self::$params['placeholder'] . '"' : '') . ' data-value>
                 </div>';
         }
     }
 
-    /**
-     * @param $params
-     */
-    protected function getTemplates(&$params)
+    protected function setTemplates()
     {
         $out = '';
 
-        if (!empty(Core::getConfig('templates')) && isset($params['templates']) && ($params['templates'] === true || is_array($params['templates']))) {
+        if (!empty(Core::getConfig('templates')) && isset(self::$params['templates']) && (self::$params['templates'] === true || is_array(self::$params['templates']))) {
             $i = 0;
             foreach (Core::getConfig('templates') as $k => $v) {
-                if ((empty($v['hidden']) && empty($params['templates'])) || ($params['templates'] === true || (is_array($params['templates']) && (isset($params['templates'][$k]) || in_array($k, $params['templates']))))) {
+                if ((empty($v['hidden']) && empty(self::$params['templates'])) || (self::$params['templates'] === true || (is_array(self::$params['templates']) && (isset(self::$params['templates'][$k]) || in_array($k, self::$params['templates']))))) {
                     $v['title'] = isset($v['title']) ? $v['title'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
                     $icon = '';
@@ -80,44 +89,34 @@ class Row extends \Multifields\Base\Elements
             }
 
             if (!empty($out)) {
-                $params['class'] .= ' mf-row-group';
+                self::$params['class'] .= ' mf-row-group';
 
-                $out = '<div id="mf-templates-' . $params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . ' contextMenu">' . $out . '</div>';
+                $out = '<div id="mf-templates-' . self::$params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . ' contextMenu">' . $out . '</div>';
             }
         }
 
-        $params['templates'] = $out;
+        self::$params['templates'] = $out;
     }
 
     /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $this->getValue($params);
-        $this->getTemplates($params);
+        $this->setAttr();
+        $this->setValue();
+        $this->setTemplates();
 
-        if (!empty($params['autoincrement'])) {
-            $params['attr'] .= ' data-autoincrement="' . $params['autoincrement'] . '"';
-        }
+        parent::setActions();
 
-        if (!empty($params['label'])) {
-            $params['label'] = '<div class="mf-title" ' . $params['label'] . '>' . $params['label'] . '</div>';
-        }
-
-        if (!empty($params['mf.col'])) {
-            $params['class'] = trim(preg_replace('/col-[\d|auto]+/', '', $params['class']) . ' col-' . $params['mf.col']);
-        }
-
-        if (!empty($params['mf.offset'])) {
-            $params['class'] = trim(preg_replace('/offset-[\d|auto]+/', '', $params['class']) . ' offset-' . $params['mf.offset']);
-        }
-
-        return parent::render($params, $data);
+        return parent::render();
     }
 
+    /**
+     * @param $action
+     * @param $type
+     * @return string
+     */
     protected function renderAction($action, $type)
     {
         if ($action == 'resize') {

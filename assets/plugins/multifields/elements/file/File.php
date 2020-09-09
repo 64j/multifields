@@ -14,14 +14,10 @@ class File extends \Multifields\Base\Elements
             <i class="[+button.class+]" onclick="BrowseFileServer(\'tv[+id+]\');"></i>
         </div>';
 
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $params['button.class'] = 'far fa-file';
+        self::$params['button.class'] = 'far fa-file';
 
-        if ($params['label'] != '') {
-            $params['label'] = '<label for="tv' . $params['id'] . '" ' . $params['label.attr'] . '>' . $params['label'] . '</label>';
-        }
-
-        return parent::render($params, $data);
+        return parent::render();
     }
 }

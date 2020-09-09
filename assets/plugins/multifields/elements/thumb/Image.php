@@ -17,55 +17,36 @@ class Image extends \Multifields\Base\Elements
     protected $template = '
         <div class="col mf-thumb mf-thumb-image [+class+]" data-type="thumb:image" data-name="[+name+]" [+attr+]>
             [+title+]
-            [+value+]
             [+actions+]
+            <div class="mf-value mf-hidden">
+                <input type="hidden" id="[+id+]_value" name="[+id+]_value" value="[+value+]">
+            </div>
         </div>';
 
-    /**
-     * @param $params
-     */
-    protected function setBackground(&$params)
+    protected function setAttr()
     {
-        preg_match('/style="(.*)"/', $params['attr'], $matches);
-        $params['attr'] = preg_replace('/style="(.*)"/', '', $params['attr']);
-        $params['attr'] .= 'style="background-image: url(\'/' . $params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
+        preg_match('/style="(.*)"/', self::$params['attr'], $matches);
+        self::$params['attr'] = preg_replace('/style="(.*)"/', '', self::$params['attr']);
+        self::$params['attr'] .= 'style="background-image: url(\'/' . self::$params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
+
+        if (!empty(self::$params['multi'])) {
+            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
+        }
     }
 
     /**
-     * @param $params
-     */
-    protected function getValue(&$params)
-    {
-        $params['value'] = '
-            <div class="mf-value mf-hidden">
-                <input type="hidden" id="' . $params['id'] . '_value" name="' . $params['id'] . '_value" value="' . $params['value'] . '">
-            </div>';
-    }
-
-    /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $this->setBackground($params);
-        $this->getValue($params);
+        $this->setAttr();
 
-        if (!empty($params['title'])) {
-            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
-        } else {
-            $params['title'] = '';
+        if (isset(self::$params['items'])) {
+            unset(self::$params['items']);
         }
 
-        if (!empty($params['multi'])) {
-            $params['attr'] .= ' data-multi="' . $params['multi'] . '"';
-        }
+        parent::setActions();
 
-        if (isset($params['items'])) {
-            unset($params['items']);
-        }
-
-        return parent::render($params, $data);
+        return parent::render();
     }
 }

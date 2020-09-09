@@ -10,15 +10,9 @@ class Richtext extends \Multifields\Base\Elements
 
     protected $disabled = false;
 
-    public function render($params = [], $data = [])
-    {
-        if ($params['label'] != '') {
-            $params['label'] = '<label for="tv' . $params['id'] . '" ' . $data['label.attr'] . '>' . $params['label'] . '</label>';
-        }
-
-        return parent::render($params, $data);
-    }
-
+    /**
+     * @return string
+     */
     public function actionDisplay()
     {
         $evo = evolutionCMS();
@@ -59,13 +53,15 @@ class Richtext extends \Multifields\Base\Elements
             $evtOut = '';
         }
 
-        return $this->view([
+        self::$params = [
             'lang' => $evo->getConfig('lang_code'),
             'MODX_SITE_URL' => MODX_SITE_URL,
             'MGR_DIR' => MGR_DIR,
             'manager_theme' => $evo->getConfig('manager_theme'),
             'body_class' => $body_class,
             'evtOut' => $evtOut
-        ]);
+        ];
+
+        return $this->view();
     }
 }

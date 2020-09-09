@@ -19,4 +19,9 @@ class Row extends \Multifields\Base\Elements
                 </div>
             </th>
         </tr>';
+
+    public function render()
+    {
+        return parent::view();
+    }
 }

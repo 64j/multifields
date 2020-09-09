@@ -10,6 +10,16 @@ class Th extends \Multifields\Base\Elements
             [+items+]
         </th>';
 
+    public function render()
+    {
+        return parent::view();
+    }
+
+    /**
+     * @param array $item
+     * @param array $config
+     * @param array $find
+     */
     protected function preFillData(&$item = [], $config = [], $find = [])
     {
         $item['@type'] = '';

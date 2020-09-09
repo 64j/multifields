@@ -49,33 +49,27 @@ class Table extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    /**
-     * @param $params
-     */
-    protected function getValue(&$params)
+    protected function setValue()
     {
-        if (isset($params['value']) && $params['value'] !== false) {
-            if (is_bool($params['value'])) {
-                $params['value'] = '';
+        if (isset(self::$params['value']) && self::$params['value'] !== false) {
+            if (is_bool(self::$params['value'])) {
+                self::$params['value'] = '';
             }
 
-            $params['value'] = '
+            self::$params['value'] = '
             <div class="mf-value mf-text">
-                <input type="text" class="form-control" name="' . $params['id'] . '_value" value="' . stripcslashes($params['value']) . '"' . (isset($params['placeholder']) ? ' placeholder="' . $params['placeholder'] . '"' : '') . ' data-value>
+                <input type="text" class="form-control" name="' . self::$params['id'] . '_value" value="' . stripcslashes(self::$params['value']) . '"' . (isset(self::$params['placeholder']) ? ' placeholder="' . self::$params['placeholder'] . '"' : '') . ' data-value>
             </div>';
         }
     }
 
-    /**
-     * @param $params
-     */
-    protected function menu(&$params)
+    protected function setMenu()
     {
-        if (empty($params['types'])) {
-            $params['types'] = $this->types;
+        if (empty(self::$params['types'])) {
+            self::$params['types'] = $this->types;
         }
 
-        foreach ($params['types'] as $k => &$v) {
+        foreach (self::$params['types'] as $k => &$v) {
             if (stripos($k, 'separator') !== false) {
                 $v = '<div class="separator cntxMnuSeparator"></div>';
             } else {
@@ -83,30 +77,24 @@ class Table extends \Multifields\Base\Elements
             }
         }
 
-        $params['types'] = implode('', $params['types']);
+        self::$params['types'] = implode('', self::$params['types']);
     }
 
     /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        if (!isset($params['items'])) {
-            $params['items'] = '';
+        if (!isset(self::$params['items'])) {
+            self::$params['items'] = '';
         }
 
-        if (!empty($params['title'])) {
-            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
-        } else {
-            $params['title'] = '';
-        }
+        $this->setValue();
+        $this->setMenu();
 
-        $this->getValue($params);
-        $this->menu($params);
+        parent::setActions();
 
-        return parent::render($params, $data);
+        return parent::render();
     }
 
     /**

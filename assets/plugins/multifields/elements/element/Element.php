@@ -6,22 +6,27 @@ class Element extends \Multifields\Base\Elements
 {
     protected $tpl = 'element.tpl';
 
-    protected $template = '<[+name+] [+attr+]>[+items+]</[+name+]>';
+    protected $template = '<[+tag+] [+attr+]>[+items+]</[+tag+]>';
 
-    public function render($params = [], $data = [])
+    protected function setAttr()
     {
-        if (!isset($params['name'])) {
-            $params['name'] = 'div';
+        if (isset(self::$params['id']) && self::$params['id'] != '') {
+            self::$params['attr'] .= ' id="' . self::$params['id'] . '"';
         }
 
-        if (isset($params['id']) && $params['id'] != '') {
-            $params['attr'] .= ' id="' . $params['id'] . '"';
+        if (isset(self::$params['class']) && self::$params['class'] != '') {
+            self::$params['attr'] .= ' class="' . self::$params['class'] . '"';
+        }
+    }
+
+    public function render()
+    {
+        if (empty(self::$params['tag'])) {
+            self::$params['tag'] = 'div';
         }
 
-        if (isset($params['class']) && $params['class'] != '') {
-            $params['attr'] .= ' class="' . $params['class'] . '"';
-        }
+        $this->setAttr();
 
-        return parent::render($params, $data);
+        return parent::view();
     }
 }

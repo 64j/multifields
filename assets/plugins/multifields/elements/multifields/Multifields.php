@@ -68,15 +68,12 @@ class Multifields extends \Multifields\Base\Elements
         ],
     ];
 
-    /**
-     * @param array $params
-     */
-    protected function getToolbar(&$params = [])
+    protected function setToolbar()
     {
         $this->toolbar = !empty(Core::getConfig('settings')['toolbar']) ? Core::getConfig('settings')['toolbar'] : [];
 
-        $params['toolbar'] = '';
-        $params['grid'] = '';
+        self::$params['toolbar'] = '';
+        self::$params['grid'] = '';
 
         if (!empty($this->toolbar)) {
             if (!empty($this->toolbar['breakpoints'])) {
@@ -113,26 +110,26 @@ class Multifields extends \Multifields\Base\Elements
                         if (($v['value'] == 0 && !$cookie_breakpoint) || ($cookie_breakpoint && $cookie_breakpoint == $v['name'])) {
                             $active = ' active';
                             if ($v['value']) {
-                                $params['items.attr'] .= ' style="max-width: ' . $v['value'] . 'px;"';
-                                $params['attr'] .= ' data-mf-breakpoint="' . $v['name'] . '"';
+                                self::$params['items.attr'] .= ' style="max-width: ' . $v['value'] . 'px;"';
+                                self::$params['attr'] .= ' data-mf-breakpoint="' . $v['name'] . '"';
                             }
                         }
 
                         $data_breakpoint = $v['name'] ? '[data-mf-breakpoint="' . $v['name'] . '"]' : ':not([data-mf-breakpoint])';
                         $data_col = $v['name'] ? '-' . $v['name'] : '';
 
-                        $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="auto"]:not([data-mf-disable-col]) { flex: 0 0 auto; max-width: none; width: auto; }';
-                        $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '=""]:not([data-mf-disable-col]) { flex-basis: 0; flex-grow: 1; }';
+                        self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="auto"]:not([data-mf-disable-col]) { flex: 0 0 auto; max-width: none; width: auto; }';
+                        self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '=""]:not([data-mf-disable-col]) { flex-basis: 0; flex-grow: 1; }';
                         for ($i = 1; $i <= 12; $i++) {
                             $n = (float)number_format(100 / 12 * $i, 6);
-                            $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="' . $i . '"]:not([data-mf-disable-col]) { flex: 0 0 ' . $n . '%; max-width: ' . $n . '%; }';
+                            self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="' . $i . '"]:not([data-mf-disable-col]) { flex: 0 0 ' . $n . '%; max-width: ' . $n . '%; }';
                             if ($i < 12) {
-                                $params['css'] .= '#' . $params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-offset' . $data_col . '="' . $i . '"]:not([data-mf-disable-offset]) { margin-left: ' . $n . '%; }';
+                                self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-offset' . $data_col . '="' . $i . '"]:not([data-mf-disable-offset]) { margin-left: ' . $n . '%; }';
                             }
                         }
 
                         if ($v['value']) {
-                            $params['grid'] .= '<div style="max-width: ' . $v['value'] . 'px;"></div>';
+                            self::$params['grid'] .= '<div style="max-width: ' . $v['value'] . 'px;"></div>';
                         }
 
                         $v = '
@@ -141,12 +138,12 @@ class Multifields extends \Multifields\Base\Elements
                         </a>';
                     }
 
-                    $params['toolbar'] .= '<div class="mf-breakpoints">' . implode($breakpoints) . '</div>';
+                    self::$params['toolbar'] .= '<div class="mf-breakpoints">' . implode($breakpoints) . '</div>';
                 }
             }
 
             if ((!isset($this->toolbar['save']) && $this->settings['toolbar']['save']) || !empty($this->toolbar['save'])) {
-                $params['toolbar'] .= '
+                self::$params['toolbar'] .= '
                 <a href="javascript:;" class="mf-btn mf-btn-toolbar-save" onclick="actions.save();">
                     <i class="mf-icon fa fa-floppy-o"></i>
                 </a>';
@@ -155,29 +152,26 @@ class Multifields extends \Multifields\Base\Elements
             if (!empty($this->toolbar['fullscreen'])) {
                 $active = '';
                 if (!empty($_COOKIE['mf-fullscreen-' . Core::getParams('tv')['id']])) {
-                    $params['attr'] .= ' data-mf-fullscreen';
+                    self::$params['attr'] .= ' data-mf-fullscreen';
                     $active = ' active';
                 }
-                $params['toolbar'] .= '
+                self::$params['toolbar'] .= '
                     <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['fullscreen']['name'] . $active . '" title="' . $this->settings['toolbar']['fullscreen']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarFullscreen.call(this);">
                         <span>' . $this->settings['toolbar']['fullscreen']['icon'] . '</span>
                     </a>';
             }
 
-            if ($params['toolbar']) {
-                $params['toolbar'] = '<div class="mf-toolbar">' . $params['toolbar'] . '</div>';
+            if (self::$params['toolbar']) {
+                self::$params['toolbar'] = '<div class="mf-toolbar">' . self::$params['toolbar'] . '</div>';
             }
 
-            if ($params['grid']) {
-                $params['grid'] = '<div class="mf-grid">' . $params['grid'] . '</div>';
+            if (self::$params['grid']) {
+                self::$params['grid'] = '<div class="mf-grid">' . self::$params['grid'] . '</div>';
             }
         }
     }
 
-    /**
-     * @param $params
-     */
-    protected function getTemplates(&$params)
+    protected function setTemplates()
     {
         $out = '';
 
@@ -211,35 +205,36 @@ class Multifields extends \Multifields\Base\Elements
 
             if (!empty($out)) {
                 $class = '';
-                $params['class'] .= ' mf-row-group';
+                self::$params['class'] .= ' mf-row-group';
                 if (!empty(Core::getConfig('settings')['view']) && in_array(Core::getConfig('settings')['view'], $this->settings['view'])) {
-                    $params['class'] .= ' mf-view-' . Core::getConfig('settings')['view'];
+                    self::$params['class'] .= ' mf-view-' . Core::getConfig('settings')['view'];
                 } else {
                     $class = ' contextMenu';
                 }
-                $out = '<div id="mf-templates-' . $params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . $class . '">' . $out . '</div>';
+                $out = '<div id="mf-templates-' . self::$params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . $class . '">' . $out . '</div>';
             }
         }
 
-        $params['templates'] = $out;
+        self::$params['templates'] = $out;
     }
 
     /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $params['css'] = '';
+        self::$params['css'] = '';
 
-        $this->getToolbar($params);
-        $this->getTemplates($params);
+        $this->setToolbar();
+        $this->setTemplates();
 
-        if (!empty($params['css'])) {
-            $params['css'] = '<style>' . $params['css'] . '</style>';
+        if (!empty(self::$params['css'])) {
+            self::$params['css'] = '<style>' . self::$params['css'] . '</style>';
         }
 
-        return parent::render($params, $data);
+        parent::setActions();
+        parent::setAttr();
+
+        return parent::render();
     }
 }

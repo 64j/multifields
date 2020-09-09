@@ -17,44 +17,32 @@ class File extends \Multifields\Base\Elements
     protected $template = '
         <div class="col mf-thumb mf-thumb-file [+class+]" data-type="thumb:file" data-name="[+name+]" [+attr+]>
             [+title+]
-            [+value+]
             [+actions+]
+            <div class="mf-value mf-hidden">
+                <input type="hidden" id="[+id+]_value" name="[+id+]_value" value="[+value+]">
+            </div>
         </div>';
 
-    /**
-     * @param $params
-     */
-    protected function getValue(&$params)
+    protected function setAttr()
     {
-        $params['value'] = '
-            <div class="mf-value mf-hidden">
-                <input type="hidden" id="' . $params['id'] . '_value" name="' . $params['id'] . '_value" value="' . $params['value'] . '">
-            </div>';
+        if (!empty(self::$params['multi'])) {
+            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
+        }
     }
 
     /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $this->getValue($params);
+        $this->setAttr();
 
-        if (!empty($params['title'])) {
-            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
-        } else {
-            $params['title'] = '';
+        if (isset(self::$params['items'])) {
+            unset(self::$params['items']);
         }
 
-        if (!empty($params['multi'])) {
-            $params['attr'] .= ' data-multi="' . $params['multi'] . '"';
-        }
+        parent::setActions();
 
-        if (isset($params['items'])) {
-            unset($params['items']);
-        }
-
-        return parent::render($params, $data);
+        return parent::render();
     }
 }

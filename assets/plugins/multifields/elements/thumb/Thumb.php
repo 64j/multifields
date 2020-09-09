@@ -17,84 +17,43 @@ class Thumb extends \Multifields\Base\Elements
     protected $template = '
         <div class="col mf-thumb [+class+]" data-type="thumb" data-name="[+name+]" [+attr+]>
             [+title+]
-            [+value+]
             [+actions+]
+            <div class="mf-value mf-hidden">
+                <input type="hidden" id="[+id+]_value" name="[+id+]_value" value="[+value+]">
+            </div>
             <div class="row mx-0 mb-2 col-12 p-0 mf-items [+items.class+]">
                 [+items+]
             </div>
         </div>';
 
-    /**
-     * @param $params
-     */
-    protected function setBackground(&$params)
+    protected function setAttr()
     {
-        preg_match('/style="(.*)"/', $params['attr'], $matches);
-        $params['attr'] = preg_replace('/style="(.*)"/', '', $params['attr']);
-        $params['attr'] .= 'style="background-image: url(\'/' . $params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
+        preg_match('/style="(.*)"/', self::$params['attr'], $matches);
+        self::$params['attr'] = preg_replace('/style="(.*)"/', '', self::$params['attr']);
+        self::$params['attr'] .= 'style="background-image: url(\'/' . self::$params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
+
+        if (!empty(self::$params['multi'])) {
+            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
+        }
+
+        if (!empty(self::$params['image'])) {
+            self::$params['attr'] .= ' data-image="' . self::$params['image'] . '"';
+        }
+
+        if (!empty(self::$data) && !empty(self::$data['items'])) {
+            self::$params['class'] .= ' mf-group';
+        }
     }
 
     /**
-     * @param $params
-     */
-    protected function getValue(&$params)
-    {
-        $params['value'] = '
-            <div class="mf-value mf-hidden">
-                <input type="hidden" id="' . $params['id'] . '_value" name="' . $params['id'] . '_value" value="' . $params['value'] . '">
-            </div>';
-    }
-
-    /**
-     * @param array $params
-     * @param array $data
      * @return string
      */
-    public function render($params = [], $data = [])
+    public function render()
     {
-        $this->setBackground($params);
-        $this->getValue($params);
+        $this->setAttr();
 
-        if (!empty($params['title'])) {
-            $params['title'] = '<div class="mf-title">' . $params['title'] . '</div>';
-        } else {
-            $params['title'] = '';
-        }
+        parent::setActions();
 
-        if (!empty($params['multi'])) {
-            $params['attr'] .= ' data-multi="' . $params['multi'] . '"';
-        }
-
-        if (!empty($params['image'])) {
-            $params['attr'] .= ' data-image="' . $params['image'] . '"';
-        }
-
-        if (!empty($data) && !empty($data['items'])) {
-            $params['class'] .= ' mf-group';
-        }
-
-        return parent::render($params, $data);
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    protected function findImage($data = [])
-    {
-        $out = [];
-        foreach ($data as $k => $v) {
-            if (empty($v['items'])) {
-                if ($v['type'] == 'image' && !empty($v['thumb'])) {
-                    foreach ($v['thumb'] as $thumb) {
-                        $out[$thumb] = $v['value'];
-                    }
-                }
-            } else {
-                $out = $this->findImage($v['items']);
-            }
-        }
-
-        return $out;
+        return parent::render();
     }
 }
