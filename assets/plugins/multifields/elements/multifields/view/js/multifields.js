@@ -58,7 +58,7 @@ Multifields.element('multifields', {
     }
   },
 
-  template: function(id) {
+  setTemplate: function(id) {
     Multifields.getTemplate(id, function(data) {
       let template = document.createElement('template');
       template.innerHTML = data.html;

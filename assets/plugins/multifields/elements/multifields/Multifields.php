@@ -196,7 +196,7 @@ class Multifields extends \Multifields\Base\Elements
                     }
 
                     $out .= '
-                    <div class="mf-option" onclick="Multifields.elements.multifields.template(\'' . $k . '\');">
+                    <div class="mf-option" onclick="Multifields.elements.multifields.setTemplate(\'' . $k . '\');">
                         <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
                     </div>';
                     $i++;

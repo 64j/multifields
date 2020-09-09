@@ -81,7 +81,7 @@ class Row extends \Multifields\Base\Elements
                     }
 
                     $out .= '
-                    <div class="mf-option" onclick="Multifields.elements.row.template(\'' . $k . '\');" data-template-name="' . $k . '">
+                    <div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">
                         <div class="' . $icon_class . '"' . $icon_image . '>' . $icon . '</div>' . $v['title'] . '
                     </div>';
                     $i++;
