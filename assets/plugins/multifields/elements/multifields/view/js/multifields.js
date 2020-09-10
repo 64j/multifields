@@ -102,8 +102,8 @@ Multifields.element('multifields', {
     document.body.appendChild(a);
     a.click();
     setTimeout(function() {
+      window.URL.revokeObjectURL(a.href);
       document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
     }, 0);
   },
 
