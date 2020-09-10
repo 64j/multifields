@@ -26,7 +26,7 @@ class Thumb extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected function setAttr()
+    protected static function setAttr()
     {
         preg_match('/style="(.*)"/', self::$params['attr'], $matches);
         self::$params['attr'] = preg_replace('/style="(.*)"/', '', self::$params['attr']);
@@ -40,7 +40,7 @@ class Thumb extends \Multifields\Base\Elements
             self::$params['attr'] .= ' data-image="' . self::$params['image'] . '"';
         }
 
-        if (!empty(self::$data) && !empty(self::$data['items'])) {
+        if (!empty(self::$params['items'])) {
             self::$params['class'] .= ' mf-group';
         }
 

@@ -49,20 +49,6 @@ class Table extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected function setValue()
-    {
-        if (isset(self::$params['value']) && self::$params['value'] !== false) {
-            if (is_bool(self::$params['value'])) {
-                self::$params['value'] = '';
-            }
-
-            self::$params['value'] = '
-            <div class="mf-value mf-text">
-                <input type="text" class="form-control" name="' . self::$params['id'] . '_value" value="' . stripcslashes(self::$params['value']) . '"' . (isset(self::$params['placeholder']) ? ' placeholder="' . self::$params['placeholder'] . '"' : '') . ' data-value>
-            </div>';
-        }
-    }
-
     protected function setMenu()
     {
         if (empty(self::$params['types'])) {
@@ -89,7 +75,7 @@ class Table extends \Multifields\Base\Elements
             self::$params['items'] = '';
         }
 
-        $this->setValue();
+        self::setValue();
         $this->setMenu();
 
         parent::setActions();
@@ -110,5 +96,12 @@ class Table extends \Multifields\Base\Elements
         ]);
 
         return json_encode($params, JSON_UNESCAPED_UNICODE);
+    }
+
+    protected function preFillData(&$item = [], $config = [], $find = [])
+    {
+        if (isset($find['value']) && $find['value'] === false) {
+            $item['value'] = false;
+        }
     }
 }

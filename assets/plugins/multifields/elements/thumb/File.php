@@ -23,7 +23,7 @@ class File extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected function setAttr()
+    protected static function setAttr()
     {
         if (!empty(self::$params['multi'])) {
             self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';

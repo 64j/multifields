@@ -8,7 +8,7 @@ class Element extends \Multifields\Base\Elements
 
     protected $template = '<[+tag+] [+attr+]>[+items+]</[+tag+]>';
 
-    protected function setAttr()
+    protected static function setAttr()
     {
         if (isset(self::$params['id']) && self::$params['id'] != '') {
             self::$params['attr'] .= ' id="' . self::$params['id'] . '"';
@@ -24,8 +24,6 @@ class Element extends \Multifields\Base\Elements
         if (empty(self::$params['tag'])) {
             self::$params['tag'] = 'div';
         }
-
-        $this->setAttr();
 
         return parent::view();
     }

@@ -290,7 +290,7 @@ class Front
         $level++;
         $i = 1;
 
-        foreach ($data as $k => $v) {
+        foreach ($data as $k => &$v) {
             if (!isset($v['name'])) {
                 $v['name'] = $k;
             }
@@ -318,7 +318,14 @@ class Front
             } else {
                 $tpl = null;
             }
-            $tpl = self::getParams('tpl_' . $v['name'], $tpl);
+            $v['tpl'] = self::getParams('tpl_' . $v['name'], $tpl);
+
+            if ($v['tpl'] === null) {
+                $first = reset($data);
+                if (isset($first['tpl'])) {
+                    $v['tpl'] = $first['tpl'];
+                }
+            }
 
             // prepare
             if (!empty($find['prepare'])) {
@@ -336,7 +343,7 @@ class Front
                 $v = array_merge($v, $this->renderData($v['items'], $level, $find));
                 $this->prepare($prepare, $v);
             }
-            $out[$k] = $this->tpl($tpl, $v);
+            $out[$k] = $this->tpl($v['tpl'], $v);
         }
 
         if (!empty($out)) {

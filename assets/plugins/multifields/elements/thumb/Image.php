@@ -23,7 +23,7 @@ class Image extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected function setAttr()
+    protected static function setAttr()
     {
         preg_match('/style="(.*)"/', self::$params['attr'], $matches);
         self::$params['attr'] = preg_replace('/style="(.*)"/', '', self::$params['attr']);

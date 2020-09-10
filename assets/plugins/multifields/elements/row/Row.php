@@ -27,7 +27,7 @@ class Row extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected function setAttr()
+    protected static function setAttr()
     {
         if (!empty(self::$params['autoincrement'])) {
             self::$params['attr'] .= ' data-autoincrement="' . self::$params['autoincrement'] . '"';
@@ -81,6 +81,13 @@ class Row extends \Multifields\Base\Elements
         parent::setValue();
 
         return parent::render();
+    }
+
+    protected function preFillData(&$item = [], $config = [], $find = [])
+    {
+        if (isset($find['value']) && $find['value'] === false) {
+            $item['value'] = false;
+        }
     }
 
     /**

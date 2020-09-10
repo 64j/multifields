@@ -83,7 +83,7 @@ class Core
 
             if (!empty(self::getData())) {
                 $values = htmlspecialchars(json_encode(self::getData(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
-                self::setData(Elements::fillData(self::getData(), self::getConfig('templates')));
+                //self::setData(Elements::fillData(self::getData(), self::getConfig('templates')));
             }
 
             $out = Elements::renderData([

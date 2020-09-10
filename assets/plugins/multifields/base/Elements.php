@@ -8,7 +8,6 @@ class Elements
 {
     private static $elements;
     protected static $params;
-    protected static $data;
     protected static $lang;
     protected $tpl;
     protected $actions;
@@ -386,76 +385,6 @@ class Elements
     }
 
     /**
-     * @param array $params
-     * @return false|string
-     */
-    public function actionTemplate($params = [])
-    {
-        Core::getInstance();
-        Core::setParams([
-            'tv' => [
-                'id' => $params['tvid'],
-                'name' => $params['tvname']
-            ]
-        ]);
-
-        if (!empty(Core::getConfig('templates')[$params['tpl']])) {
-            $data = $this->fillData($this->fillDataTemplate([$params['tpl'] => Core::getConfig('templates')[$params['tpl']]]), Core::getConfig('templates'));
-            $params['html'] = $this->renderData($data);
-        }
-
-        return json_encode($params, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @param array $data
-     * @param array $config
-     * @param array $find
-     * @return array
-     */
-    public static function fillData($data = [], $config = [], $find = [])
-    {
-        if (is_array($data)) {
-            foreach ($data as $k => &$v) {
-                if (!isset($v['name'])) {
-                    $v['name'] = $k;
-                }
-
-                $find = self::findElements($v['name'], $config);
-
-                if (!isset($find['items'])) {
-                    $find['items'] = [];
-                }
-
-                if (!empty($find)) {
-                    $v = array_merge($find, $v);
-                }
-
-                if (empty($v['type'])) {
-                    $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
-                }
-
-                if (self::element($v['type'])) {
-                    self::element($v['type'])
-                        ->preFillData($v, $config, $find);
-                }
-
-                if (!empty($v['items'])) {
-                    $v['items'] = self::element($v['type'])
-                        ->fillData($v['items'], $find['items'], $find);
-                } elseif (!empty($find['items'])) {
-                    $v['items'] = self::element($v['type'])
-                        ->fillData($find['items'], $find['items'], $find);
-                }
-            }
-        }
-
-        unset($config);
-
-        return $data;
-    }
-
-    /**
      * @param string $key
      * @param array $config
      * @return array
@@ -478,117 +407,123 @@ class Elements
             }
         }
 
+        if (isset($result['tpl'])) {
+            unset($result['tpl']);
+        }
+
+        if (isset($result['prepare'])) {
+            unset($result['prepare']);
+        }
+
         return $result;
     }
 
     /**
      * @param array $data
-     * @return array
-     */
-    private function fillDataTemplate($data = [])
-    {
-        foreach ($data as $k => &$v) {
-            if (is_array($v)) {
-                $v['name'] = $k;
-                unset($v['type']);
-                if (isset($v['items'])) {
-                    $v['items'] = $this->fillDataTemplate($v['items']);
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param array $data
+     * @param array $config
      * @return string
      */
-    public static function renderData($data = [])
+    public static function renderData($data = [], $config = [])
     {
         $out = '';
 
         if (is_array($data)) {
             foreach ($data as $k => $v) {
-                $_v = $v;
-                if (!empty($v['items']) && self::element($v['type'])) {
-                    $v['items'] = self::element($v['type'])
-                        ->renderData($v['items']);
-                } else {
-                    unset($v['items']);
+                $k = explode('#', $k)[0];
+
+                if (!isset($v['name'])) {
+                    $v['name'] = $k;
                 }
 
-                $out .= self::renderFormElement($v, $_v);
+                $find = self::findElements($k, $config);
+
+                if (!empty($find)) {
+                    $v = array_merge($find, $v);
+                }
+
+                if (!isset($find['items'])) {
+                    $find['items'] = [];
+                }
+
+                if (empty($v['type'])) {
+                    $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
+                }
+
+                if (self::element($v['type'])) {
+                    self::element($v['type'])
+                        ->preFillData($v, $config, $find);
+                }
+
+                if (!empty($v['items']) && self::element($v['type'])) {
+                    $v['items'] = self::element($v['type'])
+                        ->renderData($v['items'], $find['items']);
+                }
+
+                $out .= self::renderFormElement($v);
             }
-            unset($data);
         } else {
             $out = $data;
         }
+
+        unset($data);
 
         return $out;
     }
 
     /**
      * @param array $params
-     * @param array $data
      * @return string
      */
-    protected static function renderFormElement($params = [], $data = [])
+    protected static function renderFormElement($params = [])
     {
-        $out = '';
+        if (!empty($params['type'])) {
+            self::$params = array_merge([
+                'id' => self::uniqid(),
+                'name' => '',
+                'attr' => '',
+                'value' => '',
+                'label' => '',
+                'title' => '',
+                'title.attr' => '',
+                'placeholder' => '',
+                'style' => '',
+                'class' => '',
+                'default' => '',
+                'elements' => '',
+                'item.attr' => '',
+                'items' => '',
+                'items.class' => '',
+                'items.attr' => ''
+            ], $params);
 
-        self::$data = $data;
+            $element = self::element(self::$params['type']);
 
-        self::$params = array_merge([
-            'id' => self::uniqid(),
-            'name' => '',
-            'attr' => '',
-            'value' => '',
-            'label' => '',
-            'title' => '',
-            'title.attr' => '',
-            'placeholder' => '',
-            'style' => '',
-            'class' => '',
-            'default' => '',
-            'elements' => '',
-            'item.attr' => '',
-            'items' => '',
-            'items.class' => '',
-            'items.attr' => ''
-        ], $params);
+            if (!$element) {
+                self::setTitle();
+                self::$params['class'] = trim('col ' . self::$params['class']);
+                self::$params['attr'] = 'data-type="' . self::$params['type'] . '" data-name="' . self::$params['name'] . '" ' . self::$params['attr'];
 
-        if (!empty(self::$params['type'])) {
-            if (self::element(self::$params['type'])) {
-                $out = self::element(self::$params['type'])
-                    ->render();
-            } else {
-                $element = renderFormElement(self::$params['type'], self::$params['id'], self::$params['default'], self::$params['elements'], self::$params['value'], self::$params['style']);
+                self::$params['items'] = renderFormElement(self::$params['type'], self::$params['id'], self::$params['default'], self::$params['elements'], self::$params['value'], self::$params['style']);
 
-                if (self::$params['placeholder']) {
+                if (in_array(self::$params['type'], ['option', 'checkbox'])) {
+                    self::$params['items'] = str_replace(['id="tv', 'for="tv'], ['id="tv' . self::$params['id'], 'for="tv' . self::$params['id']], self::$params['items']);
+                }
+
+                if (self::$params['placeholder'] != '') {
                     self::$params['item.attr'] .= ' placeholder="' . self::$params['placeholder'] . '"';
                 }
 
-                if (in_array(self::$params['type'], ['option', 'checkbox'])) {
-                    $element = str_replace(['id="tv', 'for="tv'], ['id="tv' . self::$params['id'], 'for="tv' . self::$params['id']], $element);
+                if (self::$params['item.attr']) {
+                    self::$params['items'] = str_replace('id="', self::$params['item.attr'] . ' id="', self::$params['items']);
                 }
 
-                $element = str_replace('id="', self::$params['item.attr'] . ' id="', $element);
+                self::$params['items'] = self::$params['title'] . self::$params['items'];
 
-                if (self::$params['title'] != '') {
-                    $element = '<div class="mf-title" ' . self::$params['title.attr'] . '>' . self::$params['title'] . '</div>' . $element;
-                }
-
-                self::$params['class'] = 'col ' . self::$params['class'];
-                self::$params['attr'] = 'data-type="' . self::$params['type'] . '" data-name="' . self::$params['name'] . '" ' . self::$params['attr'];
-                self::$params['items'] = $element;
-
-                $out = self::element('element')
-                    ->render();
+                $element = self::element('element');
             }
-        }
 
-        return $out;
+            return $element->render();
+        }
     }
 
     /**
@@ -648,7 +583,7 @@ class Elements
      * @param $icon
      * @return string
      */
-    protected function setIcon($icon)
+    protected static function setIcon($icon)
     {
         if (!empty($icon)) {
             $attr = '';
@@ -669,14 +604,14 @@ class Elements
         return $icon;
     }
 
-    protected function setTitle()
+    protected static function setTitle()
     {
         if (self::$params['title'] != '') {
             self::$params['title'] = '<div class="mf-title" ' . self::$params['title.attr'] . '>' . self::$params['title'] . '</div>';
         }
     }
 
-    protected function setAttr()
+    protected static function setAttr()
     {
         foreach (self::$params as $k => $param) {
             if (strpos($k, 'mf.') !== false) {
@@ -685,7 +620,7 @@ class Elements
         }
     }
 
-    protected function setValue()
+    protected static function setValue()
     {
         if (isset(self::$params['value']) && self::$params['value'] !== false) {
             if (is_bool(self::$params['value'])) {
@@ -697,6 +632,29 @@ class Elements
                 <input type="text" class="form-control" name="' . self::$params['id'] . '_value" value="' . stripcslashes(self::$params['value']) . '"' . (isset(self::$params['placeholder']) ? ' placeholder="' . self::$params['placeholder'] . '"' : '') . ' data-value>
             </div>';
         }
+    }
+
+    /**
+     * @param array $params
+     * @return false|string
+     */
+    public function actionTemplate($params = [])
+    {
+        Core::getInstance();
+        Core::setParams([
+            'tv' => [
+                'id' => $params['tvid'],
+                'name' => $params['tvname']
+            ]
+        ]);
+
+        if (!empty(Core::getConfig('templates')[$params['tpl']])) {
+            $params['html'] = $this->renderData([
+                $params['tpl'] => Core::getConfig('templates')[$params['tpl']]
+            ]);
+        }
+
+        return json_encode($params, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
     }
 
     /**
