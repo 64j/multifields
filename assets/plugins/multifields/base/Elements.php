@@ -518,8 +518,9 @@ class Elements
                 }
 
                 self::$params['items'] = self::$params['title'] . self::$params['items'];
+                self::$params['type'] = 'element';
 
-                $element = self::element('element');
+                $element = self::element(self::$params['type']);
             }
 
             return $element->render();
