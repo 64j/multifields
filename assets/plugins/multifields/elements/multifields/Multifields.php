@@ -58,6 +58,18 @@ class Multifields extends \Multifields\Base\Elements
                     'icon' => '<svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.2 18H2.16C0.96696 18 0 17.033 0 15.84V2.16C0 0.96696 0.96696 0 2.16 0H7.2C8.39304 0 9.36 0.96696 9.36 2.16V15.84C9.36 17.033 8.39304 18 7.2 18ZM4.32 16.56H5.04V15.84H4.32V16.56ZM7.92 1.44H1.44V14.4H7.92V1.44Z" fill="#C4C4C4"/></svg>',
                 ],
             ],
+            'export' => [
+                'name' => 'export',
+                'value' => '',
+                'label' => 'Export',
+                'icon' => '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.1076 6.70909H13.5955L9.00001 0L4.40449 6.70909H7.89062V13.455H10.1076V6.70909Z" fill="#C4C4C4"/><path d="M18 18H0V10.925H1.23796V16.7589H16.762V10.925H18V18Z" fill="#C4C4C4"/></svg>'
+            ],
+            'import' => [
+                'name' => 'import',
+                'value' => '',
+                'label' => 'Import',
+                'icon' => '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.89245 6.74586H4.40449L9.00001 13.455L13.5955 6.74586H10.1094L10.1094 0L7.89245 1.94009e-07L7.89245 6.74586Z" fill="#C4C4C4"/><path d="M18 18H0V10.925H1.23796V16.7589H16.762V10.925H18V18Z" fill="#C4C4C4"/></svg>'
+            ],
             'fullscreen' => [
                 'name' => 'fullscreen',
                 'value' => '',
@@ -76,6 +88,7 @@ class Multifields extends \Multifields\Base\Elements
         self::$params['grid'] = '';
 
         if (!empty($this->toolbar)) {
+
             if (!empty($this->toolbar['breakpoints'])) {
                 $breakpoints = $this->toolbar['breakpoints'];
 
@@ -129,6 +142,20 @@ class Multifields extends \Multifields\Base\Elements
 
                     self::$params['toolbar'] .= '<div class="mf-breakpoints">' . implode($breakpoints) . '</div>';
                 }
+            }
+
+            if (!empty($this->toolbar['export'])) {
+                self::$params['toolbar'] .= '
+                    <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['export']['name'] . '" title="' . $this->settings['toolbar']['export']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarExport.call(this);">
+                        <span>' . $this->settings['toolbar']['export']['icon'] . '</span>
+                    </a>';
+            }
+
+            if (!empty($this->toolbar['import'])) {
+                self::$params['toolbar'] .= '
+                    <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['import']['name'] . '" title="' . $this->settings['toolbar']['import']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarImport.call(this);">
+                        <span>' . $this->settings['toolbar']['import']['icon'] . '</span>
+                    </a>';
             }
 
             if ((!isset($this->toolbar['save']) && $this->settings['toolbar']['save']) || !empty($this->toolbar['save'])) {

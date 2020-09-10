@@ -27,7 +27,9 @@
           form.addEventListener('submit', function() {
             [...document.querySelectorAll('.multifields')].map(function(el) {
               Multifields.container = el;
-              Multifields.build();
+              if (!el.disabled) {
+                Multifields.build();
+              }
             });
             [...document.querySelectorAll('.multifields [name]')].map(function(el) {
               el.disabled = true;

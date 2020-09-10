@@ -91,6 +91,49 @@ Multifields.element('multifields', {
     }
   },
 
+  actionToolbarExport: function() {
+    Multifields.build();
+    let blob = new Blob([Multifields.container.nextElementSibling.value || '{}']),
+        a = document.createElement('a');
+    a.href = URL.createObjectURL.call(this, blob, {
+      type: 'text/json;charset=utf-8;'
+    });
+    a.download = 'multifields-' + Multifields.container.id + '-tv' + Multifields.container.dataset.tvId + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  },
+
+  actionToolbarImport: function() {
+    let self = this,
+        fileInput = document.getElementById('export' + Multifields.container.id) || document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json';
+    fileInput.id = 'export' + Multifields.container.id;
+    fileInput.className = 'mf-hidden';
+    fileInput.onchange = function() {
+      let file = this.files[0],
+          reader = new FileReader();
+      if (file && ~file.name.indexOf('.json')) {
+        reader.onload = function() {
+          Multifields.container.nextElementSibling.value = reader.result;
+          Multifields.container.querySelector('.mf-items').innerHTML = '';
+          Multifields.container.disabled = true;
+          self.style.display = 'none';
+          if(self.nextElementSibling && self.nextElementSibling.classList.contains('mf-btn-toolbar-save')) {
+            self.nextElementSibling.style.display = 'flex';
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    Multifields.container.appendChild(fileInput);
+    fileInput.click();
+  },
+
   actionToolbarFullscreen: function() {
     if (Multifields.container.hasAttribute('data-mf-fullscreen')) {
       document.body.classList.remove('mf-mode-fullscreen');

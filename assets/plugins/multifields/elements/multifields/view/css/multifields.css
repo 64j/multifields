@@ -18,10 +18,8 @@
 .multifields .mf-toolbar .mf-btn:hover svg path, .multifields .mf-toolbar .mf-btn.active svg path { fill: #fff }
 .multifields .mf-toolbar .mf-btn .mf-icon { }
 .multifields .mf-toolbar .mf-breakpoints { display: flex; flex-direction: row; flex-wrap: wrap; margin-right: auto; }
-.multifields .mf-toolbar .mf-btn-toolbar-save { display: none; margin-left: auto; background: #5cb85c; color: #fff; }
+.multifields .mf-toolbar .mf-btn-toolbar-save { display: none; background: #5cb85c; color: #fff; }
 .multifields .mf-toolbar .mf-btn-toolbar-save:hover { background: #1e7e34 }
-.multifields .mf-toolbar .mf-btn-toolbar-fullscreen { margin-left: auto; }
-.multifields .mf-toolbar .mf-btn-toolbar-save + .mf-btn-toolbar-fullscreen { margin-left: .25rem; }
 .multifields > .mf-toolbar ~ .mf-items { transition: max-width .25s; }
 .multifields > .mf-grid { display: flex; justify-content: center; position: absolute; z-index: 0; left: 0; top: .5rem; right: 0; bottom: 0; pointer-events: none; }
 .multifields > .mf-grid > div { position: absolute; left: auto; top: 0; right: auto; bottom: 0; width: 100%; border-left: 1px dashed #c6c6c6; border-right: 1px dashed #c6c6c6; }
