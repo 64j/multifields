@@ -16,9 +16,8 @@ class Td extends \Multifields\Base\Elements
      * @param array $config
      * @param array $find
      */
-    protected function preFillData1(&$item = [], $config = [], $find = [])
+    protected function preFillData(&$item = [], $config = [], $find = [])
     {
-        $this->dd($item);
         $item['@type'] = '';
         if (!empty($item['items'])) {
             foreach ($item['items'] as $k => $v) {
