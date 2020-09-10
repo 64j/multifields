@@ -25,6 +25,6 @@ class Element extends \Multifields\Base\Elements
             self::$params['tag'] = 'div';
         }
 
-        return parent::view();
+        return parent::render();
     }
 }
