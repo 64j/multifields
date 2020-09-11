@@ -89,7 +89,7 @@
 
               actionMove: function() {},
 
-              onmousedown: function() {},
+              onmousedown: function() {}
             }, obj || {});
           };
         }
@@ -273,8 +273,15 @@
                 data[item.name] = item;
               } else {
                 if (data[item.name]) {
-                  data[item.name + '#1'] = data[item.name];
-                  delete data[item.name];
+                  let new_data = {};
+                  for (let i in data) {
+                    if (i !== item.name) {
+                      new_data[i] = data[i];
+                    } else {
+                      new_data[item.name + '#1'] = data[item.name];
+                    }
+                  }
+                  data = new_data;
                 }
                 data[item.name + (counters[item.name] && '#' + counters[item.name] || '')] = item;
               }
