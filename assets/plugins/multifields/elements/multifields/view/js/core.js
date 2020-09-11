@@ -430,7 +430,8 @@
        */
       checkLimit: function(name, a, isTemplate) {
         let els = [],
-            c;
+            c,
+            d;
         if (Multifields.el === Multifields.container || isTemplate) {
           els = Multifields.el.querySelectorAll(':scope > .mf-items > [data-name="' + name + '"]');
         } else {
@@ -438,7 +439,18 @@
         }
         c = !!(els.length && els[0].dataset.limit && els[0].dataset.limit <= els.length);
         if (c && a) {
-          alert('The limit (' + els[0].dataset.limit + ') for adding elements of this name has been exceeded');
+          d = 'The limit (' + els[0].dataset.limit + ') for adding elements of this name has been exceeded.';
+          if (parent.modx) {
+            parent.modx.popup({
+              type: 'warning',
+              title: 'Multifields',
+              position: 'top center alertMultifields',
+              content: d,
+              wrap: 'body'
+            });
+          } else {
+            alert(d);
+          }
         }
         return c;
       },
