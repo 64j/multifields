@@ -11,7 +11,7 @@
 .multifields.mf-view-icons > .mf-templates .mf-icon.mf-icon-image { height: 4rem; background: 50% 50% no-repeat; background-size: contain; }
 .multifields.mf-view-icons > .mf-templates .mf-icon.mf-icon-image > * { display: block; margin: auto; max-height: 100%; max-width: 100%; height: auto; width: auto; }
 .multifields.mf-view-icons > .mf-templates.contextMenu .mf-icon { font-size: 1.5rem; }
-.multifields .mf-toolbar { position: relative; z-index: 2; display: flex; align-items: center; flex-wrap: wrap; flex-direction: row; padding: .25rem; width: 100%; background: #ececec }
+.multifields .mf-toolbar { position: relative; z-index: 2; display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; flex-direction: row; padding: .25rem; width: 100%; background: #ececec }
 .multifields .mf-toolbar .mf-icon { display: flex; align-items: center; justify-content: center; height: 1.125rem; width: 1.125rem; }
 .multifields .mf-toolbar .mf-btn { display: flex; align-items: center; justify-content: center; margin: 0 .05rem; width: 1.625rem; height: 1.625rem; border-radius: .15rem; text-decoration: none; }
 .multifields .mf-toolbar .mf-btn:hover, .multifields .mf-toolbar .mf-btn.active { background-color: #1976d2; color: #fff; }
