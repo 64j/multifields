@@ -70,7 +70,7 @@ Multifields.element('multifields', {
       } else {
         Multifields.el.querySelector('.mf-items').appendChild(template.content);
       }
-    });
+    }, true);
   },
 
   actionToolbarBreakpoint: function(key) {

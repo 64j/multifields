@@ -100,20 +100,27 @@
        * Загружаем код шаблона по его названию, либо клониурем.
        * @param template
        * @param callback
+       * @param isTemplate
        */
-      getTemplate: function(template, callback) {
+      getTemplate: function(template, callback, isTemplate) {
         if (typeof template === 'function') {
+          isTemplate = callback;
           callback = template;
           template = false;
         }
+        template = template || Multifields.name;
+
         Multifields.getAction({
           action: 'template',
           class: Multifields.elements[Multifields.type].class,
-          tpl: template || Multifields.name,
+          tpl: template,
           tvid: Multifields.container.dataset['tvId'],
           tvname: Multifields.container.dataset['tvName']
         }, function(data) {
           if (typeof callback === 'function') {
+            if (Multifields.checkLimit(template, true, isTemplate)) {
+              return;
+            }
             if (data.html) {
               callback.call(Multifields, data);
             } else {
@@ -413,6 +420,27 @@
           });
         }
         return els;
+      },
+
+      /**
+       * Проверяем лимиты
+       * @param {*} name
+       * @param {boolean} a
+       * @param isTemplate
+       */
+      checkLimit: function(name, a, isTemplate) {
+        let els = [],
+            c;
+        if (Multifields.el === Multifields.container || isTemplate) {
+          els = Multifields.el.querySelectorAll(':scope > .mf-items > [data-name="' + name + '"]');
+        } else {
+          els = Multifields.el && Multifields.el.parentElement.querySelectorAll(':scope > [data-name="' + name + '"]');
+        }
+        c = !!(els.length && els[0].dataset.limit && els[0].dataset.limit <= els.length);
+        if (c && a) {
+          alert('The limit (' + els[0].dataset.limit + ') for adding elements of this name has been exceeded');
+        }
+        return c;
       },
 
       /**

@@ -619,6 +619,10 @@ class Elements
                 self::$params['attr'] .= str_replace('mf.', ' data-mf-', strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $k))) . '="' . $param . '"';
             }
         }
+
+        if (!empty(self::$params['limit'])) {
+            self::$params['attr'] .= ' data-limit="' . (int)self::$params['limit'] . '"';
+        }
     }
 
     protected static function setValue()
