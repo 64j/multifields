@@ -123,7 +123,7 @@ Multifields.element('multifields', {
           Multifields.container.querySelector('.mf-items').innerHTML = '';
           Multifields.container.disabled = true;
           self.style.display = 'none';
-          if(self.nextElementSibling && self.nextElementSibling.classList.contains('mf-btn-toolbar-save')) {
+          if (self.nextElementSibling && self.nextElementSibling.classList.contains('mf-btn-toolbar-save')) {
             self.nextElementSibling.style.display = 'flex';
           }
         };
