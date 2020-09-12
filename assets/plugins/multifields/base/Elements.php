@@ -503,7 +503,7 @@ class Elements
                 self::$params['class'] = trim('col ' . self::$params['class']);
                 self::$params['attr'] = 'data-type="' . self::$params['type'] . '" data-name="' . self::$params['name'] . '" ' . self::$params['attr'];
 
-                self::$params['items'] = renderFormElement(self::$params['type'], self::$params['id'], self::$params['default'], self::$params['elements'], self::$params['value'], self::$params['style']);
+                self::$params['items'] = renderFormElement(self::$params['type'], self::$params['id'], self::$params['default'], self::$params['elements'], self::$params['value'], self::$params['style'], self::$params);
 
                 if (in_array(self::$params['type'], ['option', 'checkbox'])) {
                     self::$params['items'] = str_replace(['id="tv', 'for="tv'], ['id="tv' . self::$params['id'], 'for="tv' . self::$params['id']], self::$params['items']);
