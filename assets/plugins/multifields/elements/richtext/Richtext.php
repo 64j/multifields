@@ -53,15 +53,13 @@ class Richtext extends \Multifields\Base\Elements
             $evtOut = '';
         }
 
-        self::$params = [
+        return $this->view([
             'lang' => $evo->getConfig('lang_code'),
             'MODX_SITE_URL' => MODX_SITE_URL,
             'MGR_DIR' => MGR_DIR,
             'manager_theme' => $evo->getConfig('manager_theme'),
             'body_class' => $body_class,
             'evtOut' => $evtOut
-        ];
-
-        return $this->view();
+        ]);
     }
 }

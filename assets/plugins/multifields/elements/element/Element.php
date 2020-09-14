@@ -8,21 +8,21 @@ class Element extends \Multifields\Base\Elements
 
     protected $template = '<[+tag+] [+attr+]>[+items+]</[+tag+]>';
 
-    protected static function setAttr()
+    protected function setAttr()
     {
-        if (isset(self::$params['id']) && self::$params['id'] != '') {
-            self::$params['attr'] .= ' id="' . self::$params['id'] . '"';
+        if (isset($this->params['id']) && $this->params['id'] != '') {
+            $this->params['attr'] .= ' id="' . $this->params['id'] . '"';
         }
 
-        if (isset(self::$params['class']) && self::$params['class'] != '') {
-            self::$params['attr'] .= ' class="' . self::$params['class'] . '"';
+        if (isset($this->params['class']) && $this->params['class'] != '') {
+            $this->params['attr'] .= ' class="' . $this->params['class'] . '"';
         }
     }
 
     public function render()
     {
-        if (empty(self::$params['tag'])) {
-            self::$params['tag'] = 'div';
+        if (empty($this->params['tag'])) {
+            $this->params['tag'] = 'div';
         }
 
         return parent::render();

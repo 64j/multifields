@@ -27,18 +27,18 @@ class Row extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected static function setAttr()
+    protected function setAttr()
     {
-        if (!empty(self::$params['autoincrement'])) {
-            self::$params['attr'] .= ' data-autoincrement="' . self::$params['autoincrement'] . '"';
+        if (!empty($this->params['autoincrement'])) {
+            $this->params['attr'] .= ' data-autoincrement="' . $this->params['autoincrement'] . '"';
         }
 
-        if (!empty(self::$params['mf.col'])) {
-            self::$params['class'] = trim(preg_replace('/col-[\d|auto]+/', '', self::$params['class']) . ' col-' . self::$params['mf.col']);
+        if (!empty($this->params['mf.col'])) {
+            $this->params['class'] = trim(preg_replace('/col-[\d|auto]+/', '', $this->params['class']) . ' col-' . $this->params['mf.col']);
         }
 
-        if (!empty(self::$params['mf.offset'])) {
-            self::$params['class'] = trim(preg_replace('/offset-[\d|auto]+/', '', self::$params['class']) . ' offset-' . self::$params['mf.offset']);
+        if (!empty($this->params['mf.offset'])) {
+            $this->params['class'] = trim(preg_replace('/offset-[\d|auto]+/', '', $this->params['class']) . ' offset-' . $this->params['mf.offset']);
         }
 
         parent::setAttr();
@@ -48,26 +48,26 @@ class Row extends \Multifields\Base\Elements
     {
         $out = '';
 
-        if (!empty(Core::getConfig('templates')) && isset(self::$params['templates']) && (self::$params['templates'] === true || is_array(self::$params['templates']))) {
+        if (!empty(Core::getConfig('templates')) && isset($this->params['templates']) && ($this->params['templates'] === true || is_array($this->params['templates']))) {
             $i = 0;
             foreach (Core::getConfig('templates') as $k => $v) {
-                if ((empty($v['hidden']) && empty(self::$params['templates'])) || (self::$params['templates'] === true || (is_array(self::$params['templates']) && (isset(self::$params['templates'][$k]) || in_array($k, self::$params['templates']))))) {
+                if ((empty($v['hidden']) && empty($this->params['templates'])) || ($this->params['templates'] === true || (is_array($this->params['templates']) && (isset($this->params['templates'][$k]) || in_array($k, $this->params['templates']))))) {
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
 
-                    $out .= '<div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . self::setIcon($v['icon']) . $v['label'] . '</div>';
+                    $out .= '<div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . $this->setIcon($v['icon']) . $v['label'] . '</div>';
                     $i++;
                 }
             }
 
             if (!empty($out)) {
-                self::$params['class'] .= ' mf-row-group';
+                $this->params['class'] .= ' mf-row-group';
 
-                $out = '<div id="mf-templates-' . self::$params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . ' contextMenu">' . $out . '</div>';
+                $out = '<div id="mf-templates-' . $this->params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . ' contextMenu">' . $out . '</div>';
             }
         }
 
-        self::$params['templates'] = $out;
+        $this->params['templates'] = $out;
     }
 
     /**
@@ -76,9 +76,8 @@ class Row extends \Multifields\Base\Elements
     public function render()
     {
         $this->setTemplates();
-
-        parent::setActions();
-        parent::setValue();
+        $this->setActions();
+        $this->setValue();
 
         return parent::render();
     }

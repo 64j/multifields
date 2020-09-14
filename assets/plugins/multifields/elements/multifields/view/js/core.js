@@ -31,7 +31,7 @@
                 Multifields.build();
               }
             });
-            [...document.querySelectorAll('.multifields [name]')].map(function(el) {
+            [...document.querySelectorAll('.multifields [id][name]')].map(function(el) {
               el.disabled = true;
             });
           });
@@ -212,7 +212,7 @@
                 if (els[i].querySelector('.mf-items')) {
                   el = els[i].querySelector(':scope > .mf-value input');
                 } else {
-                  el = els[i].querySelectorAll('[name]');
+                  el = els[i].querySelectorAll('[id][name]');
                 }
               } else {
                 el = els[i].querySelector(':scope > input');

@@ -16,7 +16,7 @@ class File extends \Multifields\Base\Elements
 
     public function render()
     {
-        self::$params['button.class'] = 'far fa-file';
+        $this->params['button.class'] = 'far fa-file';
 
         return parent::render();
     }

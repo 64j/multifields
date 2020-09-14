@@ -23,10 +23,10 @@ class File extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected static function setAttr()
+    protected function setAttr()
     {
-        if (!empty(self::$params['multi'])) {
-            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
+        if (!empty($this->params['multi'])) {
+            $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';
         }
 
         parent::setAttr();
@@ -37,11 +37,11 @@ class File extends \Multifields\Base\Elements
      */
     public function render()
     {
-        if (isset(self::$params['items'])) {
-            unset(self::$params['items']);
+        if (isset($this->params['items'])) {
+            unset($this->params['items']);
         }
 
-        parent::setActions();
+        $this->setActions();
 
         return parent::render();
     }

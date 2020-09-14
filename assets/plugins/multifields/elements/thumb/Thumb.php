@@ -26,22 +26,22 @@ class Thumb extends \Multifields\Base\Elements
             </div>
         </div>';
 
-    protected static function setAttr()
+    protected function setAttr()
     {
-        preg_match('/style="(.*)"/', self::$params['attr'], $matches);
-        self::$params['attr'] = preg_replace('/style="(.*)"/', '', self::$params['attr']);
-        self::$params['attr'] .= 'style="background-image: url(\'/' . self::$params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
+        preg_match('/style="(.*)"/', $this->params['attr'], $matches);
+        $this->params['attr'] = preg_replace('/style="(.*)"/', '', $this->params['attr']);
+        $this->params['attr'] .= 'style="background-image: url(\'/' . $this->params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
 
-        if (!empty(self::$params['multi'])) {
-            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
+        if (!empty($this->params['multi'])) {
+            $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';
         }
 
-        if (!empty(self::$params['image'])) {
-            self::$params['attr'] .= ' data-image="' . self::$params['image'] . '"';
+        if (!empty($this->params['image'])) {
+            $this->params['attr'] .= ' data-image="' . $this->params['image'] . '"';
         }
 
-        if (!empty(self::$params['items'])) {
-            self::$params['class'] .= ' mf-group';
+        if (!empty($this->params['items'])) {
+            $this->params['class'] .= ' mf-group';
         }
 
         parent::setAttr();
@@ -52,7 +52,7 @@ class Thumb extends \Multifields\Base\Elements
      */
     public function render()
     {
-        parent::setActions();
+        $this->setActions();
 
         return parent::render();
     }

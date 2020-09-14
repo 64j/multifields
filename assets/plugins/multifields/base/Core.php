@@ -83,19 +83,18 @@ class Core
 
             if (!empty(self::getData())) {
                 $values = htmlspecialchars(json_encode(self::getData(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
-                //self::setData(Elements::fillData(self::getData(), self::getConfig('templates')));
             }
 
-            $out = Elements::renderData([
-                [
-                    'type' => 'multifields',
-                    'name' => 'multifields',
-                    'form.id' => self::getParams('storage') == 'files' ? '-mf-data[' . self::getParams('id') . '__' . self::getParams('tv')['id'] . ']' : self::getParams('tv')['id'],
-                    'tv.id' => self::getParams('tv')['id'],
-                    'tv.name' => self::getParams('tv')['name'],
-                    'items' => self::getData(),
-                    'values' => $values
-                ]
+            $elements = new Elements();
+
+            $out = $elements->renderFormElement([
+                'type' => 'multifields',
+                'name' => 'multifields',
+                'form.id' => self::getParams('storage') == 'files' ? '-mf-data[' . self::getParams('id') . '__' . self::getParams('tv')['id'] . ']' : self::getParams('tv')['id'],
+                'tv.id' => self::getParams('tv')['id'],
+                'tv.name' => self::getParams('tv')['name'],
+                'items' => $elements->renderData(self::getData()),
+                'values' => $values
             ]);
 
             if (self::getParams('debug')) {

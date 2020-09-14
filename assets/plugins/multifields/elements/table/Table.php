@@ -51,11 +51,11 @@ class Table extends \Multifields\Base\Elements
 
     protected function setMenu()
     {
-        if (empty(self::$params['types'])) {
-            self::$params['types'] = $this->types;
+        if (empty($this->params['types'])) {
+            $this->params['types'] = $this->types;
         }
 
-        foreach (self::$params['types'] as $k => &$v) {
+        foreach ($this->params['types'] as $k => &$v) {
             if (stripos($k, 'separator') !== false) {
                 $v = '<div class="separator cntxMnuSeparator"></div>';
             } else {
@@ -63,7 +63,7 @@ class Table extends \Multifields\Base\Elements
             }
         }
 
-        self::$params['types'] = implode('', self::$params['types']);
+        $this->params['types'] = implode('', $this->params['types']);
     }
 
     /**
@@ -71,14 +71,13 @@ class Table extends \Multifields\Base\Elements
      */
     public function render()
     {
-        if (!isset(self::$params['items'])) {
-            self::$params['items'] = '';
+        if (!isset($this->params['items'])) {
+            $this->params['items'] = '';
         }
 
-        self::setValue();
+        $this->setValue();
         $this->setMenu();
-
-        parent::setActions();
+        $this->setActions();
 
         return parent::render();
     }

@@ -84,8 +84,8 @@ class Multifields extends \Multifields\Base\Elements
     {
         $this->toolbar = !empty(Core::getConfig('settings')['toolbar']) ? Core::getConfig('settings')['toolbar'] : [];
 
-        self::$params['toolbar'] = '';
-        self::$params['grid'] = '';
+        $this->params['toolbar'] = '';
+        $this->params['grid'] = '';
 
         if (!empty($this->toolbar)) {
 
@@ -112,54 +112,54 @@ class Multifields extends \Multifields\Base\Elements
                         if (($v['value'] == 0 && !$cookie_breakpoint) || ($cookie_breakpoint && $cookie_breakpoint == $v['name'])) {
                             $active = ' active';
                             if ($v['value']) {
-                                self::$params['items.attr'] .= ' style="max-width: ' . $v['value'] . 'px;"';
-                                self::$params['attr'] .= ' data-mf-breakpoint="' . $v['name'] . '"';
+                                $this->params['items.attr'] .= ' style="max-width: ' . $v['value'] . 'px;"';
+                                $this->params['attr'] .= ' data-mf-breakpoint="' . $v['name'] . '"';
                             }
                         }
 
                         $data_breakpoint = $v['name'] ? '[data-mf-breakpoint="' . $v['name'] . '"]' : ':not([data-mf-breakpoint])';
                         $data_col = $v['name'] ? '-' . $v['name'] : '';
 
-                        self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="auto"]:not([data-mf-disable-col]) { flex: 0 0 auto; max-width: none; width: auto; }';
-                        self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '=""]:not([data-mf-disable-col]) { flex-basis: 0; flex-grow: 1; }';
+                        $this->params['css'] .= '#' . $this->params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="auto"]:not([data-mf-disable-col]) { flex: 0 0 auto; max-width: none; width: auto; }';
+                        $this->params['css'] .= '#' . $this->params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '=""]:not([data-mf-disable-col]) { flex-basis: 0; flex-grow: 1; }';
                         for ($i = 1; $i <= 12; $i++) {
                             $n = (float)number_format(100 / 12 * $i, 6);
-                            self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="' . $i . '"]:not([data-mf-disable-col]) { flex: 0 0 ' . $n . '%; max-width: ' . $n . '%; }';
+                            $this->params['css'] .= '#' . $this->params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-col' . $data_col . '="' . $i . '"]:not([data-mf-disable-col]) { flex: 0 0 ' . $n . '%; max-width: ' . $n . '%; }';
                             if ($i < 12) {
-                                self::$params['css'] .= '#' . self::$params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-offset' . $data_col . '="' . $i . '"]:not([data-mf-disable-offset]) { margin-left: ' . $n . '%; }';
+                                $this->params['css'] .= '#' . $this->params['id'] . '.multifields' . $data_breakpoint . ' [data-mf-offset' . $data_col . '="' . $i . '"]:not([data-mf-disable-offset]) { margin-left: ' . $n . '%; }';
                             }
                         }
 
                         if ($v['value']) {
-                            self::$params['grid'] .= '<div style="max-width: ' . $v['value'] . 'px;"></div>';
+                            $this->params['grid'] .= '<div style="max-width: ' . $v['value'] . 'px;"></div>';
                         }
 
                         $v = '
                         <a href="javascript:;" class="mf-breakpoint mf-btn' . $active . '" title="' . $v['label'] . '" onclick="Multifields.elements.multifields.actionToolbarBreakpoint.call(this, \'' . $v['value'] . '\');" data-breakpoint-key="' . $v['value'] . '" data-breakpoint-name="' . $v['name'] . '">
-                            ' . self::setIcon($v['icon']) . '
+                            ' . $this->setIcon($v['icon']) . '
                         </a>';
                     }
 
-                    self::$params['toolbar'] .= '<div class="mf-breakpoints">' . implode($breakpoints) . '</div>';
+                    $this->params['toolbar'] .= '<div class="mf-breakpoints">' . implode($breakpoints) . '</div>';
                 }
             }
 
             if (!empty($this->toolbar['export'])) {
-                self::$params['toolbar'] .= '
+                $this->params['toolbar'] .= '
                     <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['export']['name'] . '" title="' . $this->settings['toolbar']['export']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarExport.call(this);">
                         <span>' . $this->settings['toolbar']['export']['icon'] . '</span>
                     </a>';
             }
 
             if (!empty($this->toolbar['import'])) {
-                self::$params['toolbar'] .= '
+                $this->params['toolbar'] .= '
                     <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['import']['name'] . '" title="' . $this->settings['toolbar']['import']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarImport.call(this);">
                         <span>' . $this->settings['toolbar']['import']['icon'] . '</span>
                     </a>';
             }
 
             if ((!isset($this->toolbar['save']) && $this->settings['toolbar']['save']) || !empty($this->toolbar['save'])) {
-                self::$params['toolbar'] .= '
+                $this->params['toolbar'] .= '
                 <a href="javascript:;" class="mf-btn mf-btn-toolbar-save" onclick="actions.save();">
                     <i class="mf-icon fa fa-floppy-o"></i>
                 </a>';
@@ -168,21 +168,21 @@ class Multifields extends \Multifields\Base\Elements
             if (!empty($this->toolbar['fullscreen'])) {
                 $active = '';
                 if (!empty($_COOKIE['mf-fullscreen-' . Core::getParams('tv')['id']])) {
-                    self::$params['attr'] .= ' data-mf-fullscreen';
+                    $this->params['attr'] .= ' data-mf-fullscreen';
                     $active = ' active';
                 }
-                self::$params['toolbar'] .= '
+                $this->params['toolbar'] .= '
                     <a href="javascript:;" class="mf-btn mf-btn-toolbar-' . $this->settings['toolbar']['fullscreen']['name'] . $active . '" title="' . $this->settings['toolbar']['fullscreen']['label'] . '" onclick="Multifields.elements.multifields.actionToolbarFullscreen.call(this);">
                         <span>' . $this->settings['toolbar']['fullscreen']['icon'] . '</span>
                     </a>';
             }
 
-            if (self::$params['toolbar']) {
-                self::$params['toolbar'] = '<div class="mf-toolbar">' . self::$params['toolbar'] . '</div>';
+            if ($this->params['toolbar']) {
+                $this->params['toolbar'] = '<div class="mf-toolbar">' . $this->params['toolbar'] . '</div>';
             }
 
-            if (self::$params['grid']) {
-                self::$params['grid'] = '<div class="mf-grid">' . self::$params['grid'] . '</div>';
+            if ($this->params['grid']) {
+                $this->params['grid'] = '<div class="mf-grid">' . $this->params['grid'] . '</div>';
             }
         }
     }
@@ -198,24 +198,24 @@ class Multifields extends \Multifields\Base\Elements
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
 
-                    $out .= '<div class="mf-option" onclick="Multifields.elements.multifields.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . self::setIcon($v['icon']) . $v['label'] . '</div>';
+                    $out .= '<div class="mf-option" onclick="Multifields.elements.multifields.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . $this->setIcon($v['icon']) . $v['label'] . '</div>';
                     $i++;
                 }
             }
 
             if (!empty($out)) {
                 $class = '';
-                self::$params['class'] .= ' mf-row-group';
+                $this->params['class'] .= ' mf-row-group';
                 if (!empty(Core::getConfig('settings')['view']) && in_array(Core::getConfig('settings')['view'], $this->settings['view'])) {
-                    self::$params['class'] .= ' mf-view-' . Core::getConfig('settings')['view'];
+                    $this->params['class'] .= ' mf-view-' . Core::getConfig('settings')['view'];
                 } else {
                     $class = ' contextMenu';
                 }
-                $out = '<div id="mf-templates-' . self::$params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . $class . '">' . $out . '</div>';
+                $out = '<div id="mf-templates-' . $this->params['id'] . '" class="mf-templates' . ($i > 1 ? '' : ' mf-hidden') . $class . '">' . $out . '</div>';
             }
         }
 
-        self::$params['templates'] = $out;
+        $this->params['templates'] = $out;
     }
 
     /**
@@ -223,16 +223,16 @@ class Multifields extends \Multifields\Base\Elements
      */
     public function render()
     {
-        self::$params['css'] = '';
+        $this->params['css'] = '';
 
         $this->setToolbar();
         $this->setTemplates();
 
-        if (!empty(self::$params['css'])) {
-            self::$params['css'] = '<style>' . self::$params['css'] . '</style>';
+        if (!empty($this->params['css'])) {
+            $this->params['css'] = '<style>' . $this->params['css'] . '</style>';
         }
 
-        parent::setActions();
+        $this->setActions();
 
         return parent::render();
     }

@@ -16,21 +16,21 @@ class Image extends \Multifields\Base\Elements
 
     public function render()
     {
-        self::$params['onchange'] = '';
-        self::$params['onclick'] = '';
+        $this->params['onchange'] = '';
+        $this->params['onclick'] = '';
 
-        if (!empty(self::$params['thumb'])) {
-            $thumb = is_array(self::$params['thumb']) ? implode(',', self::$params['thumb']) : self::$params['thumb'];
-            self::$params['attr'] .= ' data-thumb="' . $thumb . '"';
-            self::$params['onchange'] = 'Multifields.elements.image.setValue(event);';
+        if (!empty($this->params['thumb'])) {
+            $thumb = is_array($this->params['thumb']) ? implode(',', $this->params['thumb']) : $this->params['thumb'];
+            $this->params['attr'] .= ' data-thumb="' . $thumb . '"';
+            $this->params['onchange'] = 'Multifields.elements.image.setValue(event);';
         }
 
-        if (!empty(self::$params['multi'])) {
-            self::$params['attr'] .= ' data-multi="' . self::$params['multi'] . '"';
-            self::$params['onclick'] = 'Multifields.elements.image.MultiBrowseServer(event)';
-            self::$params['button.class'] = 'far fa-images';
+        if (!empty($this->params['multi'])) {
+            $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';
+            $this->params['onclick'] = 'Multifields.elements.image.MultiBrowseServer(event)';
+            $this->params['button.class'] = 'far fa-images';
         } else {
-            self::$params['button.class'] = 'far fa-image';
+            $this->params['button.class'] = 'far fa-image';
         }
 
         return parent::render();
