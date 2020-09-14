@@ -22,26 +22,30 @@ Multifields.element('table', {
   build: function(el, item) {
     item.items = {};
     let els = el.querySelector('.table thead');
-    if (els && els.rows) {
-      item.items['thead'] = {
+    if (els && els.rows && els.dataset.name) {
+      item.items[els.dataset.name] = {
         type: 'table:head',
         items: Multifields.elements.table.rows(els.rows, true)
       };
     }
     els = el.querySelector('.table tbody');
     if (els && els.rows) {
-      item.items['tbody'] = {
-        type: 'table:body',
-        items: Multifields.elements.table.rows(els.rows, false)
-      };
+      if (els.dataset.name) {
+        item.items[els.dataset.name] = {
+          type: 'table:body',
+          items: Multifields.elements.table.rows(els.rows, false)
+        };
+      } else {
+        item.items = Multifields.elements.table.rows(els.rows, false);
+      }
     }
     return item;
   },
 
   rows: function(rows, thead) {
-    let data = [];
+    let data = {};
     [...rows].map(function(row, rowIndex) {
-      data[rowIndex] = {
+      data[row.dataset.name + '#' + rowIndex] = {
         type: 'table:row',
         name: row.dataset.name,
         items: []
@@ -49,7 +53,7 @@ Multifields.element('table', {
       [...row.cells].map(function(cell) {
         let el = cell.querySelector('.col');
         if (el && el.dataset.type) {
-          data[rowIndex]['items'].push({
+          data[row.dataset.name + '#' + rowIndex]['items'].push({
             type: thead ? 'table:th' : 'table:td',
             items: [
               {
