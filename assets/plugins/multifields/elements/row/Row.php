@@ -94,7 +94,7 @@ class Row extends \Multifields\Base\Elements
      * @param $type
      * @return string
      */
-    protected function renderAction($action, $type)
+    protected function setAction($action, $type)
     {
         if ($action == 'resize') {
             return '
@@ -102,6 +102,6 @@ class Row extends \Multifields\Base\Elements
                 <i class="mf-actions-' . $action . '-col fa"></i>';
         }
 
-        return parent::renderAction($action, $type);
+        return parent::setAction($action, $type);
     }
 }

@@ -226,13 +226,13 @@ class Multifields extends \Multifields\Base\Elements
         $this->params['css'] = '';
 
         $this->setToolbar();
+        $this->setActions();
         $this->setTemplates();
 
         if (!empty($this->params['css'])) {
             $this->params['css'] = '<style>' . $this->params['css'] . '</style>';
         }
 
-        $this->setActions();
 
         return parent::render();
     }

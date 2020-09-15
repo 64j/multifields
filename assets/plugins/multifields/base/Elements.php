@@ -10,7 +10,7 @@ class Elements
     protected $params;
     protected $lexicon;
     protected $tpl;
-    protected $actions;
+    protected $actions = ['add', 'move', 'del'];
     protected $template;
     protected $scripts;
     protected $styles;
@@ -279,16 +279,6 @@ class Elements
     }
 
     /**
-     * @param $action
-     * @param $type
-     * @return string
-     */
-    protected function renderAction($action, $type)
-    {
-        return '<i class="mf-actions-' . $action . ' fa" onclick="Multifields.elements[\'' . $type . '\'].action' . ucfirst($action) . '(event);"></i>';
-    }
-
-    /**
      * @param array $params
      * @return string
      */
@@ -421,7 +411,7 @@ class Elements
     public function renderFormElement($params = [])
     {
         if (!empty($params['type'])) {
-            $params = array_merge([
+            $this->params = array_merge([
                 'id' => $this->uniqid(),
                 'name' => '',
                 'attr' => '',
@@ -437,37 +427,45 @@ class Elements
                 'item.attr' => '',
                 'items' => '',
                 'items.class' => '',
-                'items.attr' => ''
+                'items.attr' => '',
+                'actions' => null
             ], $params);
 
-            $element = $this->element($params['type']);
+            $element = $this->element($this->params['type']);
 
             if (!$element) {
                 $this->setTitle();
-                $params['class'] = trim('col ' . $params['class']);
-                $params['attr'] = 'data-type="' . $params['type'] . '" data-name="' . $params['name'] . '" ' . $params['attr'];
 
-                $params['items'] = renderFormElement($params['type'], $params['id'], $params['default'], $params['elements'], $params['value'], $params['style'], $params);
-
-                if (in_array($params['type'], ['option', 'checkbox'])) {
-                    $params['items'] = str_replace(['id="tv', 'for="tv'], ['id="tv' . $params['id'], 'for="tv' . $params['id']], $params['items']);
+                if (!empty($this->params['actions'])) {
+                    $this->setActions();
+                } else {
+                    $this->params['actions'] = '';
                 }
 
-                if ($params['placeholder'] != '') {
-                    $params['item.attr'] .= ' placeholder="' . $params['placeholder'] . '"';
+                $this->params['class'] = trim('col ' . $this->params['class']);
+                $this->params['attr'] = 'data-type="' . $this->params['type'] . '" data-name="' . $this->params['name'] . '" ' . $this->params['attr'];
+
+                $this->params['items'] = renderFormElement($this->params['type'], $this->params['id'], $this->params['default'], $this->params['elements'], $this->params['value'], $this->params['style'], $this->params);
+
+                if (in_array($this->params['type'], ['option', 'checkbox'])) {
+                    $this->params['items'] = str_replace(['id="tv', 'for="tv'], ['id="tv' . $this->params['id'], 'for="tv' . $this->params['id']], $this->params['items']);
                 }
 
-                if ($params['item.attr']) {
-                    $params['items'] = str_replace('id="', $params['item.attr'] . ' id="', $params['items']);
+                if ($this->params['placeholder'] != '') {
+                    $this->params['item.attr'] .= ' placeholder="' . $this->params['placeholder'] . '"';
                 }
 
-                $params['items'] = $params['title'] . $params['items'];
-                $params['type'] = 'element';
+                if ($this->params['item.attr']) {
+                    $this->params['items'] = str_replace('id="', $this->params['item.attr'] . ' id="', $this->params['items']);
+                }
 
-                $element = $this->element($params['type']);
+                $this->params['items'] = $this->params['actions'] . $this->params['title'] . $this->params['items'];
+                $this->params['type'] = 'element';
+
+                $element = $this->element($this->params['type']);
             }
 
-            $element->setParams($params);
+            $element->setParams($this->params);
 
             return $element->render();
         }
@@ -593,7 +591,7 @@ class Elements
                         if ($action == 'move') {
                             $this->params['class'] .= ' mf-draggable';
                         }
-                        $this->params['actions'] .= $this->element($this->params['type'])->renderAction($action, $this->params['type']);
+                        $this->params['actions'] .= $this->setAction($action, $this->params['type']);
                     }
                 }
             }
@@ -604,6 +602,19 @@ class Elements
         $class = empty($this->params['actions']) ? ' mf-empty-actions' : '';
 
         $this->params['actions'] = '<div id="mf-actions-' . $this->params['id'] . '" class="mf-actions' . $class . '">' . $this->params['actions'] . '</div>';
+    }
+
+    /**
+     * @param $action
+     * @param $type
+     * @return string
+     */
+    protected function setAction($action, $type)
+    {
+        if (!$this->element($this->params['type'])) {
+            $type = 'elements';
+        }
+        return '<i class="mf-actions-' . $action . ' fa" onclick="Multifields.elements[\'' . $type . '\'].action' . ucfirst($action) . '(event);"></i>';
     }
 
     protected function setTitle()

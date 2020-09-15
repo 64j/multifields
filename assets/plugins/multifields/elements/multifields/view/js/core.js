@@ -15,8 +15,6 @@
       name: null,
       el: null,
 
-      elements: {},
-
       /**
        * Инициализация
        */
@@ -58,6 +56,30 @@
         }
       },
 
+      elements: {
+        elements: {
+          class: 'Multifields\\Base\\Elements',
+
+          init: function() {},
+
+          actionAdd: function() {
+            Multifields.getTemplate(function(data) {
+              Multifields.el.insertAdjacentHTML('afterend', data.html);
+              Multifields.draggable(Multifields.el.nextElementSibling.querySelectorAll('.mf-draggable > .mf-items'));
+              Multifields.setDatepicker(Multifields.el.nextElementSibling);
+            });
+          },
+
+          actionDel: function() {
+            Multifields.el.parentElement.removeChild(Multifields.el);
+          },
+
+          actionMove: function() {},
+
+          onmousedown: function() {}
+        }
+      },
+
       /**
        * Добавляем новый элемент и регистрируем его, дополняя его базовыми методами или возвращаем уже существующий
        * @param type
@@ -67,29 +89,10 @@
       element: function(type, obj) {
         if (!Multifields.elements[type]) {
           Multifields.elements[type] = new function() {
-            return Object.assign({
-
+            return Object.assign({}, Multifields.elements.elements, {
               class: 'Multifields\\Elements\\' + (type + ':' + type).split(':', 2).map(function(str) {
                 return str[0].toUpperCase() + str.slice(1).toLowerCase();
-              }).join('\\'),
-
-              init: function() {},
-
-              actionAdd: function() {
-                Multifields.getTemplate(function(data) {
-                  Multifields.el.insertAdjacentHTML('afterend', data.html);
-                  Multifields.draggable(Multifields.el.nextElementSibling.querySelectorAll('.mf-draggable > .mf-items'));
-                  Multifields.setDatepicker(Multifields.el.nextElementSibling);
-                });
-              },
-
-              actionDel: function() {
-                Multifields.el.parentElement.removeChild(Multifields.el);
-              },
-
-              actionMove: function() {},
-
-              onmousedown: function() {}
+              }).join('\\')
             }, obj || {});
           };
         }
@@ -112,7 +115,7 @@
 
         Multifields.getAction({
           action: 'template',
-          class: Multifields.elements[Multifields.type].class,
+          class: Multifields.elements[Multifields.type] && Multifields.elements[Multifields.type].class || Multifields.elements.elements.class,
           tpl: template,
           tvid: Multifields.container.dataset['tvId'],
           tvname: Multifields.container.dataset['tvName']
