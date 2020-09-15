@@ -435,13 +435,6 @@ class Elements
 
             if (!$element) {
                 $this->setTitle();
-
-                if (!empty($this->params['actions'])) {
-                    $this->setActions();
-                } else {
-                    $this->params['actions'] = '';
-                }
-
                 $this->params['class'] = trim('col ' . $this->params['class']);
                 $this->params['attr'] = 'data-type="' . $this->params['type'] . '" data-name="' . $this->params['name'] . '" ' . $this->params['attr'];
 
@@ -459,7 +452,7 @@ class Elements
                     $this->params['items'] = str_replace('id="', $this->params['item.attr'] . ' id="', $this->params['items']);
                 }
 
-                $this->params['items'] = $this->params['actions'] . $this->params['title'] . $this->params['items'];
+                $this->params['items'] = $this->params['title'] . $this->params['items'];
                 $this->params['type'] = 'element';
 
                 $element = $this->element($this->params['type']);
