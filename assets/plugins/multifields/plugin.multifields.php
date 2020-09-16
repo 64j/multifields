@@ -17,7 +17,7 @@ switch ($e->name) {
         }
         break;
 
-    case 'OnManagerPreFrameLoader':
+    case 'OnBeforeManagerPageInit':
         if (isset($_REQUEST['mf-action']) && !empty($_REQUEST['action'])) {
             $className = !empty($_REQUEST['class']) ? $_REQUEST['class'] : '';
 
