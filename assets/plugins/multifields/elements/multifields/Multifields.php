@@ -2,8 +2,6 @@
 
 namespace Multifields\Elements\Multifields;
 
-use Multifields\Base\Core;
-
 class Multifields extends \Multifields\Base\Elements
 {
     protected $styles = 'view/css/multifields.css';
@@ -82,13 +80,12 @@ class Multifields extends \Multifields\Base\Elements
 
     protected function setToolbar()
     {
-        $this->toolbar = !empty(Core::getConfig('settings')['toolbar']) ? Core::getConfig('settings')['toolbar'] : [];
+        $this->toolbar = !empty(mfc()->getConfig('settings')['toolbar']) ? mfc()->getConfig('settings')['toolbar'] : [];
 
         $this->params['toolbar'] = '';
         $this->params['grid'] = '';
 
         if (!empty($this->toolbar)) {
-
             if (!empty($this->toolbar['breakpoints'])) {
                 $breakpoints = $this->toolbar['breakpoints'];
 
@@ -99,7 +96,7 @@ class Multifields extends \Multifields\Base\Elements
                 }
 
                 if (!empty($breakpoints)) {
-                    $cookie_breakpoint = !empty($_COOKIE['mf-breakpoint-' . Core::getParams('tv')['id']]) ? $_COOKIE['mf-breakpoint-' . Core::getParams('tv')['id']] : '';
+                    $cookie_breakpoint = !empty($_COOKIE['mf-breakpoint-' . mfc()->getParams('tv')['id']]) ? $_COOKIE['mf-breakpoint-' . mfc()->getParams('tv')['id']] : '';
                     foreach ($breakpoints as &$v) {
                         if (!is_array($v)) {
                             $v = $this->settings['toolbar']['breakpoints'][array_search($v, array_column($this->settings['toolbar']['breakpoints'], 'name'))];
@@ -167,7 +164,7 @@ class Multifields extends \Multifields\Base\Elements
 
             if (!empty($this->toolbar['fullscreen'])) {
                 $active = '';
-                if (!empty($_COOKIE['mf-fullscreen-' . Core::getParams('tv')['id']])) {
+                if (!empty($_COOKIE['mf-fullscreen-' . mfc()->getParams('tv')['id']])) {
                     $this->params['attr'] .= ' data-mf-fullscreen';
                     $active = ' active';
                 }
@@ -191,9 +188,9 @@ class Multifields extends \Multifields\Base\Elements
     {
         $out = '';
 
-        if (!empty(Core::getConfig('templates'))) {
+        if (!empty(mfc()->getConfig('templates'))) {
             $i = 0;
-            foreach (Core::getConfig('templates') as $k => $v) {
+            foreach (mfc()->getConfig('templates') as $k => $v) {
                 if (empty($v['hidden'])) {
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
@@ -206,8 +203,8 @@ class Multifields extends \Multifields\Base\Elements
             if (!empty($out)) {
                 $class = '';
                 $this->params['class'] .= ' mf-row-group';
-                if (!empty(Core::getConfig('settings')['view']) && in_array(Core::getConfig('settings')['view'], $this->settings['view'])) {
-                    $this->params['class'] .= ' mf-view-' . Core::getConfig('settings')['view'];
+                if (!empty(mfc()->getConfig('settings')['view']) && in_array(mfc()->getConfig('settings')['view'], $this->settings['view'])) {
+                    $this->params['class'] .= ' mf-view-' . mfc()->getConfig('settings')['view'];
                 } else {
                     $class = ' contextMenu';
                 }

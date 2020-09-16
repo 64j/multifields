@@ -11,9 +11,7 @@ require_once '__autoload.php';
 switch ($e->name) {
     case 'OnManagerMainFrameHeaderHTMLBlock':
         if (in_array($modx->manager->action, [3, 4, 17, 27, 72, 112])) {
-            \Multifields\Base\Core::getInstance();
-
-            $e->addOutput((new \Multifields\Base\Elements())->getStartScripts());
+            $e->addOutput(mfc()->getStartScripts());
         }
         break;
 
@@ -44,22 +42,19 @@ switch ($e->name) {
         break;
 
     case 'OnDocFormSave':
-        \Multifields\Base\Core::getInstance()
-            ->saveData();
+        mfc()->saveData();
         break;
 
     case 'OnDocFormDelete':
-        \Multifields\Base\Core::getInstance()
-            ->deleteData();
+        mfc()->deleteData();
         break;
 
     case 'OnWebPageInit':
-        \Multifields\Base\Front::getInstance();
+        mff();
         break;
 
     case 'OnAfterLoadDocumentObject':
         /** @var TYPE_NAME $documentObject */
-        $e->setOutput(\Multifields\Base\Front::getInstance()
-            ->addDocumentObject($documentObject));
+        $e->setOutput(mff()->addDocumentObject($documentObject));
         break;
 }

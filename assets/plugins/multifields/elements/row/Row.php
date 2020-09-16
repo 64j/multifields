@@ -2,8 +2,6 @@
 
 namespace Multifields\Elements\Row;
 
-use Multifields\Base\Core;
-
 class Row extends \Multifields\Base\Elements
 {
     protected $styles = 'view/css/row.css';
@@ -48,9 +46,9 @@ class Row extends \Multifields\Base\Elements
     {
         $out = '';
 
-        if (!empty(Core::getConfig('templates')) && isset($this->params['templates']) && ($this->params['templates'] === true || is_array($this->params['templates']))) {
+        if (!empty(mfc()->getConfig('templates')) && isset($this->params['templates']) && ($this->params['templates'] === true || is_array($this->params['templates']))) {
             $i = 0;
-            foreach (Core::getConfig('templates') as $k => $v) {
+            foreach (mfc()->getConfig('templates') as $k => $v) {
                 if ((empty($v['hidden']) && empty($this->params['templates'])) || ($this->params['templates'] === true || (is_array($this->params['templates']) && (isset($this->params['templates'][$k]) || in_array($k, $this->params['templates']))))) {
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';

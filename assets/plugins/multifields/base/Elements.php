@@ -15,7 +15,6 @@ class Elements
     protected $scripts;
     protected $styles;
     protected $disabled = false;
-    protected $file_has_changed = null;
 
     /**
      * Elements constructor.
@@ -41,198 +40,10 @@ class Elements
     }
 
     /**
-     * @return string
-     */
-    public function getStartScripts()
-    {
-        $out = '';
-        $cache_styles = dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css';
-        $cache_scripts = dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js';
-
-        $styles = [
-            '@' => [
-                $this->setFileUrl('view/css/core.css', dirname(__DIR__) . '/elements/multifields/', true, true)
-            ]
-        ];
-
-        $this->removeFile($cache_styles, $this->hasFileChanged($styles['@'][0]));
-
-        $scripts = [
-            '@' => [
-                $this->setFileUrl('view/js/Sortable.min.js', dirname(__DIR__) . '/elements/multifields/'),
-                $this->setFileUrl('view/js/core.js', dirname(__DIR__) . '/elements/multifields/', true, true)
-            ]
-        ];
-
-        $this->removeFile($cache_scripts, $this->hasFileChanged($scripts['@'][1]));
-
-        if ($elements = glob(Core::getParams('basePath') . 'elements/*', GLOB_ONLYDIR)) {
-            foreach ($elements as $element) {
-                if ($elements_elements = glob($element . '/*.php')) {
-                    $namespace = ucfirst(basename($element));
-
-                    foreach ($elements_elements as $elements_element) {
-                        $name = rtrim(basename($elements_element), '.php');
-                        $name = $namespace . ':' . $name;
-                        $element = $this->element($name);
-
-                        if (!$element) {
-                            continue;
-                        }
-
-                        if ($files = $element->getStyles()) {
-                            if (!isset($styles[$name])) {
-                                if (is_array($files)) {
-                                    foreach ($files as $style) {
-                                        if ($style = $this->setFileUrl($style, $element->path(), true, true)) {
-                                            $styles[$name][] = $style;
-                                            $this->removeFile($cache_styles, $this->hasFileChanged($style));
-                                        }
-                                    }
-                                } else {
-                                    if ($style = $this->setFileUrl($files, $element->path(), true, true)) {
-                                        $styles[$name][] = $style;
-                                        $this->removeFile($cache_styles, $this->hasFileChanged($style));
-                                    }
-                                }
-                            }
-                        }
-
-                        if ($files = $element->getScripts()) {
-
-                            if (!isset($scripts[$name])) {
-                                if (is_array($files)) {
-                                    foreach ($files as $script) {
-                                        if ($script = $this->setFileUrl($script, $element->path(), true, true)) {
-                                            $scripts[$name][] = $script;
-                                            $this->removeFile($cache_scripts, $this->hasFileChanged($script));
-                                        }
-                                    }
-                                } else {
-                                    if ($script = $this->setFileUrl($files, $element->path(), true, true)) {
-                                        $scripts[$name][] = $script;
-                                        $this->removeFile($cache_scripts, $this->hasFileChanged($script));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (Core::getParams('debug')) {
-            foreach ($styles as $files) {
-                foreach ($files as $style) {
-                    $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $style . '"/>';
-                }
-            }
-
-            foreach ($scripts as $files) {
-                foreach ($files as $script) {
-                    $out .= "\n" . '<script src="' . $script . '"></script>';
-                }
-            }
-
-            $this->removeFile($cache_styles);
-            $this->removeFile($cache_scripts);
-        } else {
-            if (!is_file($cache_styles) || !is_file($cache_scripts)) {
-
-                $__ = '';
-                foreach ($styles as $files) {
-                    foreach ($files as $style) {
-                        $__ .= file_get_contents($style);
-                    }
-                }
-
-                file_put_contents($cache_styles, Compress::css($__));
-
-                $__ = '';
-                foreach ($scripts as $files) {
-                    foreach ($files as $script) {
-                        $__ .= ';' . file_get_contents($script);
-                    }
-                }
-
-                file_put_contents($cache_scripts, Compress::js($__));
-            }
-
-            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl($cache_styles, dirname(__DIR__) . '/') . '"/>';
-            $out .= "\n" . '<script src="' . $this->setFileUrl($cache_scripts, dirname(__DIR__) . '/') . '"></script>';
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param string $url
-     * @param string $parent
-     * @param bool $timestamp
-     * @param bool $check_cache
-     * @return string
-     */
-    private function setFileUrl($url = '', $parent = '', $timestamp = true, $check_cache = false)
-    {
-        if (!empty($url)) {
-            $url = str_replace(dirname(__DIR__), '', $url);
-            $url = trim(str_replace(DIRECTORY_SEPARATOR, '/', $url), '\\/');
-            $parent = trim(str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', $parent)), '\\/');
-
-            $url = $parent . '/' . $url;
-
-            if (is_file(MODX_BASE_PATH . $url) && $timestamp) {
-                if (is_bool($timestamp)) {
-                    $timestamp = filemtime(MODX_BASE_PATH . $url);
-                }
-                if ($check_cache) {
-                    if (Core::getParams('debug')) {
-                        $this->removeFile(MODX_BASE_PATH . $url . '.cache');
-                    } else {
-                        $this->file_has_changed[MODX_SITE_URL . $url] = !is_file(MODX_BASE_PATH . $url . '.cache') || (is_file(MODX_BASE_PATH . $url . '.cache') && $timestamp != file_get_contents(MODX_BASE_PATH . $url . '.cache'));
-                        if ($this->file_has_changed[MODX_SITE_URL . $url]) {
-                            file_put_contents(MODX_BASE_PATH . $url . '.cache', $timestamp);
-                        }
-                    }
-                }
-                if (!Core::getParams('debug')) {
-                    $url .= '?time=' . $timestamp;
-                }
-            } else {
-                $url = '';
-            }
-        }
-
-        $url = MODX_SITE_URL . $url;
-
-        return $url;
-    }
-
-    /**
-     * @param $file
-     * @param bool $remove
-     */
-    private function removeFile($file, $remove = true)
-    {
-        if ($remove && is_file($file)) {
-            unlink($file);
-        }
-    }
-
-    /**
-     * @param $url
-     * @return bool
-     */
-    private function hasFileChanged($url)
-    {
-        return !empty($this->file_has_changed[explode('?', $url)[0]]);
-    }
-
-    /**
      * @param null $className
      * @return object|null
      */
-    protected function element($className = null)
+    public function element($className = null)
     {
         $element = null;
         $name = null;
@@ -331,8 +142,8 @@ class Elements
 
         if (isset($config[$key])) {
             $result = $config[$key];
-        } elseif (isset(Core::getConfig('templates')[$key])) {
-            $result = Core::getConfig('templates')[$key];
+        } elseif (isset(mfc()->getConfig('templates')[$key])) {
+            $result = mfc()->getConfig('templates')[$key];
         } else {
             if (is_array($config)) {
                 foreach ($config as $k => $v) {
@@ -473,28 +284,9 @@ class Elements
     }
 
     /**
-     * @param string $dir
-     * @return string
-     */
-    private function path($dir = '')
-    {
-        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__) . '/elements/' . strtolower($this->classBasename()) . '/' . $dir);
-    }
-
-    /**
-     * @return string
-     */
-    private function classBasename()
-    {
-        $className = explode('\\', static::class);
-
-        return $className[count($className) - 2];
-    }
-
-    /**
      * @return array
      */
-    private function getStyles()
+    public function getStyles()
     {
         return $this->styles;
     }
@@ -502,7 +294,7 @@ class Elements
     /**
      * @return array
      */
-    private function getScripts()
+    public function getScripts()
     {
         return $this->scripts;
     }
@@ -531,7 +323,6 @@ class Elements
      */
     protected function preFillData(&$item = [], $config = [], $find = [])
     {
-
     }
 
     /**
@@ -650,17 +441,16 @@ class Elements
      */
     public function actionTemplate($params = [])
     {
-        Core::getInstance();
-        Core::setParams([
+        mfc([
             'tv' => [
                 'id' => $params['tvid'],
                 'name' => $params['tvname']
             ]
         ]);
 
-        if (!empty(Core::getConfig('templates')[$params['tpl']])) {
+        if (!empty(mfc()->getConfig('templates')[$params['tpl']])) {
             $params['html'] = $this->renderData([
-                $params['tpl'] => Core::getConfig('templates')[$params['tpl']]
+                $params['tpl'] => mfc()->getConfig('templates')[$params['tpl']]
             ]);
         }
 

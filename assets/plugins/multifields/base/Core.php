@@ -14,9 +14,10 @@ class Core
     const VERSION = '2.0.1';
 
     private static $instance;
-    private static $params = [];
-    private static $config = [];
-    private static $data = [];
+    private $params = [];
+    private $config = [];
+    private $data = [];
+    protected $file_has_changed = null;
 
     private function __construct($params = [])
     {
@@ -25,7 +26,7 @@ class Core
             $pluginParams = json_decode(evolutionCMS()->pluginCache['multifieldsProps'], true);
         }
 
-        self::setParams(array_merge([
+        $this->setParams(array_merge([
             'basePath' => str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__)) . '/',
             'storage' => empty($pluginParams['multifields_storage']) ? 'files' : $pluginParams['multifields_storage'],
             'debug' => empty($pluginParams['multifields_debug']) ? false : ($pluginParams['multifields_debug'] == 'no' ? false : true),
@@ -45,10 +46,193 @@ class Core
         if (self::$instance === null) {
             self::$instance = new static($params);
         } else {
-            self::setParams($params);
+            self::$instance->setParams($params);
         }
 
         return self::$instance;
+    }
+
+    public function getStartScripts()
+    {
+        $out = '';
+        $cache_styles = dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css';
+        $cache_scripts = dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js';
+
+        $styles = [
+            '@' => [
+                $this->setFileUrl('view/css/core.css', dirname(__DIR__) . '/elements/multifields/', true, true)
+            ]
+        ];
+
+        $this->removeFile($cache_styles, $this->hasFileChanged($styles['@'][0]));
+
+        $scripts = [
+            '@' => [
+                $this->setFileUrl('view/js/Sortable.min.js', dirname(__DIR__) . '/elements/multifields/'),
+                $this->setFileUrl('view/js/core.js', dirname(__DIR__) . '/elements/multifields/', true, true)
+            ]
+        ];
+
+        $this->removeFile($cache_scripts, $this->hasFileChanged($scripts['@'][1]));
+
+        if ($elements = glob($this->getParams('basePath') . 'elements/*', GLOB_ONLYDIR)) {
+            foreach ($elements as $path) {
+                if ($elements_elements = glob($path . '/*.php')) {
+                    $namespace = ucfirst(basename($path));
+
+                    foreach ($elements_elements as $elements_element) {
+                        $name = rtrim(basename($elements_element), '.php');
+                        $name = $namespace . ':' . $name;
+                        $element = (new Elements)->element($name);
+
+                        if (!$element) {
+                            continue;
+                        }
+
+                        $files = $element->getStyles();
+
+                        if (!empty($files) && !isset($styles[$name])) {
+                            if (is_array($files)) {
+                                foreach ($files as $style) {
+                                    if ($style = $this->setFileUrl($style, $path, true, true)) {
+                                        $styles[$name][] = $style;
+                                        $this->removeFile($cache_styles, $this->hasFileChanged($style));
+                                    }
+                                }
+                            } else {
+                                if ($style = $this->setFileUrl($files, $path, true, true)) {
+                                    $styles[$name][] = $style;
+                                    $this->removeFile($cache_styles, $this->hasFileChanged($style));
+                                }
+                            }
+                        }
+
+                        $files = $element->getScripts();
+
+                        if (!empty($files) && !isset($scripts[$name])) {
+                            if (is_array($files)) {
+                                foreach ($files as $script) {
+                                    if ($script = $this->setFileUrl($script, $path, true, true)) {
+                                        $scripts[$name][] = $script;
+                                        $this->removeFile($cache_scripts, $this->hasFileChanged($script));
+                                    }
+                                }
+                            } else {
+                                if ($script = $this->setFileUrl($files, $path, true, true)) {
+                                    $scripts[$name][] = $script;
+                                    $this->removeFile($cache_scripts, $this->hasFileChanged($script));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($this->getParams('debug')) {
+            foreach ($styles as $files) {
+                foreach ($files as $style) {
+                    $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $style . '"/>';
+                }
+            }
+
+            foreach ($scripts as $files) {
+                foreach ($files as $script) {
+                    $out .= "\n" . '<script src="' . $script . '"></script>';
+                }
+            }
+
+            $this->removeFile($cache_styles);
+            $this->removeFile($cache_scripts);
+        } else {
+            if (!is_file($cache_styles) || !is_file($cache_scripts)) {
+                $__ = '';
+                foreach ($styles as $files) {
+                    foreach ($files as $style) {
+                        $__ .= file_get_contents($style);
+                    }
+                }
+
+                file_put_contents($cache_styles, Compress::css($__));
+
+                $__ = '';
+                foreach ($scripts as $files) {
+                    foreach ($files as $script) {
+                        $__ .= ';' . file_get_contents($script);
+                    }
+                }
+
+                file_put_contents($cache_scripts, Compress::js($__));
+            }
+
+            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl($cache_styles, dirname(__DIR__) . '/') . '"/>';
+            $out .= "\n" . '<script src="' . $this->setFileUrl($cache_scripts, dirname(__DIR__) . '/') . '"></script>';
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param string $url
+     * @param string $parent
+     * @param bool $timestamp
+     * @param bool $check_cache
+     * @return string
+     */
+    private function setFileUrl($url = '', $parent = '', $timestamp = true, $check_cache = false)
+    {
+        if (!empty($url)) {
+            $url = str_replace(dirname(__DIR__), '', $url);
+            $url = trim(str_replace(DIRECTORY_SEPARATOR, '/', $url), '\\/');
+            $parent = trim(str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', $parent)), '\\/');
+
+            $url = $parent . '/' . $url;
+
+            if (is_file(MODX_BASE_PATH . $url) && $timestamp) {
+                if (is_bool($timestamp)) {
+                    $timestamp = filemtime(MODX_BASE_PATH . $url);
+                }
+                if ($check_cache) {
+                    if ($this->getParams('debug')) {
+                        $this->removeFile(MODX_BASE_PATH . $url . '.cache');
+                    } else {
+                        $this->file_has_changed[MODX_SITE_URL . $url] = !is_file(MODX_BASE_PATH . $url . '.cache') || (is_file(MODX_BASE_PATH . $url . '.cache') && $timestamp != file_get_contents(MODX_BASE_PATH . $url . '.cache'));
+                        if ($this->file_has_changed[MODX_SITE_URL . $url]) {
+                            file_put_contents(MODX_BASE_PATH . $url . '.cache', $timestamp);
+                        }
+                    }
+                }
+                if (!$this->getParams('debug')) {
+                    $url .= '?time=' . $timestamp;
+                }
+            } else {
+                $url = '';
+            }
+        }
+
+        $url = MODX_SITE_URL . $url;
+
+        return $url;
+    }
+
+    /**
+     * @param $file
+     * @param bool $remove
+     */
+    private function removeFile($file, $remove = true)
+    {
+        if ($remove && is_file($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @param $url
+     * @return bool
+     */
+    private function hasFileChanged($url)
+    {
+        return !empty($this->file_has_changed[explode('?', $url)[0]]);
     }
 
     /**
@@ -62,27 +246,27 @@ class Core
 
         $tmp_ResourceManagerLoaded = $ResourceManagerLoaded;
 
-        self::setParams([
+        $this->setParams([
             'id' => $id,
             'tv' => $row
         ]);
 
-        self::setConfig(null);
-        self::setData(null);
+        $this->setConfig(null);
+        $this->setData(null);
 
-        if (empty(self::getConfig('templates'))) {
-            if (self::getConfig()) {
-                $out = 'Must be an array in file for id=' . self::getParams('tv')['id'];
+        if (empty($this->getConfig('templates'))) {
+            if ($this->getConfig()) {
+                $out = 'Must be an array in file for id=' . $this->getParams('tv')['id'];
             } else {
-                $out = 'Not found config file for TV id=' . self::getParams('tv')['id'];
+                $out = 'Not found config file for TV id=' . $this->getParams('tv')['id'];
             }
         } else {
             $start = microtime(true);
 
             $values = '';
 
-            if (!empty(self::getData())) {
-                $values = htmlspecialchars(json_encode(self::getData(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+            if (!empty($this->getData())) {
+                $values = htmlspecialchars(json_encode($this->getData(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
             }
 
             $elements = new Elements();
@@ -90,14 +274,14 @@ class Core
             $out = $elements->renderFormElement([
                 'type' => 'multifields',
                 'name' => 'multifields',
-                'form.id' => self::getParams('storage') == 'files' ? '-mf-data[' . self::getParams('id') . '__' . self::getParams('tv')['id'] . ']' : self::getParams('tv')['id'],
-                'tv.id' => self::getParams('tv')['id'],
-                'tv.name' => self::getParams('tv')['name'],
-                'items' => $elements->renderData(self::getData()),
+                'form.id' => $this->getParams('storage') == 'files' ? '-mf-data[' . $this->getParams('id') . '__' . $this->getParams('tv')['id'] . ']' : $this->getParams('tv')['id'],
+                'tv.id' => $this->getParams('tv')['id'],
+                'tv.name' => $this->getParams('tv')['name'],
+                'items' => $elements->renderData($this->getData()),
                 'values' => $values
             ]);
 
-            if (self::getParams('debug')) {
+            if ($this->getParams('debug')) {
                 echo microtime(true) - $start . ' s.';
             }
 
@@ -114,17 +298,17 @@ class Core
      */
     public function saveData()
     {
-        if (isset($_POST['tv-mf-data']) && self::getParams('storage') == 'files') {
+        if (isset($_POST['tv-mf-data']) && $this->getParams('storage') == 'files') {
             foreach ($_POST['tv-mf-data'] as $k => $data) {
                 list($id, $tvId) = explode('__', $k);
-                self::setParams([
+                $this->setParams([
                     'id' => $id,
                     'tv' => [
                         'id' => $tvId
                     ]
                 ]);
                 $data = evolutionCMS()->removeSanitizeSeed($data);
-                $file = self::getParams('basePath') . 'data/' . $id . '__' . $tvId . '.json';
+                $file = $this->getParams('basePath') . 'data/' . $id . '__' . $tvId . '.json';
                 if ($data == '') {
                     if (is_file($file)) {
                         unlink($file);
@@ -141,96 +325,95 @@ class Core
      */
     public function deleteData()
     {
-
     }
 
     /**
      * @param array $data
      * @return array
      */
-    public static function setParams($data = [])
+    public function setParams($data = [])
     {
-        if (empty(self::$params)) {
-            self::$params = [];
+        if (empty($this->params)) {
+            $this->params = [];
         }
 
-        return self::$params = array_merge(self::$params, $data);
+        return $this->params = array_merge($this->params, $data);
     }
 
     /**
      * @param null $key
      * @return array
      */
-    public static function getParams($key = null)
+    public function getParams($key = null)
     {
-        return isset(self::$params[$key]) ? self::$params[$key] : self::$params;
+        return isset($this->params[$key]) ? $this->params[$key] : $this->params;
     }
 
     /**
      * @param array $data
      * @return array
      */
-    public static function setConfig($data = [])
+    public function setConfig($data = [])
     {
-        return self::$config = $data;
+        return $this->config = $data;
     }
 
     /**
      * @param null $key
      * @return array|mixed|null
      */
-    public static function getConfig($key = null)
+    public function getConfig($key = null)
     {
-        if (empty(self::$config)) {
-            if (!is_dir(self::getParams('basePath') . 'config')) {
-                mkdir(self::getParams('basePath') . 'config', 0755);
+        if (empty($this->config)) {
+            if (!is_dir($this->getParams('basePath') . 'config')) {
+                mkdir($this->getParams('basePath') . 'config', 0755);
             }
 
-            if (file_exists(self::getParams('basePath') . 'config/' . self::getParams('tv')['name'] . '.php')) {
-                self::$config = require self::getParams('basePath') . 'config/' . self::getParams('tv')['name'] . '.php';
-            } elseif (file_exists(self::getParams('basePath') . 'config/' . self::getParams('tv')['id'] . '.php')) {
-                self::$config = require self::getParams('basePath') . 'config/' . self::getParams('tv')['id'] . '.php';
+            if (file_exists($this->getParams('basePath') . 'config/' . $this->getParams('tv')['name'] . '.php')) {
+                $this->config = require $this->getParams('basePath') . 'config/' . $this->getParams('tv')['name'] . '.php';
+            } elseif (file_exists($this->getParams('basePath') . 'config/' . $this->getParams('tv')['id'] . '.php')) {
+                $this->config = require $this->getParams('basePath') . 'config/' . $this->getParams('tv')['id'] . '.php';
             }
 
-            if (!is_array(self::$config)) {
-                self::$config = null;
+            if (!is_array($this->config)) {
+                $this->config = null;
             } else {
-                if (!isset(self::$config['settings'])) {
-                    self::$config['settings'] = [];
+                if (!isset($this->config['settings'])) {
+                    $this->config['settings'] = [];
                 }
-                if (!isset(self::$config['templates'])) {
-                    self::$config['templates'] = [];
+                if (!isset($this->config['templates'])) {
+                    $this->config['templates'] = [];
                 }
-                if (!isset(self::$config['items'])) {
-                    self::$config['items'] = [];
+                if (!isset($this->config['items'])) {
+                    $this->config['items'] = [];
                 }
-                self::$config['templates'] = self::configNormalize(self::$config['templates']);
+                $this->config['templates'] = $this->configNormalize($this->config['templates']);
             }
         }
 
-        if (isset(self::$config[$key])) {
-            return self::$config[$key];
+        if (isset($this->config[$key])) {
+            return $this->config[$key];
         }
 
-        return self::$config;
+        return $this->config;
     }
 
     /**
      * @param array $data
      * @return array
      */
-    private static function configNormalize($data = [])
+    private function configNormalize($data = [])
     {
         foreach ($data as $k => &$v) {
             if (!is_array($v)) {
-                if (isset(self::$config['templates'][$v])) {
-                    $data[$v] = self::$config['templates'][$v];
+                if (isset($this->config['templates'][$v])) {
+                    $data[$v] = $this->config['templates'][$v];
                 }
                 unset($data[$k]);
             }
             if (!empty($v['templates'])) {
                 $v['@templates'] = $v['templates'];
-                $v['templates'] = self::configNormalize($v['templates']);
+                $v['templates'] = $this->configNormalize($v['templates']);
             }
         }
 
@@ -241,29 +424,29 @@ class Core
      * @param array $data
      * @return array
      */
-    public static function setData($data = [])
+    public function setData($data = [])
     {
-        return self::$data = $data;
+        return $this->data = $data;
     }
 
     /**
      * @return array
      */
-    public static function getData()
+    public function getData()
     {
-        if (empty(self::$data)) {
-            switch (self::getParams('storage')) {
+        if (empty($this->data)) {
+            switch ($this->getParams('storage')) {
                 case 'files':
-                    self::$data = self::fileData();
+                    $this->data = $this->fileData();
                     break;
 
                 default:
-                    self::$data = !empty(self::getParams('tv')['value']) ? json_decode(self::getParams('tv')['value'], true) : self::getConfig('items');
+                    $this->data = !empty($this->getParams('tv')['value']) ? json_decode($this->getParams('tv')['value'], true) : $this->getConfig('items');
                     break;
             }
         }
 
-        return self::$data;
+        return $this->data;
     }
 
     /**
@@ -271,29 +454,29 @@ class Core
      * @param null $tv_id
      * @return array
      */
-    private static function fileData($doc_id = 0, $tv_id = null)
+    private function fileData($doc_id = 0, $tv_id = null)
     {
-        self::$data = [];
+        $this->data = [];
 
-        if (!is_dir(self::getParams('basePath') . 'data')) {
-            mkdir(self::getParams('basePath') . 'data', 0755);
+        if (!is_dir($this->getParams('basePath') . 'data')) {
+            mkdir($this->getParams('basePath') . 'data', 0755);
         }
 
-        if (empty($doc_id) && !empty(self::getParams('id'))) {
-            $doc_id = self::getParams('id');
+        if (empty($doc_id) && !empty($this->getParams('id'))) {
+            $doc_id = $this->getParams('id');
         }
 
-        if (empty($tv_id) && isset(self::getParams('tv')['id'])) {
-            $tv_id = self::getParams('tv')['id'];
+        if (empty($tv_id) && isset($this->getParams('tv')['id'])) {
+            $tv_id = $this->getParams('tv')['id'];
         }
 
-        $file = self::getParams('basePath') . 'data/' . $doc_id . '__' . $tv_id . '.json';
+        $file = $this->getParams('basePath') . 'data/' . $doc_id . '__' . $tv_id . '.json';
 
         if (file_exists($file)) {
-            self::$data = file_get_contents($file);
-            self::$data = json_decode(self::$data, true);
+            $this->data = file_get_contents($file);
+            $this->data = json_decode($this->data, true);
         }
 
-        return self::$data;
+        return $this->data;
     }
 }
