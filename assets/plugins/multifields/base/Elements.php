@@ -196,6 +196,8 @@ class Elements
                     $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
                 }
 
+                $this->syncWithConfig($v, $find);
+
                 if ($this->element($v['type'])) {
                     $this->element($v['type'])->preFillData($v, $config, $find);
                 }
@@ -213,6 +215,34 @@ class Elements
         unset($data);
 
         return $out;
+    }
+
+    /**
+     * @param array $value
+     * @param array $find
+     */
+    protected function syncWithConfig(&$value = [], &$find = [])
+    {
+        if (!empty($find['items'])) {
+            $__items = [];
+            foreach ($find['items'] as $key => $item) {
+                $item['name'] = $key;
+
+                $count = 0;
+                foreach ($value['items'] as $k => $v) {
+                    if ($v['name'] == $key) {
+                        $__items[$k] = array_merge($item, $v);
+                        $count++;
+                    }
+                }
+
+                if (!$count) {
+                    $__items[] = $item;
+                }
+            }
+
+            $value['items'] = $__items;
+        }
     }
 
     /**
