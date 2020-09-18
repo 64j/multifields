@@ -485,13 +485,31 @@ class Front
         $evo = evolutionCMS();
 
         if (!empty($documentObject['id'])) {
-            $rs = $evo->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $evo->getFullTableName('site_tmplvars') . " tv
+            if (version_compare($evo->getConfig('settings_version'), '2.0', '<')) {
+                $rs = $evo->db->select("tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value", $evo->getFullTableName('site_tmplvars') . " tv
                 INNER JOIN " . $evo->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
                 LEFT JOIN " . $evo->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'", "tvtpl.templateid = '{$documentObject['template']}'");
 
-            while ($row = $evo->db->getRow($rs)) {
-                if (isset($documentObject[$row['name']])) {
-                    $documentObject[$row['name']]['id'] = $row['id'];
+                while ($row = $evo->db->getRow($rs)) {
+                    if (isset($documentObject[$row['name']])) {
+                        $documentObject[$row['name']]['id'] = $row['id'];
+                    }
+                }
+            } else {
+                $rs = \DB::table('site_tmplvars as tv')
+                    ->select('tv.*', 'tvc.value', 'tv.default_text')
+                    ->join('site_tmplvar_templates as tvtpl', 'tvtpl.tmplvarid', '=', 'tv.id')
+                    ->leftJoin('site_tmplvar_contentvalues as tvc', function ($join) use ($documentObject) {
+                        $join->on('tvc.tmplvarid', '=', 'tv.id');
+                        $join->on('tvc.contentid', '=', \DB::raw((int)$documentObject['id']));
+                    })
+                    ->where('tvtpl.templateid', (int)$documentObject['template'])
+                    ->get();
+
+                foreach ($rs as $row) {
+                    if (isset($documentObject[$row->name])) {
+                        $documentObject[$row->name]['id'] = $row->id;
+                    }
                 }
             }
         }
