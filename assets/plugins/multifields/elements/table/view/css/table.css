@@ -48,7 +48,7 @@
 .multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add { top: 1.6rem; left: 100%; margin: -12px -7px; }
 .multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add::after { font-size: 15px }
 .multifields .mf-table > .mf-items .table .mf-active td { background-color: #ffecb3 }
-.multifields .mf-table > .mf-items .table input { background-color: transparent; border-color: transparent; border-radius: 0; border: none !important; }
+.multifields .mf-table > .mf-items .table input, .multifields .mf-table > .mf-items .table select { background-color: transparent; border-color: transparent; border-radius: 0; border: none !important; }
 /* */
 .multifields .mf-table input[readonly] { background-color: #f2f2f2 }
 .multifields .mf-table input[readonly]:focus, .multifields .mf-table input[readonly]:hover { border-color: #d4d4d4; box-shadow: none; outline: none; }

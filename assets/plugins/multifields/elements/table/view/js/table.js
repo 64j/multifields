@@ -51,15 +51,17 @@ Multifields.element('table', {
         items: []
       };
       [...row.cells].map(function(cell) {
-        let el = cell.querySelector('.col');
+        let el = cell.querySelector('.col'),
+            input;
         if (el && el.dataset.type) {
+          input = el.querySelector('[name]');
           data[row.dataset.name + '#' + rowIndex]['items'].push({
             type: thead ? 'table:th' : 'table:td',
             items: [
               {
                 type: thead ? cell.dataset.type : el.dataset.type,
                 name: el.dataset.name,
-                value: el.querySelector('input').value
+                value: input && input.value || ''
               }
             ]
           });
