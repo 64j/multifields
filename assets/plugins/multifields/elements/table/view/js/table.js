@@ -45,7 +45,7 @@ Multifields.element('table', {
   rows: function(rows, thead) {
     let data = {};
     [...rows].map(function(row, rowIndex) {
-      data[row.dataset.name + '#' + rowIndex] = {
+      data[row.dataset.name + '#' + (rowIndex + 1)] = {
         type: 'table:row',
         name: row.dataset.name,
         items: []
@@ -55,7 +55,7 @@ Multifields.element('table', {
             input;
         if (el && el.dataset.type) {
           input = el.querySelector('[name]');
-          data[row.dataset.name + '#' + rowIndex]['items'].push({
+          data[row.dataset.name + '#' + (rowIndex + 1)]['items'].push({
             type: thead ? 'table:th' : 'table:td',
             items: [
               {
