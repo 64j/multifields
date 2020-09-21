@@ -105,7 +105,8 @@ class Elements
             }
         }
 
-        return class_exists('DLTemplate') ? DLTemplate::getInstance(evolutionCMS())->parseChunk('@CODE:' . $this->getTemplate(), $this->params, false, true) : evolutionCMS()->parseText($this->getTemplate(), $this->params);
+        return class_exists('DLTemplate') ? DLTemplate::getInstance(evolutionCMS())
+            ->parseChunk('@CODE:' . $this->getTemplate(), $this->params, false, true) : evolutionCMS()->parseText($this->getTemplate(), $this->params);
     }
 
     /**
@@ -199,11 +200,13 @@ class Elements
                 $this->syncWithConfig($v, $find);
 
                 if ($this->element($v['type'])) {
-                    $this->element($v['type'])->preFillData($v, $config, $find);
+                    $this->element($v['type'])
+                        ->preFillData($v, $config, $find);
                 }
 
                 if (!empty($v['items']) && $this->element($v['type'])) {
-                    $v['items'] = $this->element($v['type'])->renderData($v['items'], $find['items']);
+                    $v['items'] = $this->element($v['type'])
+                        ->renderData($v['items'], $find['items']);
                 }
 
                 $out .= $this->renderFormElement($v);
@@ -221,7 +224,7 @@ class Elements
      * @param array $value
      * @param array $find
      */
-    protected function syncWithConfig(&$value = [], &$find = [])
+    protected function syncWithConfig(&$value = [], $find = [])
     {
         if (!empty($find['items'])) {
             $__items = [];
@@ -230,14 +233,16 @@ class Elements
 
                 $count = 0;
                 foreach ($value['items'] as $k => $v) {
-                    if ($v['name'] == $key) {
+                    $__k = explode('#', $k)[0];
+                    if ($key == $__k) {
                         $__items[$k] = array_merge($item, $v);
+                        $__items[$k]['type'] = $item['type'];
                         $count++;
                     }
                 }
 
                 if (!$count) {
-                    $__items[] = $item;
+                    $__items[$key] = $item;
                 }
             }
 
