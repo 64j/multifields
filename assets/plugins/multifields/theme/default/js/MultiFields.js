@@ -209,6 +209,9 @@
             }
             els[el.name][el.id] = el;
           } else {
+            if ((el.type === 'select-one' || el.type === 'select-multiple') && el.children.length) {
+              el.children[0].selected = true;
+            }
             if (typeof replace[el.id] !== 'undefined') {
               el.name = el.id = replace[el.id];
             } else {
