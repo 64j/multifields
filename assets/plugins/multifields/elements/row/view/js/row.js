@@ -4,7 +4,7 @@ Multifields.element('row', {
   actionAdd: function(e) {
     if (Multifields.el.classList.contains('mf-row-group')) {
       e.stopPropagation();
-      let menu = document.getElementById('mf-templates-' + Multifields.el.id);
+      let menu = Multifields.el.querySelector('#mf-templates-' + Multifields.el.id);
       if (menu) {
         Multifields.closeOpened(menu);
         if (menu.children.length > 1) {
