@@ -404,16 +404,18 @@ class Core
      */
     private function configNormalize($data = [])
     {
-        foreach ($data as $k => &$v) {
-            if (!is_array($v)) {
-                if (isset($this->config['templates'][$v])) {
-                    $data[$v] = $this->config['templates'][$v];
+        if (is_array($data)) {
+            foreach ($data as $k => &$v) {
+                if (!is_array($v)) {
+                    if (isset($this->config['templates'][$v])) {
+                        $data[$v] = $this->config['templates'][$v];
+                    }
+                    unset($data[$k]);
                 }
-                unset($data[$k]);
-            }
-            if (!empty($v['templates'])) {
-                $v['@templates'] = $v['templates'];
-                $v['templates'] = $this->configNormalize($v['templates']);
+                if (!empty($v['templates'])) {
+                    $v['@templates'] = $v['templates'];
+                    $v['templates'] = $this->configNormalize($v['templates']);
+                }
             }
         }
 
