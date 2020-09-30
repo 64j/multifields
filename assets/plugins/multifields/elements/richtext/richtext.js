@@ -1,6 +1,5 @@
 Multifields.element('richtext', {
   popup: null,
-  classEl: 'mf-richtext-inline',
 
   init: function() {
     [...document.querySelectorAll('.mf-richtext-inline')].map(function(el) {
