@@ -40,13 +40,16 @@ Multifields.element('thumb', {
         Multifields.elements.thumb.popup.el.querySelector('.multifields').replaceChild(clone.querySelector('.mf-items'), Multifields.elements.thumb.popup.el.querySelector('.mf-items'));
         Multifields.elements.thumb.parent = Multifields.el;
 
-        [...Multifields.elements.thumb.popup.el.querySelectorAll('[data-type]')].map(function(el) {
-          el.addEventListener('mousedown', function(e) {
-            Multifields.container = el;
-            Multifields.el = e.target.closest('[data-type]');
+        // init Richtext
+        Multifields.elements.richtext.initEls(Multifields.elements.thumb.popup.el, true);
+
+        Multifields.elements.thumb.popup.el.addEventListener('mousedown', function(e) {
+          let target = e.target.hasAttribute('data-type') && e.target || e.target.closest('[data-type]');
+          if (target) {
+            Multifields.el = target;
             Multifields.name = Multifields.el.dataset['name'];
             Multifields.type = Multifields.el.dataset['type'];
-          });
+          }
         });
 
         Multifields.elements.thumb.popup.el.addEventListener('click', function(e) {
@@ -70,6 +73,8 @@ Multifields.element('thumb', {
               }
             });
             Multifields.elements.thumb.parent.replaceChild(this.querySelector('.mf-items'), Multifields.elements.thumb.parent.querySelector('.mf-items'));
+            // save Richtext
+            Multifields.elements.richtext.destroyEls(Multifields.elements.thumb.parent);
             this.close();
           }
         });

@@ -208,6 +208,9 @@ Multifields.element('row', {
       Multifields.setDatepicker(template.content);
       Multifields.draggable(template.content.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
       Multifields.el.querySelector('.mf-items').appendChild(template.content);
+      if (data.type && Multifields.elements[data.type]) {
+        Multifields.elements[data.type]['initEl'](Multifields.el.querySelector('.mf-items').lastElementChild);
+      }
     }, true);
   },
 

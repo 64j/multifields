@@ -487,6 +487,7 @@ class Elements
             $params['html'] = $this->renderData([
                 $params['tpl'] => mfc()->getConfig('templates')[$params['tpl']]
             ]);
+            $params['type'] = mfc()->getConfig('templates')[$params['tpl']]['type'];
         }
 
         return json_encode($params, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);

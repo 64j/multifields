@@ -10,6 +10,19 @@ class Richtext extends \Multifields\Base\Elements
 
     protected $disabled = false;
 
+    public function render()
+    {
+        if (!empty($this->params['inline'])) {
+            $this->params['class'] .= ' mf-richtext-inline';
+        }
+
+        if (!empty($this->params['mf.options'])) {
+            $this->params['mf.options'] = is_array($this->params['mf.options']) ? htmlspecialchars(json_encode($this->params['mf.options'])) : htmlspecialchars($this->params['mf.options']);
+        }
+
+        return parent::render();
+    }
+
     /**
      * @return string
      */
