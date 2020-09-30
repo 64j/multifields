@@ -64,11 +64,9 @@ Multifields.element('multifields', {
       template.innerHTML = data.html;
       Multifields.setDatepicker(template.content);
       Multifields.draggable(template.content.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
-
-      if (Multifields.container.querySelector('.mf-selected')) {
-        Multifields.container.querySelector('.mf-selected').appendChild(template.content);
-      } else {
-        Multifields.el.querySelector('.mf-items').appendChild(template.content);
+      Multifields.el.querySelector('.mf-items').appendChild(template.content);
+      if (data.type && Multifields.elements[data.type]) {
+        Multifields.elements[data.type]['initEl'](Multifields.el.querySelector('.mf-items').lastElementChild);
       }
     }, true);
   },

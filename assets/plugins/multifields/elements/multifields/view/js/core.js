@@ -62,6 +62,8 @@
 
           init: function() {},
 
+          initEl: function() {},
+
           actionAdd: function() {
             Multifields.getTemplate(function(data) {
               Multifields.el.insertAdjacentHTML('afterend', data.html);
