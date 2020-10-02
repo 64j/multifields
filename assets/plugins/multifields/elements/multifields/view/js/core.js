@@ -29,7 +29,7 @@
                 Multifields.build();
               }
             });
-            [...document.querySelectorAll('.multifields [id][name]')].map(function(el) {
+            [...document.querySelectorAll('.multifields [name]')].map(function(el) {
               el.disabled = true;
             });
           });
