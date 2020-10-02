@@ -15,6 +15,8 @@
 .multifields .fa { min-width: 1rem; min-height: 1rem; }
 .dp_container { z-index: 1050; }
 /* actions */
+.multifields  > .mf-actions { display: none }
+.multifields  > .mf-templates ~ .mf-actions { display: block }
 .multifields .mf-actions { position: absolute; left: .25rem; top: .25rem; right: .25rem; bottom: .25rem; }
 .multifields .mf-actions::before { content: ""; position: absolute; z-index: 5; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid #d4d4d4; pointer-events: none; transition: all .25s; }
 .multifields [data-type]:hover > .mf-actions::before { border-color: #2196f3 }
