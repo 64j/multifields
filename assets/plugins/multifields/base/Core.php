@@ -54,7 +54,27 @@ class Core
 
     public function getStartScripts()
     {
-        $out = '';
+        $evo = evolutionCMS();
+
+        $out = '
+        <script>
+        if (!evo) {
+            var evo = {};
+        }
+        if (!evo.config) {
+            evo.config = {};
+        }
+        if (typeof evo.MGR_DIR === \'undefined\') {
+            evo.MGR_DIR = \'' . MGR_DIR . '\';
+        }
+        if (typeof evo.MODX_MANAGER_URL === \'undefined\') {
+            evo.MODX_MANAGER_URL = \'' . MODX_MANAGER_URL . '\';
+        }
+        if (typeof evo.config.which_browser === \'undefined\') {
+            evo.config.which_browser = \'' . ($evo->configGlobal['which_browser'] ? $evo->configGlobal['which_browser'] : $evo->config['which_browser']) . '\';
+        }
+        </script>';
+
         $cache_styles = dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css';
         $cache_scripts = dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js';
 

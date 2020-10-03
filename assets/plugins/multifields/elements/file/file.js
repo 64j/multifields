@@ -20,7 +20,7 @@ function BrowseServer(ctrl)
   lastImageCtrl = ctrl;
   var w = screen.width * 0.5;
   var h = screen.height * 0.5;
-  OpenServerBrowser('/manager/media/browser/mcpuk/browser.php?Type=images', w, h);
+  OpenServerBrowser(evo.MODX_MANAGER_URL + 'media/browser/' + evo.config.which_browser + '/browser.php?Type=images', w, h);
 }
 
 function BrowseFileServer(ctrl)
@@ -28,7 +28,7 @@ function BrowseFileServer(ctrl)
   lastFileCtrl = ctrl;
   var w = screen.width * 0.5;
   var h = screen.height * 0.5;
-  OpenServerBrowser('/manager/media/browser/mcpuk/browser.php?Type=files', w, h);
+  OpenServerBrowser(evo.MODX_MANAGER_URL + 'media/browser/' + evo.config.which_browser + '/browser.php?Type=files', w, h);
 }
 
 function SetUrlChange(el)
