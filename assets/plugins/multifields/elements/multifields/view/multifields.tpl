@@ -8,4 +8,4 @@
         [+items+]
     </div>
 </div>
-<textarea name="tv[+form.id+]" data-id="[+tv.id+]" data-name="[+tv.name+]" data-multifields rows="10">[+values+]</textarea>
+<textarea name="[+form.id+]" data-id="[+tv.id+]" data-name="[+tv.name+]" data-multifields rows="10">[+values+]</textarea>

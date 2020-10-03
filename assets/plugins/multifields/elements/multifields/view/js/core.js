@@ -20,7 +20,7 @@
        */
       init: function() {
 
-        let form = document.getElementById('mutate');
+        let form = document['mutate'];
         if (form) {
           form.addEventListener('submit', function() {
             [...document.querySelectorAll('.multifields')].map(function(el) {

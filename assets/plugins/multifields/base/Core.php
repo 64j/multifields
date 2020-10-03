@@ -294,7 +294,7 @@ class Core
             $out = $elements->renderFormElement([
                 'type' => 'multifields',
                 'name' => 'multifields',
-                'form.id' => $this->getParams('storage') == 'files' ? '-mf-data[' . $this->getParams('id') . '__' . $this->getParams('tv')['id'] . ']' : $this->getParams('tv')['id'],
+                'form.id' => $this->getParams('storage') == 'files' ? 'tv-mf-data[' . $this->getParams('id') . '__' . $this->getParams('tv')['id'] . ']' : 'tv' . $this->getParams('tv')['id'],
                 'tv.id' => $this->getParams('tv')['id'],
                 'tv.name' => $this->getParams('tv')['name'],
                 'items' => $elements->renderData($this->getData()),
