@@ -32,14 +32,14 @@ Multifields.element('thumb:image', {
         }
         if (Multifields.el.dataset['image']) {
           valueEl.onchange = function(e) {
-            Multifields.el.style.backgroundImage = 'url(\'/' + e.target.value + '\')';
+            Multifields.el.style.backgroundImage = 'url(\'../' + e.target.value + '\')';
             [...Multifields.el.parentElement.querySelectorAll('[data-name="' + Multifields.el.dataset['image'] + '"]')].map(function(el) {
               el.querySelector('[name]').value = e.target.value;
             });
           };
         } else {
           valueEl.onchange = function(e) {
-            Multifields.el.style.backgroundImage = 'url(\'/' + e.target.value + '\')';
+            Multifields.el.style.backgroundImage = 'url(\'../' + e.target.value + '\')';
           };
         }
       }
@@ -61,7 +61,7 @@ Multifields.element('thumb:image', {
                 Multifields.el = Multifields.el.nextElementSibling;
                 window.lastFileCtrl = Multifields.el.querySelector('.mf-value > input').id;
                 window.SetUrl(files[k]);
-                Multifields.el.style.backgroundImage = 'url(\'/' + files[k] + '\')';
+                Multifields.el.style.backgroundImage = 'url(\'../' + files[k] + '\')';
               });
             }
           }

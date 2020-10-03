@@ -27,7 +27,7 @@ class Image extends \Multifields\Base\Elements
     {
         preg_match('/style="(.*)"/', $this->params['attr'], $matches);
         $this->params['attr'] = preg_replace('/style="(.*)"/', '', $this->params['attr']);
-        $this->params['attr'] .= 'style="background-image: url(\'/' . $this->params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
+        $this->params['attr'] .= 'style="background-image: url(\'../' . $this->params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
 
         if (!empty($this->params['multi'])) {
             $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';

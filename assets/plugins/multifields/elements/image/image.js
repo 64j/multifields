@@ -74,7 +74,7 @@ Multifields.element('image', {
         thumb = items.querySelector('[data-name="' + thumbs[k] + '"]');
         if (thumb) {
           thumb.querySelector(':scope > .mf-value input').value = target.value;
-          thumb.style.backgroundImage = 'url(\'/' + target.value + '\')';
+          thumb.style.backgroundImage = 'url(\'../' + target.value + '\')';
         }
       }
     }
@@ -103,7 +103,7 @@ Multifields.element('image', {
                   window.lastFileCtrl = el.id;
                   window.SetUrl(files[k]);
                   Multifields.el.querySelector(':scope > .mf-value input').value = files[k];
-                  Multifields.el.style.backgroundImage = 'url(\'/' + files[k] + '\')';
+                  Multifields.el.style.backgroundImage = 'url(\'../' + files[k] + '\')';
                 }
               }
             }

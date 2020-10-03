@@ -60,13 +60,13 @@ Multifields.element('thumb', {
               let value = el.querySelector('input').value;
               if (el.dataset['thumb'] === Multifields.elements.thumb.parent.dataset['name']) {
                 Multifields.elements.thumb.parent.querySelector(':scope > .mf-value input').value = value;
-                Multifields.elements.thumb.parent.style.backgroundImage = 'url(\'/' + value + '\')';
+                Multifields.elements.thumb.parent.style.backgroundImage = 'url(\'../' + value + '\')';
               } else {
                 let thumbs = el.dataset['thumb'].toString().split(',');
                 for (let k in thumbs) {
                   if (thumbs.hasOwnProperty(k) && Multifields.elements.thumb.parent.dataset['name'] === thumbs[k]) {
                     Multifields.elements.thumb.parent.querySelector(':scope > .mf-value input').value = value;
-                    Multifields.elements.thumb.parent.style.backgroundImage = 'url(\'/' + value + '\')';
+                    Multifields.elements.thumb.parent.style.backgroundImage = 'url(\'../' + value + '\')';
                     break;
                   }
                 }
@@ -113,14 +113,14 @@ Multifields.element('thumb', {
           }
           if (Multifields.el.dataset['image']) {
             valueEl.onchange = function(e) {
-              Multifields.el.style.backgroundImage = 'url(\'/' + e.target.value + '\')';
+              Multifields.el.style.backgroundImage = 'url(\'../' + e.target.value + '\')';
               [...Multifields.el.parentElement.querySelectorAll('[data-name="' + Multifields.el.dataset['image'] + '"]')].map(function(el) {
                 el.querySelector('[name]').value = e.target.value;
               });
             };
           } else {
             valueEl.onchange = function(e) {
-              Multifields.el.style.backgroundImage = 'url(\'/' + e.target.value + '\')';
+              Multifields.el.style.backgroundImage = 'url(\'../' + e.target.value + '\')';
             };
           }
         }
@@ -143,7 +143,7 @@ Multifields.element('thumb', {
                 Multifields.el = Multifields.el.nextElementSibling;
                 window.lastFileCtrl = Multifields.el.querySelector('.mf-value > input').id;
                 window.SetUrl(files[k]);
-                Multifields.el.style.backgroundImage = 'url(\'/' + files[k] + '\')';
+                Multifields.el.style.backgroundImage = 'url(\'../' + files[k] + '\')';
               });
             }
           }
