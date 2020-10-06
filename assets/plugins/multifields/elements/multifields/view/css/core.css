@@ -40,7 +40,7 @@
 /* title */
 .multifields .col[data-type] > label { margin: 0; width: 100%; }
 .multifields .col[data-type] > input + label { width: auto }
-.multifields .mf-title { overflow: hidden; width: 100%; white-space: nowrap; text-overflow: ellipsis; }
+.multifields .mf-title { overflow: hidden; position: relative; width: 100%; white-space: nowrap; text-overflow: ellipsis; }
 .multifields .mf-value { position: relative; padding: .5rem !important; width: 100%; }
 .multifields label.mf-title { margin: 0; padding: 0 !important; }
 .multifields .mf-row:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff !important; }
