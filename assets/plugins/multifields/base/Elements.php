@@ -276,6 +276,7 @@ class Elements
                 'class' => '',
                 'default' => '',
                 'elements' => '',
+                'item.class' => '',
                 'item.attr' => '',
                 'items' => '',
                 'items.class' => '',
@@ -301,7 +302,7 @@ class Elements
                 }
 
                 if ($this->params['item.attr']) {
-                    $this->params['items'] = str_replace('id="', $this->params['item.attr'] . ' id="', $this->params['items']);
+                    $this->params['items'] = str_replace('id="tv', $this->params['item.attr'] . ' id="tv', $this->params['items']);
                 }
 
                 $this->params['items'] = $this->params['title'] . $this->params['items'];
