@@ -179,6 +179,11 @@ class Elements
             foreach ($data as $k => $v) {
                 $k = explode('#', $k)[0];
 
+                if (is_string($v)) {
+                    $k = $v;
+                    $v = [];
+                }
+
                 if (!isset($v['name'])) {
                     $v['name'] = $k;
                 }
@@ -193,8 +198,12 @@ class Elements
                     $find['items'] = [];
                 }
 
-                if (isset($find['value']) && $find['value'] === false) {
-                    $v['value'] = false;
+                if (isset($find['value'])) {
+                    if ($find['value'] === false) {
+                        $v['value'] = false;
+                    } elseif (!is_bool($find['value'])) {
+                        $v['value'] = $find['value'];
+                    }
                 } elseif (isset($find['default']) && $v['value'] == '') {
                     $v['value'] = $find['default'];
                 }
@@ -232,26 +241,15 @@ class Elements
      */
     protected function syncWithConfig(&$value = [], $find = [])
     {
-        if (!empty($find['items'])) {
+        if (!empty($value['items']) && !isset($find['templates'])) {
             $__items = [];
             foreach ($find['items'] as $key => $item) {
-                $item['name'] = $key;
-
-                $count = 0;
-                foreach ($value['items'] as $k => $v) {
-                    $__k = explode('#', $k)[0];
-                    if ($key == $__k) {
-                        $__items[$k] = array_merge($item, $v);
-                        $__items[$k]['type'] = $item['type'];
-                        $count++;
-                    }
+                if (isset($item['items'])) {
+                    continue;
                 }
-
-                if (!$count) {
-                    $__items[$key] = $item;
-                }
+                $__items[$key] = isset($value['items'][$key]) ? array_merge($item, $value['items'][$key]) : $item;
+                $__items[$key]['type'] = $item['type'];
             }
-
             $value['items'] = $__items;
         }
     }
