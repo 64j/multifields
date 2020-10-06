@@ -8,7 +8,7 @@
 .multifields .mf-table > .mf-actions { left: .25rem; right: .25rem; background-color: #fff; border: none; }
 .multifields .mf-table .mf-items th > .mf-actions { left: 0; right: 0; border: none; }
 .multifields .mf-table .mf-items .mf-table-head:hover .mf-actions::before { z-index: 1 !important; border-color: #d4d4d4 !important }
-.multifields .mf-table:hover > .mf-actions::before, .multifields .mf-table .mf-items .mf-row:hover .mf-actions::before { z-index: 10; border-color: #2196f3; }
+.multifields .mf-table:hover > .mf-actions::before, .multifields .mf-table .mf-items .mf-row:hover .mf-actions::before { z-index: 9; border-color: #2196f3; }
 .multifields .mf-table > .mf-actions .mf-actions-add { opacity: 0; visibility: hidden; transform: scale(.8); transition: opacity .15s, visibility .15s, transform .15s; }
 .multifields .mf-table:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
 /* columns */
@@ -26,11 +26,14 @@
 .multifields .mf-table .mf-columns .col:first-child, .multifields .mf-table > .mf-items .col:first-child { margin-left: 0 !important; }
 .multifields .mf-table .mf-columns .col[data-type="id"] input, .multifields .mf-table > .mf-items .col[data-type="id"] input { text-align: right }
 .multifields .mf-table .mf-columns input, .multifields .mf-table > .mf-items input { background-color: transparent; }
-.multifields .mf-table > .mf-items { margin: 0; }
+.multifields .mf-table > .mf-items, .multifields .mf-table > .mf-items > .mf-row > .mf-items { margin: 0; padding: 0; }
 .multifields .mf-table > .mf-items .mf-items { margin: 0 1rem; border-left: 1px solid transparent; border-right: 1px solid transparent; }
-.multifields .mf-table > .mf-items th > .col, .multifields .mf-table > .mf-items td > .col { display: flex; margin: 0 0 0 -1px !important; padding: 0 !important; height: 100% }
+.multifields .mf-table > .mf-items th > .col, .multifields .mf-table > .mf-items td > .col, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col { display: flex; margin: 0 0 0 -1px !important; padding: 0 !important; height: 100% }
+.multifields .mf-table > .mf-items > .mf-row > .mf-items > .col { margin: 0 !important; border-left: 1px solid #eceeef; }
+.multifields .mf-table > .mf-items > .mf-row > .mf-items > .col:last-child { border-right: 1px solid #eceeef; }
 .multifields .mf-table > .mf-items thead .col { display: block }
 .multifields .mf-table .mf-items .mf-row { margin: -1px 0 0 !important; padding: 0 !important; }
+.multifields .mf-table > .mf-items > .mf-row { padding: 0 1rem !important; min-height: auto }
 .multifields .mf-table .mf-table-head { background-color: #f2f2f2 }
 /* table */
 .multifields .mf-table > .mf-items .table { }
@@ -47,8 +50,13 @@
 .multifields .mf-table > .mf-items .table tr:hover th > .mf-actions i { opacity: 1; }
 .multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add { top: 1.6rem; left: 100%; margin: -12px -7px; }
 .multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add::after { font-size: 15px }
+.multifields .mf-table > .mf-items > .mf-row > .mf-actions { left: 0; top: 0; right: 0; bottom: 0; }
+.multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-add { top: 100%; left: 0; margin: -11px 6px; }
+.multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-add::after { font-size: 15px; }
+.multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-del { right: .5rem; top: .85rem; }
+.multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-move { left: .5rem; top: .85rem; }
 .multifields .mf-table > .mf-items .table .mf-active td { background-color: #ffecb3 }
-.multifields .mf-table > .mf-items .table input, .multifields .mf-table > .mf-items .table select { background-color: transparent; border-color: transparent; border-radius: 0; border: none !important; }
+.multifields .mf-table > .mf-items .table input, .multifields .mf-table > .mf-items .table select, .multifields .mf-table > .mf-items .table textarea, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col > input, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col > select, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col > textarea { background-color: transparent; border-color: transparent; border-radius: 0; border: none !important; }
 /* */
 .multifields .mf-table input[readonly] { background-color: #f2f2f2 }
 .multifields .mf-table input[readonly]:focus, .multifields .mf-table input[readonly]:hover { border-color: #d4d4d4; box-shadow: none; outline: none; }
