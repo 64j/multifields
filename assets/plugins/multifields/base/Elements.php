@@ -250,7 +250,9 @@ class Elements
                 $__items[$key] = isset($value['items'][$key]) ? array_merge($item, $value['items'][$key]) : $item;
                 $__items[$key]['type'] = $item['type'];
             }
-            $value['items'] = $__items;
+            if (!empty($__items)) {
+                $value['items'] = $__items;
+            }
         }
     }
 
