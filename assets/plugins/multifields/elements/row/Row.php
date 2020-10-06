@@ -80,13 +80,6 @@ class Row extends \Multifields\Base\Elements
         return parent::render();
     }
 
-    protected function preFillData(&$item = [], $config = [], $find = [])
-    {
-        if (isset($find['value']) && $find['value'] === false) {
-            $item['value'] = false;
-        }
-    }
-
     /**
      * @param $action
      * @param $type

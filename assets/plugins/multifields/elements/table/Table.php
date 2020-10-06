@@ -96,11 +96,4 @@ class Table extends \Multifields\Base\Elements
 
         return json_encode($params, JSON_UNESCAPED_UNICODE);
     }
-
-    protected function preFillData(&$item = [], $config = [], $find = [])
-    {
-        if (isset($find['value']) && $find['value'] === false) {
-            $item['value'] = false;
-        }
-    }
 }

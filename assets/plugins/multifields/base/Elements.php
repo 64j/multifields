@@ -193,6 +193,12 @@ class Elements
                     $find['items'] = [];
                 }
 
+                if (isset($find['value']) && $find['value'] === false) {
+                    $v['value'] = false;
+                } elseif (isset($find['default']) && $v['value'] == '') {
+                    $v['value'] = $find['default'];
+                }
+
                 if (empty($v['type'])) {
                     $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
                 }
