@@ -433,7 +433,12 @@ class Core
                     unset($data[$k]);
                 }
                 if (!empty($v['templates'])) {
-                    $v['@templates'] = $v['templates'];
+                    if (is_array($v['templates'])) {
+                        $v['@templates'] = [];
+                        foreach ($v['templates'] as $key => $val) {
+                            $v['@templates'][] = is_array($val) ? $key : $val;
+                        }
+                    }
                     $v['templates'] = $this->configNormalize($v['templates']);
                 }
             }
