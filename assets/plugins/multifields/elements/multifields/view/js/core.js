@@ -245,14 +245,14 @@
                           break;
 
                         default:
-                          value.push(el.value || el.innerHTML || '');
+                          value.push(el.value || '');
                       }
                     }
                   });
                   item.value = value.join('||');
                 } else {
                   if (!el.hidden) {
-                    item.value = el.value || el.innerHTML || '';
+                    item.value = el.value || '';
                   }
                   if (el.placeholder !== '') {
                     item.placeholder = el.placeholder;
