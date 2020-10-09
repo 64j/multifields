@@ -75,12 +75,12 @@ class Core
         }
         </script>';
 
-        $cache_styles = dirname(__DIR__) . '/elements/multifields/view/css/styles.min.css';
-        $cache_scripts = dirname(__DIR__) . '/elements/multifields/view/js/scripts.min.js';
+        $cache_styles = MODX_BASE_PATH . $evo->getCacheFolder() . 'multifields.styles.min.css';
+        $cache_scripts = MODX_BASE_PATH . $evo->getCacheFolder() . 'multifields.scripts.min.js';
 
         $styles = [
             '@' => [
-                $this->setFileUrl('view/css/core.css', dirname(__DIR__) . '/elements/multifields/', true, true)
+                $this->setFileUrl('view/css/core.css', dirname(__DIR__) . '/elements/multifields/', false, true)
             ]
         ];
 
@@ -89,7 +89,7 @@ class Core
         $scripts = [
             '@' => [
                 $this->setFileUrl('view/js/Sortable.min.js', dirname(__DIR__) . '/elements/multifields/'),
-                $this->setFileUrl('view/js/core.js', dirname(__DIR__) . '/elements/multifields/', true, true)
+                $this->setFileUrl('view/js/core.js', dirname(__DIR__) . '/elements/multifields/', false, true)
             ]
         ];
 
@@ -114,13 +114,13 @@ class Core
                         if (!empty($files) && !isset($styles[$name])) {
                             if (is_array($files)) {
                                 foreach ($files as $style) {
-                                    if ($style = $this->setFileUrl($style, $path, true, true)) {
+                                    if ($style = $this->setFileUrl($style, $path, false, true)) {
                                         $styles[$name][] = $style;
                                         $this->removeFile($cache_styles, $this->hasFileChanged($style));
                                     }
                                 }
                             } else {
-                                if ($style = $this->setFileUrl($files, $path, true, true)) {
+                                if ($style = $this->setFileUrl($files, $path, false, true)) {
                                     $styles[$name][] = $style;
                                     $this->removeFile($cache_styles, $this->hasFileChanged($style));
                                 }
@@ -132,13 +132,13 @@ class Core
                         if (!empty($files) && !isset($scripts[$name])) {
                             if (is_array($files)) {
                                 foreach ($files as $script) {
-                                    if ($script = $this->setFileUrl($script, $path, true, true)) {
+                                    if ($script = $this->setFileUrl($script, $path, false, true)) {
                                         $scripts[$name][] = $script;
                                         $this->removeFile($cache_scripts, $this->hasFileChanged($script));
                                     }
                                 }
                             } else {
-                                if ($script = $this->setFileUrl($files, $path, true, true)) {
+                                if ($script = $this->setFileUrl($files, $path, false, true)) {
                                     $scripts[$name][] = $script;
                                     $this->removeFile($cache_scripts, $this->hasFileChanged($script));
                                 }
@@ -152,13 +152,13 @@ class Core
         if ($this->getParams('debug')) {
             foreach ($styles as $files) {
                 foreach ($files as $style) {
-                    $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $style . '"/>';
+                    $out .= "\n" . '<link rel="stylesheet" type="text/css" href="../' . $style . '"/>';
                 }
             }
 
             foreach ($scripts as $files) {
                 foreach ($files as $script) {
-                    $out .= "\n" . '<script src="' . $script . '"></script>';
+                    $out .= "\n" . '<script src="../' . $script . '"></script>';
                 }
             }
 
@@ -169,7 +169,7 @@ class Core
                 $__ = '';
                 foreach ($styles as $files) {
                     foreach ($files as $style) {
-                        $__ .= file_get_contents($style);
+                        $__ .= file_get_contents(MODX_BASE_PATH . $style);
                     }
                 }
 
@@ -178,15 +178,15 @@ class Core
                 $__ = '';
                 foreach ($scripts as $files) {
                     foreach ($files as $script) {
-                        $__ .= ';' . file_get_contents($script);
+                        $__ .= ';' . file_get_contents(MODX_BASE_PATH . $script);
                     }
                 }
 
                 file_put_contents($cache_scripts, Compress::js($__));
             }
 
-            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="' . $this->setFileUrl($cache_styles, dirname(__DIR__) . '/') . '"/>';
-            $out .= "\n" . '<script src="' . $this->setFileUrl($cache_scripts, dirname(__DIR__) . '/') . '"></script>';
+            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="../' . $this->setFileUrl($cache_styles, '', true) . '"/>';
+            $out .= "\n" . '<script src="../' . $this->setFileUrl($cache_scripts, '', true) . '"></script>';
         }
 
         return $out;
@@ -199,38 +199,39 @@ class Core
      * @param bool $check_cache
      * @return string
      */
-    private function setFileUrl($url = '', $parent = '', $timestamp = true, $check_cache = false)
+    private function setFileUrl($url = '', $parent = '', $timestamp = false, $check_cache = false)
     {
         if (!empty($url)) {
-            $url = str_replace(dirname(__DIR__), '', $url);
+            $url = str_replace(MODX_BASE_PATH, '', $url);
             $url = trim(str_replace(DIRECTORY_SEPARATOR, '/', $url), '\\/');
             $parent = trim(str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', $parent)), '\\/');
 
-            $url = $parent . '/' . $url;
+            $url = ltrim($parent . '/' . $url, '/');
 
-            if (is_file(MODX_BASE_PATH . $url) && $timestamp) {
-                if (is_bool($timestamp)) {
+            if (is_file(MODX_BASE_PATH . $url)) {
+                if (!empty($timestamp)) {
                     $timestamp = filemtime(MODX_BASE_PATH . $url);
                 }
                 if ($check_cache) {
+                    $fileCache = MODX_BASE_PATH . evolutionCMS()->getCacheFolder() . 'multifields.' . str_replace(['\\', '/'], '.', $url) . '.cache';
                     if ($this->getParams('debug')) {
-                        $this->removeFile(MODX_BASE_PATH . $url . '.cache');
+                        $this->removeFile($fileCache);
                     } else {
-                        $this->file_has_changed[MODX_SITE_URL . $url] = !is_file(MODX_BASE_PATH . $url . '.cache') || (is_file(MODX_BASE_PATH . $url . '.cache') && $timestamp != file_get_contents(MODX_BASE_PATH . $url . '.cache'));
+                        $this->file_has_changed[MODX_SITE_URL . $url] = !is_file($fileCache) || (is_file($fileCache) && $timestamp != file_get_contents($fileCache));
                         if ($this->file_has_changed[MODX_SITE_URL . $url]) {
-                            file_put_contents(MODX_BASE_PATH . $url . '.cache', $timestamp);
+                            file_put_contents($fileCache, $timestamp);
                         }
                     }
                 }
-                if (!$this->getParams('debug')) {
-                    $url .= '?time=' . $timestamp;
-                }
             } else {
                 $url = '';
+                $timestamp = false;
             }
         }
 
-        $url = MODX_SITE_URL . $url;
+        if (!empty($timestamp)) {
+            $url .= '?time=' . $timestamp;
+        }
 
         return $url;
     }
