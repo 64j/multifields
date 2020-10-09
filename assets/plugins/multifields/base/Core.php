@@ -52,6 +52,17 @@ class Core
         return self::$instance;
     }
 
+    /**
+     * @return string
+     */
+    protected function getCacheFolder()
+    {
+        return MODX_BASE_PATH . 'assets/cache/';
+    }
+
+    /**
+     * @return string
+     */
     public function getStartScripts()
     {
         $evo = evolutionCMS();
@@ -75,8 +86,8 @@ class Core
         }
         </script>';
 
-        $cache_styles = MODX_BASE_PATH . $evo->getCacheFolder() . 'multifields.styles.min.css';
-        $cache_scripts = MODX_BASE_PATH . $evo->getCacheFolder() . 'multifields.scripts.min.js';
+        $cache_styles = $this->getCacheFolder() . 'multifields.styles.min.css';
+        $cache_scripts = $this->getCacheFolder() . 'multifields.scripts.min.js';
 
         $styles = [
             '@' => [
@@ -185,8 +196,8 @@ class Core
                 file_put_contents($cache_scripts, Compress::js($__));
             }
 
-            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="../' . $this->setFileUrl($cache_styles, '', true) . '"/>';
-            $out .= "\n" . '<script src="../' . $this->setFileUrl($cache_scripts, '', true) . '"></script>';
+            $out .= "\n" . '<link rel="stylesheet" type="text/css" href="../' . $this->setFileUrl($cache_styles, '', true, true) . '"/>';
+            $out .= "\n" . '<script src="../' . $this->setFileUrl($cache_scripts, '', true, true) . '"></script>';
         }
 
         return $out;
@@ -195,11 +206,11 @@ class Core
     /**
      * @param string $url
      * @param string $parent
-     * @param bool $timestamp
+     * @param bool $check_timestamp
      * @param bool $check_cache
      * @return string
      */
-    private function setFileUrl($url = '', $parent = '', $timestamp = false, $check_cache = false)
+    private function setFileUrl($url = '', $parent = '', $check_timestamp = false, $check_cache = false)
     {
         if (!empty($url)) {
             $url = str_replace(MODX_BASE_PATH, '', $url);
@@ -207,30 +218,26 @@ class Core
             $parent = trim(str_replace(MODX_BASE_PATH, '', str_replace(DIRECTORY_SEPARATOR, '/', $parent)), '\\/');
 
             $url = ltrim($parent . '/' . $url, '/');
+            $timestamp = '';
 
             if (is_file(MODX_BASE_PATH . $url)) {
-                if (!empty($timestamp)) {
-                    $timestamp = filemtime(MODX_BASE_PATH . $url);
-                }
+                $timestamp = filemtime(MODX_BASE_PATH . $url);
                 if ($check_cache) {
-                    $fileCache = MODX_BASE_PATH . evolutionCMS()->getCacheFolder() . 'multifields.' . str_replace(['\\', '/'], '.', $url) . '.cache';
+                    $fileCache = $this->getCacheFolder() . 'multifields.' . str_replace(['\\', '/'], '.', $url) . '.cache';
                     if ($this->getParams('debug')) {
                         $this->removeFile($fileCache);
                     } else {
-                        $this->file_has_changed[MODX_SITE_URL . $url] = !is_file($fileCache) || (is_file($fileCache) && $timestamp != file_get_contents($fileCache));
-                        if ($this->file_has_changed[MODX_SITE_URL . $url]) {
+                        $this->file_has_changed[$url] = !is_file($fileCache) || (is_file($fileCache) && $timestamp != file_get_contents($fileCache));
+                        if ($this->file_has_changed[$url]) {
                             file_put_contents($fileCache, $timestamp);
                         }
                     }
                 }
-            } else {
-                $url = '';
-                $timestamp = false;
             }
-        }
 
-        if (!empty($timestamp)) {
-            $url .= '?time=' . $timestamp;
+            if (!empty($check_timestamp) && !empty($timestamp)) {
+                $url .= '?time=' . $timestamp;
+            }
         }
 
         return $url;
