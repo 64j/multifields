@@ -10,6 +10,7 @@ return [
                 'thumb' => [
                     'type' => 'thumb',
                     'image' => 'image',
+                    'actions' => ['del', 'edit'],
                     'class' => 'col-2 float-left'
                 ],
                 'image' => [
@@ -49,7 +50,7 @@ return [
             'items' => [
                 'thumb' => [
                     'type' => 'thumb',
-                    'actions' => ['edit']
+                    'actions' => ['del', 'edit'],
                 ],
                 'text' => [
                     'type' => 'richtext',
