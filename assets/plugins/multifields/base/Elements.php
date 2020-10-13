@@ -284,6 +284,8 @@ class Elements
                 'actions' => null
             ], $params);
 
+            $this->params['value'] = htmlspecialchars($this->params['value'], ENT_QUOTES, 'UTF-8');
+
             $element = $this->element($this->params['type']);
 
             if (!$element) {
@@ -472,7 +474,7 @@ class Elements
 
             $this->params['value'] = '
             <div class="mf-value">
-                <input type="text" class="form-control" name="' . $this->params['id'] . '_value" value="' . stripcslashes($this->params['value']) . '"' . (isset($this->params['placeholder']) ? ' placeholder="' . $this->params['placeholder'] . '"' : '') . ' data-value>
+                <input type="text" class="form-control" name="' . $this->params['id'] . '_value" value="' . $this->params['value'] . '"' . (isset($this->params['placeholder']) ? ' placeholder="' . $this->params['placeholder'] . '"' : '') . ' data-value>
             </div>';
         }
     }
