@@ -32,6 +32,11 @@ class Core
             'debug' => empty($pluginParams['multifields_debug']) ? false : ($pluginParams['multifields_debug'] == 'no' ? false : true),
         ], $params));
 
+        if (!is_dir($this->getCacheFolder())) {
+            mkdir($this->getCacheFolder(), 0755);
+            file_put_contents($this->getCacheFolder() . '.htaccess', "order deny,allow\nallow from all\n");
+        }
+
         require_once MODX_MANAGER_PATH . 'includes/tmplvars.inc.php';
         require_once MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php';
         require_once MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php';
@@ -57,7 +62,7 @@ class Core
      */
     protected function getCacheFolder()
     {
-        return MODX_BASE_PATH . 'assets/cache/';
+        return MODX_BASE_PATH . 'assets/cache/multifields/';
     }
 
     /**
