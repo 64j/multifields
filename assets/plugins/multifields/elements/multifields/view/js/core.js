@@ -164,6 +164,10 @@
             el.name = id;
           } else if (el.type === 'checkbox') {
 
+          } else if ((el.type === 'select-one' || el.type === 'select-multiple') && el.children.length) {
+            el.id = id;
+            el.name = id;
+            el.children[0].selected = true;
           } else {
             el.id = id;
             el.name = id;
