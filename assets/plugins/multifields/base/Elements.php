@@ -212,7 +212,7 @@ class Elements
                     $v['type'] = is_numeric($v['name']) ? 'text' : $v['name'];
                 }
 
-                $this->syncWithConfig($v, $find);
+                //$this->syncWithConfig($v, $find);
 
                 if ($this->element($v['type'])) {
                     $this->element($v['type'])
