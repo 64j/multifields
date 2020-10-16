@@ -33,7 +33,7 @@
 .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col:last-child { border-right: 1px solid #eceeef; }
 .multifields .mf-table > .mf-items thead .col { display: block }
 .multifields .mf-table .mf-items .mf-row { margin: -1px 0 0 !important; padding: 0 !important; }
-.multifields .mf-table > .mf-items > .mf-row { padding: 0 0 !important; min-height: auto }
+.multifields .mf-table > .mf-items > .mf-row { padding: 0 1rem !important; min-height: auto }
 .multifields .mf-table .mf-table-head { background-color: #f2f2f2 }
 /* table */
 .multifields .mf-table > .mf-items .table { }
