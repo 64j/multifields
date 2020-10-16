@@ -24,7 +24,7 @@ class Table extends \Multifields\Base\Elements
     ];
 
     protected $template = '
-        <div id="[+id+]" class="mf-table col col-12 row m-0 [+class+]" data-type="table" data-name="[+name+]" [+attr+]>
+        <div id="[+id+]" class="mf-table col row m-0 [+class+]" data-type="table" data-name="[+name+]" [+attr+]>
             [+title+]
             [+value+]
             [+actions+]
@@ -73,6 +73,10 @@ class Table extends \Multifields\Base\Elements
     {
         if (!isset($this->params['items'])) {
             $this->params['items'] = '';
+        }
+
+        if (empty($this->params['class'])) {
+            $this->params['class'] = 'col-12';
         }
 
         $this->setValue();

@@ -284,7 +284,9 @@ class Elements
                 'actions' => null
             ], $params);
 
-            $this->params['value'] = htmlspecialchars($this->params['value'], ENT_QUOTES, 'UTF-8');
+            if (!is_bool($this->params['value'])) {
+                $this->params['value'] = htmlspecialchars($this->params['value'], ENT_QUOTES, 'UTF-8');
+            }
 
             $element = $this->element($this->params['type']);
 
