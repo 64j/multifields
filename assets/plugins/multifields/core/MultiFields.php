@@ -44,7 +44,7 @@ class MultiFields
     /**
      * @param array $params
      * @param $id
-     * @return mixed
+     * @return static
      */
     public static function getInstance($id = 0, $params = [])
     {
@@ -831,9 +831,12 @@ class MultiFields
         $this->post = $_POST;
 
         if (isset($this->post['mf-data']) && $this->params['storage'] != 'default') {
+            $this->deleteData();
             foreach ($this->post['mf-data'] as $k => $data) {
                 list($id, $tvId) = explode('__', $k);
-                $this->params['id'] = $id;
+                if (!empty($id)) {
+                    $this->params['id'] = $id;
+                }
                 $this->params['tv']['id'] = $tvId;
                 $out = '';
                 $data = $this->evo->removeSanitizeSeed($data);
@@ -858,19 +861,13 @@ class MultiFields
                                 $out .= '];' . "\n";
                             }
                         }
-                        if ($out == '') {
-                            if (file_exists($this->fileData())) {
-                                unlink($this->fileData());
-                            }
-                        } else {
+                        if ($out != '') {
                             $out = '<?php' . "\n" . '$d = &$this->data;' . "\n" . $out;
                             file_put_contents($this->fileData(), $out);
                         }
                         break;
 
                     case 'database':
-                        $this->deleteData($this->params['id'], $this->params['tv']['id']);
-
                         if (!empty($data)) {
                             foreach ($data as $key => $v) {
                                 if (!isset($v['value'])) {
@@ -897,24 +894,37 @@ class MultiFields
     }
 
     /**
-     * @param int $doc_id
-     * @param int $tv_id
      */
-    protected function deleteData($doc_id = 0, $tv_id = 0)
+    public function deleteData()
     {
-        $where = [];
+        switch ($this->params['storage']) {
+            case 'files':
+                array_map('unlink', glob($this->basePath . 'data/' . $this->params['id'] . '__*.php'));
+                break;
 
-        if (!empty($doc_id)) {
-            $where[] = 'doc_id=' . $doc_id;
+            case 'database':
+                if (!empty($this->params['id'])) {
+                    $this->evo->db->delete($this->evo->getFullTableName('multifields'), 'doc_id=' . $this->params['id']);
+                }
+                break;
         }
+    }
 
-        if (!empty($tv_id)) {
-            $where[] = 'tv_id=' . $tv_id;
-        }
+    /**
+     * @param array $ids
+     */
+    public function deleteAllData($ids = [])
+    {
+        switch ($this->params['storage']) {
+            case 'files':
+                foreach ($ids as $id) {
+                    array_map('unlink', glob($this->basePath . 'data/' . $id . '__*.php'));
+                }
+                break;
 
-        if (!empty($where)) {
-            $where = 'WHERE ' . implode(' AND ', $where);
-            $this->evo->db->query('DELETE FROM ' . $this->evo->getFullTableName('multifields') . $where);
+            case 'database':
+                $this->evo->db->delete($this->evo->getFullTableName('multifields'), 'doc_id IN (' . implode(',', $ids) . ')');
+                break;
         }
     }
 

@@ -8,7 +8,7 @@
  * @version     1.3
  * @package     evo
  * @internal    @properties &multifields_theme=Default theme used;text;default &multifields_storage=Data storage;list;default,files,database;files
- * @internal    @events OnManagerPreFrameLoader,OnManagerMainFrameHeaderHTMLBlock,OnDocFormSave,OnDocFormDelete
+ * @internal    @events OnManagerPreFrameLoader,OnManagerMainFrameHeaderHTMLBlock,OnDocFormSave,OnEmptyTrash
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base,sample
  * @author      64j

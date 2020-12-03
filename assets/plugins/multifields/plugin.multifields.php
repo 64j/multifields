@@ -21,6 +21,11 @@ switch ($e->name) {
         \MF2\MultiFields::getInstance($id)->saveData();
         break;
 
+    case 'OnEmptyTrash':
+        require_once MODX_BASE_PATH . 'assets/plugins/multifields/core/MultiFields.php';
+        \MF2\MultiFields::getInstance()->deleteAllData($ids);
+        break;
+
     case 'OnManagerPreFrameLoader':
         if (!empty($_REQUEST['mf-action'])) {
             require_once MODX_BASE_PATH . 'assets/plugins/multifields/core/MultiFields.php';
