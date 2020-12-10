@@ -53,7 +53,7 @@ class Row extends \Multifields\Base\Elements
                     $v['label'] = isset($v['label']) ? $v['label'] : $k;
                     $v['icon'] = isset($v['icon']) ? $v['icon'] : '';
 
-                    $out .= '<div class="mf-option" onclick="Multifields.elements.row.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . $this->setIcon($v['icon']) . $v['label'] . '</div>';
+                    $out .= '<div class="mf-option" onclick="Multifields.setTemplate(\'' . $k . '\');" data-template-name="' . $k . '">' . $this->setIcon($v['icon']) . $v['label'] . '</div>';
                     $i++;
                 }
             }

@@ -138,6 +138,29 @@
       },
 
       /**
+       * Выбираем шаблон и инициализируем элемент и вложенные
+       * @param id
+       */
+      setTemplate: function(id) {
+        Multifields.getTemplate(id, function(data) {
+          let template = document.createElement('template');
+          template.innerHTML = data.html;
+          Multifields.setDatepicker(template.content);
+          Multifields.draggable(template.content.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
+          Multifields.el.querySelector('.mf-items').appendChild(template.content);
+          if (data.type && Multifields.elements[data.type]) {
+            Multifields.elements[data.type]['initEl'](Multifields.el.querySelector('.mf-items').lastElementChild);
+          }
+          [...Multifields.el.querySelector('.mf-items').lastElementChild.querySelectorAll('[data-type]')].map(function(el) {
+            let type = el.dataset.type;
+            if (Multifields.elements[type]) {
+              Multifields.elements[type]['initEl'](el);
+            }
+          });
+        }, true);
+      },
+
+      /**
        * Клонируем элемент с очисткой данных
        * @param clear
        * @param clone
