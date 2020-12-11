@@ -45,6 +45,10 @@ switch ($e->name) {
         mfc()->saveData($id);
         break;
 
+    case 'OnDocDuplicate':
+        mfc()->duplicateData($id, $new_id);
+        break;
+
     case 'OnEmptyTrash':
         mfc()->deleteData($ids);
         break;

@@ -369,6 +369,19 @@ class Core
     }
 
     /**
+     * @param $id
+     * @param $new_id
+     */
+    public function duplicateData($id, $new_id)
+    {
+        if ($this->getParams('storage') == 'files') {
+            foreach (glob($this->getParams('basePath') . 'data/' . $id . '__*.json') as $v) {
+                copy($v, str_replace($id . '__', $new_id . '__', $v));
+            }
+        }
+    }
+
+    /**
      * @param array $data
      * @return array
      */
