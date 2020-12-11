@@ -1,6 +1,10 @@
 Multifields.element('row', {
   index: 1,
 
+  initEl: function(el) {
+    Multifields.elements.row.setAutoincrement(el.parentElement.children);
+  },
+
   actionAdd: function(e) {
     if (Multifields.el.classList.contains('mf-row-group')) {
       e.stopPropagation();
@@ -20,24 +24,7 @@ Multifields.element('row', {
         }
       }
     } else {
-      Multifields.getTemplate(function(data) {
-        Multifields.el.insertAdjacentHTML('afterend', data.html);
-        let clone = Multifields.el.nextElementSibling,
-            el,
-            items;
-        if (Multifields.el.dataset['autoincrement']) {
-          items = Multifields.el.parentElement.children;
-          let j = 1;
-          for (let i = 0; i < items.length; i++) {
-            el = items[i].querySelector('[data-type="' + Multifields.el.dataset['autoincrement'] + '"] > input');
-            if (el && items[i].dataset['name'] === Multifields.name) {
-              el.value = j++;
-            }
-          }
-        }
-        Multifields.setDatepicker(clone);
-        Multifields.draggable(clone.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
-      });
+      Multifields.setTemplate(Multifields.name, true);
     }
   },
 
@@ -53,8 +40,7 @@ Multifields.element('row', {
       if (Multifields.el.classList.contains('mf-row-group')) {
         Multifields.el.querySelector('.mf-items').innerHTML = '';
       } else {
-        Multifields.getTemplate(function(data) {
-          Multifields.el.insertAdjacentHTML('afterend', data.html);
+        Multifields.setTemplate(Multifields.name, function() {
           Multifields.elements.row.deleteRow();
         });
       }
@@ -64,12 +50,14 @@ Multifields.element('row', {
   },
 
   deleteRow: function() {
-    let el,
-        items = Multifields.el.parentElement.children;
-
+    let items = Multifields.el.parentElement.children;
     Multifields.el.parentElement.removeChild(Multifields.el);
+    Multifields.elements.row.setAutoincrement(items);
+  },
 
-    let j = 1;
+  setAutoincrement: function(items) {
+    let el,
+        j = 1;
     if (Multifields.el.dataset['autoincrement']) {
       for (let i = 0; i < items.length; i++) {
         el = items[i].querySelector('[data-type="' + Multifields.el.dataset['autoincrement'] + '"] > input');

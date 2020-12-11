@@ -60,9 +60,11 @@
         elements: {
           class: 'Multifields\\Base\\Elements',
 
-          init: function() {},
+          init: function() {
+          },
 
-          initEl: function() {},
+          initEl: function() {
+          },
 
           actionAdd: function() {
             Multifields.getTemplate(function(data) {
@@ -76,9 +78,11 @@
             Multifields.el.parentElement.removeChild(Multifields.el);
           },
 
-          actionMove: function() {},
+          actionMove: function() {
+          },
 
-          onmousedown: function() {}
+          onmousedown: function() {
+          }
         }
       },
 
@@ -129,8 +133,10 @@
             if (data.html) {
               callback.call(Multifields, data);
             } else {
+              let clone = Multifields.clone();
               callback.call(Multifields, {
-                html: Multifields.clone().outerHTML
+                html: clone.outerHTML,
+                type: clone.dataset.type
               });
             }
           }
@@ -140,18 +146,29 @@
       /**
        * Выбираем шаблон и инициализируем элемент и вложенные
        * @param id
+       * @param isParent
+       * @param callback
        */
-      setTemplate: function(id) {
+      setTemplate: function(id, isParent, callback) {
+        if (typeof isParent === 'function') {
+          callback = isParent;
+        }
         Multifields.getTemplate(id, function(data) {
-          let template = document.createElement('template');
+          let template = document.createElement('template'),
+              parent = isParent && Multifields.el || Multifields.el.querySelector('.mf-items');
           template.innerHTML = data.html;
-          Multifields.setDatepicker(template.content);
-          Multifields.draggable(template.content.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
-          Multifields.el.querySelector('.mf-items').appendChild(template.content);
-          if (data.type && Multifields.elements[data.type]) {
-            Multifields.elements[data.type]['initEl'](Multifields.el.querySelector('.mf-items').lastElementChild);
+          let el = isParent
+              ? parent.insertAdjacentElement('afterend', template.content.firstElementChild)
+              : parent.insertAdjacentElement('beforeend', template.content.firstElementChild);
+          if (typeof callback === 'function') {
+            callback.call(Multifields, data);
           }
-          [...Multifields.el.querySelector('.mf-items').lastElementChild.querySelectorAll('[data-type]')].map(function(el) {
+          Multifields.setDatepicker(el);
+          Multifields.draggable(el.querySelectorAll(':scope > .mf-items, .mf-draggable > .mf-items'));
+          if (data.type && Multifields.elements[data.type]) {
+            Multifields.elements[data.type]['initEl'](el);
+          }
+          [...el.querySelectorAll('[data-type]')].map(function(el) {
             let type = el.dataset.type;
             if (Multifields.elements[type]) {
               Multifields.elements[type]['initEl'](el);

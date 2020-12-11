@@ -16,11 +16,19 @@ Multifields.element('richtext', {
         let conf = theme !== undefined ? window['config_tinymce4_' + theme] : window[modxRTEbridge_tinymce4.default];
         conf = Object.assign({}, conf, options);
         conf.selector = '#' + inputEl.id;
+        [...el.querySelectorAll('.mce-tinymce')].map(function(div) {
+          div.parentElement.removeChild(div);
+        });
+        inputEl.style.display = 'block';
         tinymce.init(conf);
       } else if (typeof myCodeMirrors !== 'undefined') {
         if (myCodeMirrors['ta']) {
           options = Object.assign({}, myCodeMirrors['ta'].options, options);
         }
+        [...el.querySelectorAll('.CodeMirror')].map(function(div) {
+          div.parentElement.removeChild(div);
+        });
+        inputEl.style.display = 'block';
         myCodeMirrors[inputEl.id] = CodeMirror.fromTextArea(inputEl, options);
       }
     }
