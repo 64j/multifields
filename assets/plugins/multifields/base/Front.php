@@ -76,11 +76,8 @@ class Front
         if (!empty(self::getData() && (!empty(self::getParams('tvId')) || !empty(self::getParams('tvName') || !empty(self::getParams('data')))))) {
             switch (self::getParams('api')) {
                 case '1':
-                    $out = self::getData();
-                    break;
-
                 case 'json':
-                    $out = json_encode(self::getData(), JSON_FORCE_OBJECT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
+                    $out = self::getData();
                     break;
 
                 default:
@@ -136,9 +133,8 @@ class Front
     /**
      * @return array
      */
-    protected static function getData()
+    public static function getData()
     {
-
         if (empty(self::$data)) {
             if (!is_null(self::getParams('data'))) {
                 self::$data = json_decode(self::getParams('data', '{}'), true);
@@ -163,8 +159,10 @@ class Front
      */
     protected static function getDataFromFile()
     {
-        if (file_exists(self::getParams('basePath') . 'data/' . self::getParams('docid') . '__' . self::getParams('tvId') . '.json')) {
-            self::$data = json_encode(file_get_contents(self::getParams('basePath') . 'data/' . self::getParams('docid') . '__' . self::getParams('tvId') . '.json'), true);
+        $filename = self::getParams('basePath') . 'data/' . self::getParams('docid') . '__' . self::getParams('tvId') . '.json';
+        if (file_exists($filename)) {
+            $data = file_get_contents($filename);
+            self::$data = self::getParams('api') == 'json' ? $data : json_decode($data, true);
         }
     }
 
@@ -174,13 +172,13 @@ class Front
     protected static function getDataFromEvo()
     {
         $evo = evolutionCMS();
-        self::$data = [];
+        self::$data = '{}';
 
         if (self::getParams('docid') == $evo->documentIdentifier) {
             if (!empty(self::getParams('tvId'))) {
                 foreach ($evo->documentObject as $k => $v) {
                     if (!empty($v['id']) && $v['id'] == self::getParams('tvId')) {
-                        self::$data = json_decode($v[1], true);
+                        self::$data = $v[1];
                         break;
                     }
                 }
@@ -189,7 +187,7 @@ class Front
                     self::setParams([
                         'tvId' => $evo->documentObject[self::getParams('tvName')]['id']
                     ]);
-                    self::$data = json_decode($evo->documentObject[self::getParams('tvName')][1], true);
+                    self::$data = $evo->documentObject[self::getParams('tvName')][1];
                 }
             }
         } else {
@@ -207,7 +205,7 @@ class Front
                     self::setParams([
                         'tvName' => $row['name']
                     ]);
-                    self::$data = json_decode($row['value'], true);
+                    self::$data = $row['value'];
                 }
             } else {
                 $default_field = array(
@@ -251,11 +249,11 @@ class Front
                     self::setParams([
                         'tvId' => self::getParams('tvName')
                     ]);
-                    self::$data = json_decode($evo->db->getValue('
+                    self::$data = $evo->db->getValue('
                     SELECT sc.' . self::getParams('tvName') . '
                     FROM ' . $evo->getFullTableName('site_content') . ' AS sc
                     WHERE 
-                    sc.id="' . $evo->db->escape(self::getParams('docid')) . '"'), true);
+                    sc.id="' . $evo->db->escape(self::getParams('docid')) . '"');
                 } else {
                     $result = $evo->db->query('
                     SELECT tv.id, tv.name, tvc.value
@@ -269,13 +267,13 @@ class Front
                         self::setParams([
                             'tvId' => self::getParams('id')
                         ]);
-                        self::$data = json_decode($row['value'], true);
+                        self::$data = $row['value'];
                     }
                 }
             }
         }
 
-        return self::$data;
+        return self::$data = self::getParams('api') == 'json' ? self::$data : json_decode(self::$data, true);
     }
 
     /**
