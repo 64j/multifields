@@ -45,8 +45,8 @@ switch ($e->name) {
         mfc()->saveData($id);
         break;
 
-    case 'OnDocFormDelete':
-        mfc()->deleteData();
+    case 'OnEmptyTrash':
+        mfc()->deleteData($ids);
         break;
 
     case 'OnWebPageInit':

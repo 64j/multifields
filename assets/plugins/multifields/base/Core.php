@@ -357,10 +357,15 @@ class Core
     }
 
     /**
-     *
+     * @param array $ids
      */
-    public function deleteData()
+    public function deleteData($ids = [])
     {
+        if ($this->getParams('storage') == 'files') {
+            foreach ($ids as $id) {
+                array_map('unlink', glob($this->getParams('basePath') . 'data/' . $id . '__*.json'));
+            }
+        }
     }
 
     /**
