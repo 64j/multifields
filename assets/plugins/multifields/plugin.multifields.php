@@ -16,29 +16,7 @@ switch ($e->name) {
         break;
 
     case 'OnBeforeManagerPageInit':
-        if (isset($_REQUEST['mf-action']) && !empty($_REQUEST['action'])) {
-            $className = !empty($_REQUEST['class']) ? $_REQUEST['class'] : '';
-
-            if (class_exists($className)) {
-                $class = new $className();
-                $method = 'action' . ucfirst(strtolower($_REQUEST['action']));
-                if (is_callable([$className, $method])) {
-                    try {
-                        echo $class->$method($_REQUEST);
-                    } catch (Error $exception) {
-                        echo json_encode([
-                            'error' => (string)$exception
-                        ], JSON_UNESCAPED_UNICODE);
-                    }
-                } else {
-                    echo 'Method ' . $method . ' not found in class ' . $className . '!';
-                }
-            } else {
-                echo 'Class ' . $className . ' not found!';
-            }
-
-            exit;
-        }
+        mfc()->managerInit();
         break;
 
     case 'OnDocFormSave':
