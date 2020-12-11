@@ -155,19 +155,22 @@ class Front
     }
 
     /**
-     * @return void
+     * @return array|mixed|string
      */
     protected static function getDataFromFile()
     {
+        self::$data = '{}';
+
         $filename = self::getParams('basePath') . 'data/' . self::getParams('docid') . '__' . self::getParams('tvId') . '.json';
         if (file_exists($filename)) {
-            $data = file_get_contents($filename);
-            self::$data = self::getParams('api') == 'json' ? $data : json_decode($data, true);
+            self::$data = file_get_contents($filename);
         }
+
+        return self::getDataFormat();
     }
 
     /**
-     * @return array|mixed
+     * @return array|mixed|string
      */
     protected static function getDataFromEvo()
     {
@@ -273,7 +276,21 @@ class Front
             }
         }
 
-        return self::$data = self::getParams('api') == 'json' ? self::$data : json_decode(self::$data, true);
+        return self::getDataFormat();
+    }
+
+    /**
+     * @return array|mixed|string
+     */
+    protected static function getDataFormat()
+    {
+        if (self::getParams('api') == 'json') {
+            self::$data = !empty(self::$data) ? self::$data : '{}';
+        } else {
+            self::$data = !empty(self::$data) ? json_decode(self::$data, true) : [];
+        }
+
+        return self::$data;
     }
 
     /**
