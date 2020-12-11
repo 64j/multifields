@@ -42,7 +42,7 @@ switch ($e->name) {
         break;
 
     case 'OnDocFormSave':
-        mfc()->saveData();
+        mfc()->saveData($id);
         break;
 
     case 'OnDocFormDelete':

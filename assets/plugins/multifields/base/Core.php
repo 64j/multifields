@@ -327,13 +327,16 @@ class Core
     }
 
     /**
-     *
+     * @param int $docid
      */
-    public function saveData()
+    public function saveData($docid = 0)
     {
         if (isset($_POST['tv-mf-data']) && $this->getParams('storage') == 'files') {
             foreach ($_POST['tv-mf-data'] as $k => $data) {
                 list($id, $tvId) = explode('__', $k);
+                if (!empty($docid)) {
+                    $id = $docid;
+                }
                 $this->setParams([
                     'id' => $id,
                     'tv' => [
@@ -379,7 +382,7 @@ class Core
      */
     public function getParams($key = null)
     {
-        return isset($this->params[$key]) ? $this->params[$key] : $this->params;
+        return is_null($key) ? $this->params : (isset($this->params[$key]) ? $this->params[$key] : '');
     }
 
     /**
