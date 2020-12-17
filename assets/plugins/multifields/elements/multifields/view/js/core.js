@@ -280,6 +280,7 @@
                           break;
 
                         case 'select':
+                        case 'select-one':
                         case 'select-multiple':
                           for (let i = 0; i < el.length; i++) {
                             if (el[i].selected) {

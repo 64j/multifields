@@ -40,6 +40,19 @@ Multifields.element('thumb', {
         Multifields.elements.thumb.popup.el.querySelector('.multifields').replaceChild(clone.querySelector('.mf-items'), Multifields.elements.thumb.popup.el.querySelector('.mf-items'));
         Multifields.elements.thumb.parent = Multifields.el;
 
+        // fix select
+        [...Multifields.elements.thumb.popup.el.querySelectorAll('.multifields select')].map(function(el) {
+          if (el.type === 'select-one') {
+            let value = '';
+            for (let i = 0; i < el.options.length; i++) {
+              if (el.options[i].attributes.selected) {
+                value = (el.options[i].value || el.options[i].text);
+              }
+            }
+            el.value = value
+          }
+        });
+
         // init Richtext
         Multifields.elements.richtext.initEls(Multifields.elements.thumb.popup.el, true);
 
