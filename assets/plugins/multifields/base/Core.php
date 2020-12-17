@@ -471,7 +471,6 @@ class Core
                 if (!isset($this->config['items'])) {
                     $this->config['items'] = [];
                 }
-                $this->config['templates'] = $this->configNormalize($this->config['templates']);
             }
         }
 
@@ -480,35 +479,6 @@ class Core
         }
 
         return $this->config;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    private function configNormalize($data = [])
-    {
-        if (is_array($data)) {
-            foreach ($data as $k => &$v) {
-                if (!is_array($v)) {
-                    if (isset($this->config['templates'][$v])) {
-                        $data[$v] = $this->config['templates'][$v];
-                    }
-                    unset($data[$k]);
-                }
-                if (!empty($v['templates'])) {
-                    if (is_array($v['templates'])) {
-                        $v['@templates'] = [];
-                        foreach ($v['templates'] as $key => $val) {
-                            $v['@templates'][] = is_array($val) ? $key : $val;
-                        }
-                    }
-                    $v['templates'] = $this->configNormalize($v['templates']);
-                }
-            }
-        }
-
-        return $data;
     }
 
     /**
