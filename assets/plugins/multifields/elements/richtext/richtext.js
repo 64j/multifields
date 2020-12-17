@@ -8,6 +8,9 @@ Multifields.element('richtext', {
   },
 
   initEl: function(el, init) {
+    if (el.closest('.mf-hidden')) {
+      return;
+    }
     let theme = el.dataset['mfTheme'] ? el.dataset['mfTheme'] : '',
         options = el.dataset['mfOptions'] ? JSON.parse(el.dataset['mfOptions']) : {};
     if (options.init || init) {
@@ -108,21 +111,28 @@ Multifields.element('richtext', {
     return item;
   },
 
-  destroy: function(el) {
+  destroy: function(el, save) {
+    if (typeof save === 'undefined') {
+      save = true;
+    }
     if (typeof tinymce !== 'undefined' && tinymce.editors[el.id]) {
-      el.value = tinymce.editors[el.id].getContent();
+      if (save) {
+        el.value = tinymce.editors[el.id].getContent();
+      }
       tinymce.editors[el.id].destroy();
     } else if (typeof myCodeMirrors !== 'undefined') {
       if (myCodeMirrors[el.id]) {
-        el.value = myCodeMirrors[el.id].getValue();
+        if (save) {
+          el.value = myCodeMirrors[el.id].getValue();
+        }
         myCodeMirrors[el.id].toTextArea();
       }
     }
   },
 
-  destroyEls: function(el) {
+  destroyEls: function(el, save) {
     [...el.querySelectorAll('.mf-richtext-inline')].map(function(el) {
-      Multifields.elements.richtext.destroy(el.querySelector('textarea'));
+      Multifields.elements.richtext.destroy(el.querySelector('textarea'), save);
     });
   }
 });
