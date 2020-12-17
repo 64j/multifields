@@ -6,7 +6,6 @@
 .multifields input[disabled], .multifields select[disabled], .multifields textarea[disabled] { opacity: .7 !important; background-color: #fff }
 .multifields .mf-hidden, [data-multifields1] { display: none !important; }
 .multifields > .mf-items { position: relative; margin: 0 -.25rem !important; background: #f9f9f9 }
-.evo-popup .multifields > .mf-items { margin: 0 0 .5rem !important; background: none }
 .multifields .mf-items { display: flex; flex-wrap: wrap; padding: .25rem; }
 .multifields .mf-items::after { content: ""; display: table; width: 100%; }
 .multifields .form-control, .multifields input, .multifields select, .multifields select[size="1"] { display: block; float: none; }
@@ -49,6 +48,9 @@
 .multifields .mf-active > .mf-actions, .multifields .mf-row.mf-active > .mf-title, .multifields .mf-row-group.mf-active > .mf-title, .multifields .mf-row.mf-active > .mf-value, .multifields .mf-row-group.mf-active > .mf-value { background-color: #ffecb3 !important; border-color: #ffc107 !important; color: inherit !important; }
 .multifields .mf-active > .mf-actions::before { border-color: #ffc107 !important }
 .multifields .mf-active > * { pointer-events: none; }
+/* popup */
+.evo-popup .multifields { margin: 0 .25rem !important }
+.evo-popup .multifields > .mf-items { margin: 0 0 .5rem !important; padding: 0 !important; background: none }
 /* types */
 .multifields [data-type="date"] input { width: 100% }
 /* lightness */

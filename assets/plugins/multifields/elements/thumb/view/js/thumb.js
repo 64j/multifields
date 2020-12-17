@@ -24,7 +24,7 @@ Multifields.element('thumb', {
       if (parent.modx) {
         Multifields.elements.thumb.popup = parent.modx.popup({
           title: Multifields.el.querySelector('.mf-title') && Multifields.el.querySelector('.mf-title').innerHTML || Multifields.type,
-          content: '<div class="multifields"><div class="mf-items"></div><div class="px-1"><span class="btn btn-success w-100 mf-save">OK</span></div></div>',
+          content: '<div class="multifields"><div class="mf-items"></div></div>',
           icon: 'fa-layer-group',
           delay: 0,
           overlay: 1,
@@ -32,29 +32,24 @@ Multifields.element('thumb', {
           hide: 0,
           hover: 0,
           width: '80%',
+          maxheight: '99%',
+          position: 'top center',
           onclose: function(e, el) {
             el.classList.remove('show');
             Multifields.elements.thumb.popup = null;
           }
         });
-        Multifields.elements.thumb.popup.el.querySelector('.multifields').replaceChild(clone.querySelector('.mf-items'), Multifields.elements.thumb.popup.el.querySelector('.mf-items'));
+        Multifields.elements.thumb.popup.el.querySelector('.mf-items').innerHTML = clone.querySelector('.mf-items').innerHTML;
+        Multifields.elements.thumb.popup.el.querySelector('.evo-popup-close').outerHTML = '<div id="actions" class="position-absolute"><span class="btn btn-sm btn-success mf-save"><i class="fa fa-floppy-o show no-events"></i></span><span class="btn btn-sm btn-danger mf-close"><i class="fa fa-times-circle show no-events"></i></span></div>';
         Multifields.elements.thumb.parent = Multifields.el;
 
-        // fix select
-        [...Multifields.elements.thumb.popup.el.querySelectorAll('.multifields select')].map(function(el) {
-          if (el.type === 'select-one') {
-            let value = '';
-            for (let i = 0; i < el.options.length; i++) {
-              if (el.options[i].attributes.selected) {
-                value = (el.options[i].value || el.options[i].text);
-              }
-            }
-            el.value = value
+        // Init elements
+        [...Multifields.elements.thumb.popup.el.querySelectorAll('[data-type]')].map(function(el) {
+          let type = el.dataset.type;
+          if (Multifields.elements[type]) {
+            Multifields.elements[type]['initEl'](el);
           }
         });
-
-        // init Richtext
-        Multifields.elements.richtext.initEls(Multifields.elements.thumb.popup.el, true);
 
         Multifields.elements.thumb.popup.el.addEventListener('mousedown', function(e) {
           let target = e.target.hasAttribute('data-type') && e.target || e.target.closest('[data-type]');
@@ -64,7 +59,6 @@ Multifields.element('thumb', {
             Multifields.type = Multifields.el.dataset['type'];
           }
         });
-
         Multifields.elements.thumb.popup.el.addEventListener('click', function(e) {
           if (e.target.classList.contains('mf-save')) {
             this.classList.remove('show');
@@ -88,6 +82,9 @@ Multifields.element('thumb', {
             Multifields.elements.thumb.parent.replaceChild(this.querySelector('.mf-items'), Multifields.elements.thumb.parent.querySelector('.mf-items'));
             // save Richtext
             Multifields.elements.richtext.destroyEls(Multifields.elements.thumb.parent);
+            this.close();
+          }
+          if (e.target.classList.contains('mf-close')) {
             this.close();
           }
         });
