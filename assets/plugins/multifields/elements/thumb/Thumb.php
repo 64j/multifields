@@ -21,7 +21,7 @@ class Thumb extends \Multifields\Base\Elements
             <div class="mf-value mf-hidden">
                 <input type="hidden" id="[+id+]_value" name="[+id+]_value" value="[+value+]">
             </div>
-            <div class="row mx-0 mb-2 col-12 p-0 mf-items [+items.class+]">
+            <div class="row mx-0 mb-2 col-12 p-0 mf-items mf-hidden [+items.class+]">
                 [+items+]
             </div>
         </div>';

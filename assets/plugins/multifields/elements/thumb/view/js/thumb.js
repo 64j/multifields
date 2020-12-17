@@ -19,10 +19,11 @@ Multifields.element('thumb', {
   },
 
   actionEdit: function() {
+    let Thumb = this;
+
     if (Multifields.el.classList.contains('mf-group')) {
-      let clone = Multifields.clone(false);
       if (parent.modx) {
-        Multifields.elements.thumb.popup = parent.modx.popup({
+        Thumb.popup = parent.modx.popup({
           title: Multifields.el.querySelector('.mf-title') && Multifields.el.querySelector('.mf-title').innerHTML || Multifields.type,
           content: '<div class="multifields"><div class="mf-items"></div></div>',
           icon: 'fa-layer-group',
@@ -36,22 +37,31 @@ Multifields.element('thumb', {
           position: 'top center',
           onclose: function(e, el) {
             el.classList.remove('show');
-            Multifields.elements.thumb.popup = null;
+            Thumb.popup = null;
           }
         });
-        Multifields.elements.thumb.popup.el.querySelector('.mf-items').innerHTML = clone.querySelector('.mf-items').innerHTML;
-        Multifields.elements.thumb.popup.el.querySelector('.evo-popup-close').outerHTML = '<div id="actions" class="position-absolute"><span class="btn btn-sm btn-success mf-save"><i class="fa fa-floppy-o show no-events"></i></span><span class="btn btn-sm btn-danger mf-close"><i class="fa fa-times-circle show no-events"></i></span></div>';
-        Multifields.elements.thumb.parent = Multifields.el;
+
+        Thumb.clone = Multifields.el.querySelector(':scope > .mf-items').cloneNode(true).children;
+
+        Thumb.popup.el.querySelector('.multifields .mf-items').append(...Multifields.el.querySelector(':scope > .mf-items').children);
+
+        Thumb.popup.el.querySelector('.evo-popup-close').outerHTML = '<div id="actions" class="position-absolute"><span class="btn btn-sm btn-success mf-save"><i class="fa fa-floppy-o show no-events"></i></span><span class="btn btn-sm btn-danger mf-close"><i class="fa fa-times-circle show no-events"></i></span></div>';
+
+        Thumb.parent = Multifields.el;
+
+        Multifields.setDatepicker(Thumb.popup.el);
+
+        Multifields.draggable(Thumb.popup.el.querySelectorAll('.multifields > .mf-items, .mf-draggable > .mf-items'));
 
         // Init elements
-        [...Multifields.elements.thumb.popup.el.querySelectorAll('[data-type]')].map(function(el) {
+        [...Thumb.popup.el.querySelectorAll('[data-type]')].map(function(el) {
           let type = el.dataset.type;
           if (Multifields.elements[type]) {
             Multifields.elements[type]['initEl'](el);
           }
         });
 
-        Multifields.elements.thumb.popup.el.addEventListener('mousedown', function(e) {
+        Thumb.popup.el.addEventListener('mousedown', function(e) {
           let target = e.target.hasAttribute('data-type') && e.target || e.target.closest('[data-type]');
           if (target) {
             Multifields.el = target;
@@ -59,49 +69,36 @@ Multifields.element('thumb', {
             Multifields.type = Multifields.el.dataset['type'];
           }
         });
-        Multifields.elements.thumb.popup.el.addEventListener('click', function(e) {
+
+        Thumb.popup.el.addEventListener('click', function(e) {
           if (e.target.classList.contains('mf-save')) {
             this.classList.remove('show');
             documentDirty = true;
             [...this.querySelectorAll('.mf-items [data-thumb]')].map(function(el) {
               let value = el.querySelector('input').value;
-              if (el.dataset['thumb'] === Multifields.elements.thumb.parent.dataset['name']) {
-                Multifields.elements.thumb.parent.querySelector(':scope > .mf-value input').value = value;
-                Multifields.elements.thumb.parent.style.backgroundImage = 'url(\'../' + value + '\')';
+              if (el.dataset['thumb'] === Thumb.parent.dataset['name']) {
+                Thumb.parent.querySelector(':scope > .mf-value input').value = value;
+                Thumb.parent.style.backgroundImage = 'url(\'../' + value + '\')';
               } else {
                 let thumbs = el.dataset['thumb'].toString().split(',');
                 for (let k in thumbs) {
-                  if (thumbs.hasOwnProperty(k) && Multifields.elements.thumb.parent.dataset['name'] === thumbs[k]) {
-                    Multifields.elements.thumb.parent.querySelector(':scope > .mf-value input').value = value;
-                    Multifields.elements.thumb.parent.style.backgroundImage = 'url(\'../' + value + '\')';
+                  if (thumbs.hasOwnProperty(k) && Thumb.parent.dataset['name'] === thumbs[k]) {
+                    Thumb.parent.querySelector(':scope > .mf-value input').value = value;
+                    Thumb.parent.style.backgroundImage = 'url(\'../' + value + '\')';
                     break;
                   }
                 }
               }
             });
-            Multifields.elements.thumb.parent.replaceChild(this.querySelector('.mf-items'), Multifields.elements.thumb.parent.querySelector('.mf-items'));
             // save Richtext
-            Multifields.elements.richtext.destroyEls(Multifields.elements.thumb.parent);
+            Thumb.parent.querySelector('.mf-items').append(...this.querySelector('.mf-items').children);
+            Multifields.elements.richtext.destroyEls(Thumb.parent);
             this.close();
           }
           if (e.target.classList.contains('mf-close')) {
+            Thumb.parent.querySelector('.mf-items').append(...Thumb.clone);
+            Multifields.elements.richtext.destroyEls(Thumb.parent, false);
             this.close();
-          }
-        });
-        Multifields.elements.thumb.popup.el.addEventListener('change', function(e) {
-          let target = e.target;
-          switch (target.type) {
-            case 'select':
-            case 'select-one':
-            case 'select-multiple':
-              [...target.options].map(function(el, i) {
-                if (i === target.selectedIndex) {
-                  el.setAttribute('selected', true);
-                } else {
-                  el.removeAttribute('selected');
-                }
-              });
-              break;
           }
         });
       } else {
@@ -119,7 +116,7 @@ Multifields.element('thumb', {
         if (valueEl) {
           BrowseServer(valueEl.id);
           if (Multifields.el.dataset['multi']) {
-            Multifields.elements.thumb.MultiBrowseServer(valueEl);
+            Thumb.MultiBrowseServer(valueEl);
           }
           if (Multifields.el.dataset['image']) {
             valueEl.onchange = function(e) {
