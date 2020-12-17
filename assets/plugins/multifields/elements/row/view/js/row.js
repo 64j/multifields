@@ -29,7 +29,7 @@ Multifields.element('row', {
   },
 
   actionDel: function() {
-    if (!Multifields.el.parentElement.parentElement.classList.contains('multifields')
+    if (!Multifields.el.parentElement.parentElement.dataset['multifields']
         && Multifields.el.parentElement.querySelectorAll('.mf-row[data-name="' + Multifields.name + '"]').length === 1
         && (
             !Multifields.el.parentElement.parentElement.classList.contains('mf-row-group')
