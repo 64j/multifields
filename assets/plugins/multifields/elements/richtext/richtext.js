@@ -11,12 +11,15 @@ Multifields.element('richtext', {
     if (el.closest('.mf-hidden')) {
       return;
     }
-    let theme = el.dataset['mfTheme'] ? el.dataset['mfTheme'] : '',
-        options = el.dataset['mfOptions'] ? JSON.parse(el.dataset['mfOptions']) : {};
+    let options = el.dataset['mfOptions'] ? JSON.parse(el.dataset['mfOptions']) : {},
+        theme = el.dataset['mfTheme'] ? el.dataset['mfTheme'] : (options.theme ? options.theme : '');
     if (options.init || init) {
       let inputEl = el.querySelector('textarea');
       if (typeof tinymce !== 'undefined') {
-        let conf = theme !== undefined ? window['config_tinymce4_' + theme] : window[modxRTEbridge_tinymce4.default];
+        let conf = window['config_tinymce4_' + theme] ? window['config_tinymce4_' + theme] : window[modxRTEbridge_tinymce4.default];
+        if (options.theme && window['config_tinymce4_' + theme]) {
+          delete options.theme;
+        }
         conf = Object.assign({}, conf, options);
         conf.selector = '#' + inputEl.id;
         [...el.querySelectorAll('.mce-tinymce')].map(function(div) {

@@ -27,6 +27,17 @@ class Richtext extends \Multifields\Base\Elements
     {
         if (!empty($find['mf.options'])) {
             $item['mf.options'] = $find['mf.options'];
+            if (is_array($item['mf.options'])) {
+                if (!empty($item['mf.options']['init'])) {
+                    $item['inline'] = true;
+                } elseif (!empty($item['mf.options']['inline'])) {
+                    unset($item['mf.options']['inline']);
+                    $item['mf.options']['init'] = true;
+                    $item['inline'] = true;
+                } elseif (isset($item['inline'])) {
+                    unset($item['inline']);
+                }
+            }
         } elseif (isset($item['mf.options'])) {
             unset($item['mf.options']);
         }
