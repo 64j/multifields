@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="[+MGR_DIR+]/media/style/[+manager_theme+]/style.css">
     <style>
         html, body, body > form { position: relative; margin: 0; padding: 0; height: 100%; background: none }
+        body { overflow: hidden }
         #table-layout { position: relative; width: 100%; height: 100%; padding: 0; border: none; border-collapse: collapse; }
-        #table-layout > tfoot > tr { height: 2rem; }
+        #table-layout > tbody > tr { height: 100%; }
         #table-layout > tbody > tr > td { padding: 0 }
         #table-layout > tbody > tr > td > .mce-tinymce { height: 100% !important; border: none !important; }
         #table-layout > tbody > tr > td > .mce-tinymce > .mce-container-body { display: table !important; width: 100%; height: 100%; }
