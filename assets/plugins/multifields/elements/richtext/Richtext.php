@@ -23,10 +23,20 @@ class Richtext extends \Multifields\Base\Elements
         return parent::render();
     }
 
+    protected function preFillData(&$item = [], $config = [], $find = [])
+    {
+        if (!empty($find['mf.options'])) {
+            $item['mf.options'] = $find['mf.options'];
+        } elseif (isset($item['mf.options'])) {
+            unset($item['mf.options']);
+        }
+    }
+
     /**
+     * @param array $params
      * @return string
      */
-    public function actionDisplay()
+    public function actionDisplay($params = [])
     {
         $evo = evolutionCMS();
         $this->template = file_get_contents(__DIR__ . '/editor.tpl');
@@ -35,16 +45,25 @@ class Richtext extends \Multifields\Base\Elements
 
         define($which_editor . '_INIT_INTROTEXT', 1);
 
+        $options = [
+            'theme' => 'custom',
+            'width' => '100%',
+            'height' => '100%',
+            'block_formats' => 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3;Header 4=h4;Header 5=h5;Header 6=h6;Div=div'
+        ];
+
+        if (!empty($params['mf-options'])) {
+            $params['mf-options'] = json_decode(base64_decode($params['mf-options']), true);
+            if (is_array($params['mf-options'])) {
+                $options = array_merge($options, $params['mf-options']);
+            }
+        }
+
         $which_editor_config = [
             'editor' => $which_editor,
             'elements' => ['ta'],
             'options' => [
-                'ta' => [
-                    'theme' => 'custom',
-                    'width' => '100%',
-                    'height' => '100%',
-                    'block_formats' => 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3;Header 4=h4;Header 5=h5;Header 6=h6;Div=div'
-                ]
+                'ta' => $options
             ]
         ];
 

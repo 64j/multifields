@@ -43,7 +43,7 @@ Multifields.element('richtext', {
     });
   },
 
-  actionDisplay: function() {
+  actionDisplay: function(el) {
     if (parent.modx) {
       Multifields.elements.richtext.popup = parent.modx.popup({
         iframe: 'iframe',
@@ -57,7 +57,7 @@ Multifields.element('richtext', {
         delay: 0,
         hover: 0,
         hide: 0,
-        url: '?mf-action=&class=' + this.class + '&action=display',
+        url: '?mf-action=&class=' + Multifields.elements.richtext.class + '&action=display&mf-options=' + btoa(el.parentElement.parentElement.getAttribute('data-mf-options')),
         onclose: function(e, el) {
           el.classList.remove('show');
           Multifields.elements.richtext.popup = null;

@@ -2,7 +2,7 @@
     [+title+]
     <textarea name="tv[+id+]" id="tv[+id+]" class="form-control [+item.class+]" rows="4" placeholder="[+placeholder+]" onchange="documentDirty=true;"  [+item.attr+]>[+value+]</textarea>
     <div class="input-group-append">
-        <button type="button" class="btn btn-secondary" onclick="Multifields.elements.richtext.actionDisplay();">
+        <button type="button" class="btn btn-secondary" onclick="Multifields.elements.richtext.actionDisplay(this);">
             <i class="fa fa-edit"></i>
         </button>
     </div>
