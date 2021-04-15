@@ -124,7 +124,9 @@
           class: Multifields.elements[Multifields.type] && Multifields.elements[Multifields.type].class || Multifields.elements.elements.class,
           tpl: template,
           tvid: Multifields.container.dataset['tvId'],
-          tvname: Multifields.container.dataset['tvName']
+          tvname: Multifields.container.dataset['tvName'],
+          docId: document.querySelector('[name="id"]') && document.querySelector('[name="id"]').value || 0,
+          templateId: document.querySelector('[name="template"]') && document.querySelector('[name="template"]').value || 0
         }, function(data) {
           if (typeof callback === 'function') {
             if (Multifields.checkLimit(template, true, isTemplate)) {
