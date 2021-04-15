@@ -49,6 +49,14 @@ Multifields.element('row', {
     }
   },
 
+  actionHide: function() {
+    if (!Multifields.el.dataset.mfHide) {
+      Multifields.el.setAttribute('data-mf-hide', 1);
+    } else {
+      Multifields.el.removeAttribute('data-mf-hide');
+    }
+  },
+
   deleteRow: function() {
     let items = Multifields.el.parentElement.children;
     Multifields.el.parentElement.removeChild(Multifields.el);

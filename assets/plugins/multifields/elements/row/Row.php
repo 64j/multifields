@@ -12,6 +12,7 @@ class Row extends \Multifields\Base\Elements
         'move',
         'del',
         'resize',
+        'hide'
     ];
 
     protected $template = '
