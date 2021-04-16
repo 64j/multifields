@@ -46,6 +46,14 @@ Multifields.element('thumb:image', {
     }
   },
 
+  actionHide: function() {
+    if (!Multifields.el.dataset.mfHide) {
+      Multifields.el.setAttribute('data-mf-hide', 1);
+    } else {
+      Multifields.el.removeAttribute('data-mf-hide');
+    }
+  },
+
   MultiBrowseServer: function(el) {
     Multifields.interval = setInterval(function() {
       if (window.KCFinder) {

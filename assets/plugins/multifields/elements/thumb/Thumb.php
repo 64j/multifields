@@ -11,7 +11,8 @@ class Thumb extends \Multifields\Base\Elements
         'add',
         'move',
         'del',
-        'edit'
+        'edit',
+        'hide'
     ];
 
     protected $template = '

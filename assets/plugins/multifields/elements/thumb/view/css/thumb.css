@@ -5,6 +5,8 @@
 .multifields .mf-thumb:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff !important; }
 .multifields .mf-thumb.mf-group:hover > .mf-title { background-color: #0a5 !important; border-color: #0a5 !important; color: #fff !important; }
 .multifields .mf-thumb.mf-group:hover > .mf-actions::before { border-color: #0a5 !important; }
+.multifields .mf-thumb[data-mf-hide] > * { opacity: .5; }
+.multifields .mf-thumb[data-mf-hide] > *:not(.mf-actions), .multifields .mf-thumb[data-mf-hide] > .mf-actions > *:not(.mf-actions-hide) { pointer-events: none }
 .multifields .mf-thumb > .mf-actions { background-image: inherit; background-repeat: no-repeat; background-size: contain; background-position: 50% 50% }
 .multifields .mf-thumb > .mf-actions .mf-actions-add { left: 100%; top: 50%; opacity: 0; visibility: hidden; transform: scale(.8); }
 .multifields .mf-thumb:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
@@ -17,6 +19,12 @@
 .multifields .mf-thumb.mf-group > .mf-actions .mf-actions-edit::before { content: "\f044"; }
 .multifields .mf-thumb[data-multi] > .mf-actions .mf-actions-edit::before { content: "\f302"; }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit::after { font-size: 2rem; opacity: .5; }
+.multifields .mf-thumb > .mf-actions .mf-actions-hide { top: .65rem; right: .5rem; color: #2f2f2f; text-shadow: 0 0 1px #fff; }
+.multifields .mf-thumb > .mf-actions .mf-actions-del ~ .mf-actions-hide { right: 1.5rem }
+.multifields .mf-thumb > .mf-actions .mf-actions-hide::before { content: "\f06e"; }
+.multifields .mf-thumb > .mf-actions .mf-actions-hide::after { opacity: 0; }
+.multifields .mf-thumb[data-mf-hide] > .mf-actions .mf-actions-hide::before { content: "\f070"; }
 .multifields .mf-thumb > .mf-items { display: none !important }
 /* darkness */
 .darkness .multifields .mf-thumb > .mf-title { background-color: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .1); }
+.darkness .multifields .mf-thumb > .mf-actions .mf-actions-hide { color: #c4c4c4; text-shadow: 0 0 1px #000; }
