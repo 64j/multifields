@@ -18,7 +18,7 @@
 .multifields .mf-toolbar .mf-btn:hover svg path, .multifields .mf-toolbar .mf-btn.active svg path { fill: #fff }
 .multifields .mf-toolbar .mf-btn .mf-icon { }
 .multifields .mf-toolbar .mf-breakpoints { display: flex; flex-direction: row; flex-wrap: wrap; margin-right: auto; }
-.multifields .mf-toolbar .mf-btn-toolbar-save { display: none; background: #5cb85c; color: #fff; }
+.multifields .mf-toolbar .mf-btn-toolbar-save { display: none; background: #5cb85c; color: #fff !important; }
 .multifields .mf-toolbar .mf-btn-toolbar-save:hover { background: #1e7e34 }
 .multifields > .mf-toolbar ~ .mf-items { transition: max-width .25s; }
 .multifields > .mf-grid { display: flex; justify-content: center; position: absolute; z-index: 0; left: 0; top: .5rem; right: 0; bottom: 0; pointer-events: none; }
@@ -40,6 +40,7 @@
 .light .multifields[data-mf-fullscreen] > .mf-templates, .light .multifields.mf-view-icons > .mf-templates, .lightness .multifields[data-mf-fullscreen] > .mf-templates, .lightness .multifields.mf-view-icons > .mf-templates { background: #fff }
 /* darkness */
 .darkness .multifields .mf-toolbar { background: #3e4249; }
+.darkness .multifields .mf-toolbar .mf-btn:not(:hover):not(.active) { color: #b7b7b7; }
 .darkness .multifields.mf-view-icons > .mf-templates { background: #282c34 }
 .darkness .multifields.mf-view-icons > .mf-templates .mf-option { background-color: rgba(255, 255, 255, .1); }
 .darkness .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]), .darkness .multifields[data-mf-fullscreen] { background: #202329; }
