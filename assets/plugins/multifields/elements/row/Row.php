@@ -12,7 +12,8 @@ class Row extends \Multifields\Base\Elements
         'move',
         'del',
         'resize',
-        'hide'
+        'hide',
+        'expand'
     ];
 
     protected $template = '
@@ -30,6 +31,10 @@ class Row extends \Multifields\Base\Elements
     {
         if (!empty($this->params['autoincrement'])) {
             $this->params['attr'] .= ' data-autoincrement="' . $this->params['autoincrement'] . '"';
+        }
+
+        if ($this->params['title'] != '') {
+            $this->params['attr'] .= ' data-title="' . $this->params['title'] . '"';
         }
 
         if (!empty($this->params['mf.col'])) {

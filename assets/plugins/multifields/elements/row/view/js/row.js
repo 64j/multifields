@@ -57,6 +57,14 @@ Multifields.element('row', {
     }
   },
 
+  actionExpand: function() {
+    if (!Multifields.el.dataset.mfExpand) {
+      Multifields.el.setAttribute('data-mf-expand', 1);
+    } else {
+      Multifields.el.removeAttribute('data-mf-expand');
+    }
+  },
+
   deleteRow: function() {
     let items = Multifields.el.parentElement.children;
     Multifields.el.parentElement.removeChild(Multifields.el);

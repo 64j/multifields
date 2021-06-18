@@ -20,18 +20,16 @@
 .multifields .mf-actions::before { content: ""; position: absolute; z-index: 5; left: 0; top: 0; right: 0; bottom: 0; border: 1px solid #d4d4d4; pointer-events: none; transition: all .25s; }
 .multifields [data-type]:hover > .mf-actions::before { border-color: #2196f3 }
 .multifields > .mf-actions::before { border: none }
-.multifields .mf-actions i { position: absolute; z-index: 10; display: flex;align-items: center; justify-content: center; width: 1rem; height: 1rem; margin: -.5rem; text-align: center; color: #000; cursor: pointer; opacity: 0; transition: all .25s; }
+.multifields .mf-actions i { position: relative; z-index: 10; top: -1.25rem; float: left; display: flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; font-size: 0.8125rem; text-align: center; color: #fff; background: #2196f3; cursor: pointer; opacity: 0; transition: all .25s; }
 .multifields div:hover > .mf-actions i { opacity: 1; }
 .multifields .mf-actions i::before { position: relative; z-index: 1; }
-.multifields .mf-actions i::after { content: "\f111"; position: absolute; z-index: 0; font-size: 80%; color: #fff; }
-.multifields .mf-actions .mf-actions-add { left: 50%; bottom: 0; margin: -11px; width: 22px; height: 22px; color: #2196f3; }
+.multifields .mf-actions .mf-actions-add { position: absolute; left: 50%; top: auto; bottom: 0; margin: -11px; width: 22px; height: 22px; background: #2196f3; border-radius: 50%; }
 .multifields .mf-actions .mf-actions-add::before { content: "\f067"; position: relative; z-index: 1; font-size: 9px; color: #fff; }
 .multifields .mf-actions .mf-actions-add::after { color: inherit; font-size: 22px; }
-.multifields .mf-actions .mf-actions-del { top: .5rem; right: 0; margin-right: -.45rem; color: #e53935 }
-.multifields .mf-actions .mf-actions-del::before { content: "\f056"; }
-.multifields .mf-actions .mf-actions-move { left: 0; top: .5rem; margin-left: -.45rem; color: #000; cursor: all-scroll; }
+.multifields .mf-actions .mf-actions-del { position: absolute; right: 0; background: #e53935 !important; }
+.multifields .mf-actions .mf-actions-del::before { content: "\f2ed"; }
+.multifields .mf-actions .mf-actions-move { cursor: all-scroll; }
 .multifields .mf-actions .mf-actions-move::before { content: "\f0b2"; }
-.multifields .mf-actions .mf-actions-move::after { font-size: 100%; opacity: .5; }
 /* templates */
 .multifields .mf-templates { top: auto; left: 50%; bottom: 0; margin-left: -6.5rem; width: 13rem !important; opacity: 0; visibility: hidden; display: block !important; font-size: .75rem; transition: opacity .1s, visibility .1s, bottom .1s; }
 .multifields .mf-templates.open { opacity: 1; visibility: visible; }
@@ -45,6 +43,7 @@
 .multifields .mf-row:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff !important; }
 .multifields .mf-row-group:hover > .mf-title { background-color: #0a5 !important; border-color: #0a5 !important; color: #fff !important; }
 /* draggable */
+.multifields .sortable-chosen { z-index: 10; }
 .multifields .mf-active > .mf-actions, .multifields .mf-row.mf-active > .mf-title, .multifields .mf-row-group.mf-active > .mf-title, .multifields .mf-row.mf-active > .mf-value, .multifields .mf-row-group.mf-active > .mf-value { background-color: #ffecb3 !important; border-color: #ffc107 !important; color: inherit !important; }
 .multifields .mf-active > .mf-actions::before { border-color: #ffc107 !important }
 .multifields .mf-active > * { pointer-events: none; }

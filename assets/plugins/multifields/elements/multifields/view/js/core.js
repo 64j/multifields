@@ -508,6 +508,39 @@
       },
 
       /**
+       * Шаблонизатор
+       * @param html
+       * @param data
+       * @param isDom
+       * @param cleanKeys
+       * @returns {Element|*}
+       */
+      parseTpl: function(html, data, isDom, cleanKeys) {
+        data = data || {};
+        isDom = isDom || false;
+        if (typeof cleanKeys === 'undefined') {
+          cleanKeys = true;
+        }
+        html = html.replace(/\{([\w\.]*)\}/g, function(str, key) {
+          let keys = key.split('.'), value = data[keys.shift()];
+          [].slice.call(keys).forEach(function(item) {
+            value = typeof value !== 'undefined' && value[item] || '';
+          });
+          return (value === null || value === undefined) ? (cleanKeys ? '' : str) : value;
+        });
+        if (typeof data === 'boolean') {
+          isDom = data;
+        }
+        if (isDom) {
+          let fragment = document.createElement('div');
+          fragment.innerHTML = html;
+          return fragment.children[0];
+        } else {
+          return html;
+        }
+      },
+
+      /**
        * Работа с куками
        */
       cookie: {

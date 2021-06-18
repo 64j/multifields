@@ -1,4 +1,4 @@
-.multifields > .mf-actions .mf-actions-add { bottom: -1rem; font-size: .7rem; opacity: 1; color: #0a5; }
+.multifields > .mf-actions .mf-actions-add { position: absolute; top: auto; bottom: -1rem; font-size: .7rem; opacity: 1; background: #0a5; }
 .multifields > .mf-actions .mf-actions-add::after { font-size: 1.4rem; }
 .multifields .mf-templates .mf-icon.mf-icon-image { float: left; margin-right: .25rem; height: 1rem; width: 1.2rem; background: 50% 50% no-repeat; background-size: contain; }
 .multifields .mf-templates .mf-icon.mf-icon-image > * { display: block; margin: auto; max-height: 100%; max-width: 100%; height: auto; width: auto; }
@@ -27,7 +27,7 @@
 .multifields[data-mf-breakpoint]:not([data-mf-breakpoint=""]) > .mf-items { background: #f9f9f9; }
 .multifields[data-mf-fullscreen] { position: fixed; z-index: 1050; left: 0; top: 0; right: 0; bottom: 0; margin: 0 !important; padding: 2.15rem 15rem 0 0 !important; flex-direction: column; flex-wrap: nowrap; align-items: center; background-color: #dcdcdc; }
 .mf-mode-fullscreen { overflow: hidden; }
-.multifields[data-mf-fullscreen] > .mf-items { overflow: auto; overflow-x: hidden; margin: 0 !important; align-content: start; background-color: #f9f9f9 }
+.multifields[data-mf-fullscreen] > .mf-items { overflow: auto; overflow-x: hidden; margin: 0 !important; padding: 1rem 0 !important; align-content: start; background-color: #f9f9f9 }
 .multifields[data-mf-fullscreen] > .mf-toolbar { position: absolute; left: 0; top: 0; }
 .multifields[data-mf-fullscreen] > .mf-actions { display: none }
 .multifields[data-mf-fullscreen] > .mf-toolbar > .mf-btn-toolbar-save { display: flex; }
