@@ -11,7 +11,7 @@
 .multifields .mf-thumb > .mf-actions .mf-actions-add { left: 100%; top: 50%; opacity: 0; visibility: hidden; transform: scale(.8); }
 .multifields .mf-thumb:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
 .multifields .mf-thumb.mf-group:hover > .mf-actions .mf-actions-add { color: #0a5; }
-.multifields .mf-thumb.mf-group > .mf-actions i { background: #0a5; }
+.multifields .mf-thumb.mf-group > .mf-actions i { background: #04944c; }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit, .multifields .mf-thumb.mf-group > .mf-actions .mf-actions-edit { position: absolute; left: 50%; top: 50%; font-size: 1rem; background: none; color: #222; opacity: .8; visibility: visible; transform: translate3d(-50%, -50%, 0); }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit:hover { opacity: 1; }
 .multifields .mf-thumb > .mf-actions .mf-actions-edit::before { content: "\f03e"; }
@@ -24,4 +24,4 @@
 .multifields .mf-thumb > .mf-items { display: none !important }
 /* darkness */
 .darkness .multifields .mf-thumb > .mf-title { background-color: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .1); }
-.darkness .multifields .mf-thumb > .mf-actions .mf-actions-hide { color: #c4c4c4; text-shadow: 0 0 1px #000; }
+.darkness .multifields .mf-thumb > .mf-actions .mf-actions-edit, .darkness .multifields .mf-thumb.mf-group > .mf-actions .mf-actions-edit { color: #bdbdbd; }

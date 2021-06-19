@@ -12,6 +12,8 @@ class Table extends \Multifields\Base\Elements
         'add',
         'move',
         'del',
+        'hide',
+        'expand'
     ];
 
     protected $types = [
@@ -77,6 +79,10 @@ class Table extends \Multifields\Base\Elements
 
         if (empty($this->params['class'])) {
             $this->params['class'] = 'col-12';
+        }
+
+        if ($this->params['title'] != '') {
+            $this->params['attr'] .= ' data-title="' . $this->params['title'] . '"';
         }
 
         $this->setValue();

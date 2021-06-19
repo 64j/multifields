@@ -1,9 +1,15 @@
-.multifields .mf-table { align-content: flex-start }
+.multifields .mf-table, .multifields .mf-table[data-mf-hide], .multifields .mf-table[data-mf-expand] { align-content: flex-start; min-height: 2.2rem }
 .multifields .mf-table > .mf-value, .multifields .mf-table > .mf-title { z-index: 1; transition: all .25s; }
 .multifields .mf-table > .mf-title { margin-bottom: -1px; padding: .25rem .5rem; }
 .multifields .mf-table > .mf-title + .mf-value { border-top: 1px solid rgba(0, 0, 0, .15); }
 .multifields .mf-table > .mf-value::after { display: none }
 .multifields .mf-table:hover > .mf-title { background-color: #2196f3 !important; border-color: #2196f3 !important; color: #fff; }
+.multifields .mf-table[data-mf-hide] > *:not(.mf-actions) { opacity: .5; pointer-events: none }
+.multifields .mf-table[data-mf-hide] > .mf-actions > *:not(.mf-actions-hide), .multifields .mf-table[data-mf-hide] > .mf-items, .multifields .mf-table[data-mf-hide] > .mf-value, .multifields .mf-table[data-mf-hide] > .mf-title, .multifields .mf-table[data-mf-expand] > .mf-items, .multifields .mf-table[data-mf-expand] > .mf-value, .multifields .mf-table[data-mf-expand] > .mf-title { display: none }
+.multifields .mf-table[data-mf-hide]::after, .multifields .mf-table[data-mf-expand]::after { content: attr(data-name); position: absolute; z-index: 0; left: .25rem; top: .25rem; right: .25rem; bottom: .25rem; padding: .25rem .5rem; background: #f1f1f1; transition: all .25s; }
+.multifields .mf-table[data-mf-hide][data-title]::after, .multifields .mf-table[data-mf-expand][data-title]::after { content: attr(data-title); }
+.multifields .mf-table[data-mf-hide]::after { opacity: .5; }
+.multifields .mf-table[data-mf-hide]:hover::after, .multifields .mf-table[data-mf-expand]:hover::after { background: #2196f3; color: #fff; }
 /* actions */
 .multifields .mf-table > .mf-actions { left: .25rem; right: .25rem; background-color: #fff; border: none; }
 .multifields .mf-table .mf-items th > .mf-actions { left: 0; right: 0; border: none; }
@@ -12,6 +18,12 @@
 .multifields .mf-table > .mf-actions .mf-actions-add { opacity: 0; visibility: hidden; transform: scale(.8); transition: opacity .15s, visibility .15s, transform .15s; }
 .multifields .mf-table:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
 .multifields .mf-table > .mf-actions > .mf-actions-resize-col, .multifields .mf-table > .mf-actions > .mf-actions-resize-offset { display: none; }
+.multifields .mf-table > .mf-actions .mf-actions-hide::before { content: "\f06e"; }
+.multifields .mf-table > .mf-actions .mf-actions-hide::after { opacity: 0; }
+.multifields .mf-table[data-mf-hide] > .mf-actions .mf-actions-hide::before { content: "\f070"; }
+.multifields .mf-table > .mf-actions .mf-actions-expand::before { content: "\f077"; }
+.multifields .mf-table > .mf-actions .mf-actions-expand::after { opacity: 0; }
+.multifields .mf-table[data-mf-expand] > .mf-actions .mf-actions-expand::before { content: "\f078"; }
 /* columns */
 .multifields .mf-table .mf-column-settings { position: relative; z-index: 9; float: right; margin: .5rem .25rem .5rem -1rem; width: .7rem; height: .7rem; text-align: center; cursor: pointer; }
 .multifields .mf-table .mf-column-settings:hover { color: #2196f3; }
@@ -51,6 +63,7 @@
 .multifields .mf-table > .mf-items .table th > .mf-actions::before { display: none }
 .multifields .mf-table > .mf-items .table th > .mf-actions i { top: 0; width: 100%; height: 100%; opacity: 0; }
 .multifields .mf-table > .mf-items .table tr:hover th > .mf-actions i { opacity: 1; visibility: visible; }
+.multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-move { background: #2196f3; }
 .multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add { top: auto; left: 100%; bottom: .25rem; margin: -12px -7px; width: 1rem; height: 1rem; }
 .multifields .mf-table > .mf-items .table th > .mf-actions i.mf-actions-add::after { font-size: 15px }
 .multifields .mf-table > .mf-items > .mf-row > .mf-actions { left: 0; top: 0; right: 0; bottom: 0; }
@@ -58,7 +71,7 @@
 .multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-add { z-index: 11; top: auto; left: 0; bottom: .25rem; margin: -12px 10px; width: 1rem; height: 1rem; transform: none; }
 .multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-add::after { font-size: 15px; }
 .multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-del { right: .05rem; top: 0; width: 1.05rem; height: 100%; }
-.multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-move { left: .05rem; top: 0; width: 1.05rem; height: 100%; }
+.multifields .mf-table > .mf-items > .mf-row > .mf-actions i.mf-actions-move { left: .05rem; top: 0; width: 1.05rem; height: 100%; background: #2196f3; }
 .multifields .mf-table > .mf-items .table .mf-active td { background-color: #ffecb3 }
 .multifields .mf-table > .mf-items .table input, .multifields .mf-table > .mf-items .table select, .multifields .mf-table > .mf-items .table textarea, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col > input, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col > select, .multifields .mf-table > .mf-items > .mf-row > .mf-items > .col > textarea { background-color: transparent; border-color: transparent; border-radius: 0; border: none !important; }
 /* */
@@ -66,7 +79,7 @@
 .multifields .mf-table input[readonly]:focus, .multifields .mf-table input[readonly]:hover { border-color: #d4d4d4; box-shadow: none; outline: none; }
 /* darkness */
 .darkness .multifields .mf-table > .mf-actions { background-color: #282c34; }
-.darkness .multifields .mf-table > .mf-value, .darkness .multifields .mf-table > .mf-title { background-color: #3e4249; border-color: #52555c; }
+.darkness .multifields .mf-table > .mf-value, .darkness .multifields .mf-table > .mf-title, .darkness .multifields .mf-table[data-mf-hide]::after, .darkness .multifields .mf-table[data-mf-expand]::after { background-color: #3e4249; border-color: #52555c; }
 .darkness .multifields .mf-table > .mf-items .table thead, .darkness .multifields .mf-table > .mf-items .table th:first-child, .darkness .multifields .mf-table > .mf-items .table th:last-child, .darkness .multifields .mf-table > .mf-items .table td:first-child, .darkness .multifields .mf-table > .mf-items .table td:last-child { background-color: #202329; }
 .darkness .multifields .table-hover tbody tr:hover { color: #afafaf }
 .darkness .multifields .table th, .darkness .multifields .table td { border-color: #2b2e34 }

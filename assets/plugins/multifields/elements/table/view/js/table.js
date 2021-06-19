@@ -88,6 +88,22 @@ Multifields.element('table', {
     Multifields.elements.table.setIndexes();
   },
 
+  actionHide: function() {
+    if (!Multifields.el.dataset.mfHide) {
+      Multifields.el.setAttribute('data-mf-hide', 1);
+    } else {
+      Multifields.el.removeAttribute('data-mf-hide');
+    }
+  },
+
+  actionExpand: function() {
+    if (!Multifields.el.dataset.mfExpand) {
+      Multifields.el.setAttribute('data-mf-expand', 1);
+    } else {
+      Multifields.el.removeAttribute('data-mf-expand');
+    }
+  },
+
   columnMenu: function(e) {
     e.stopPropagation();
     Multifields.elements.table.el = e.target.closest('.mf-table');
