@@ -6,11 +6,11 @@
 .multifields .mf-row.col:not([class*="col-"]):not([data-mf-disable-col]) { max-width: 100%; flex: 0 0 100%; }
 .multifields .mf-row[data-mf-hide] > *:not(.mf-actions) { opacity: .5; pointer-events: none }
 .multifields .mf-row[data-mf-hide] > .mf-actions > *:not(.mf-actions-hide), .multifields .mf-row[data-mf-hide] > .mf-items, .multifields .mf-row[data-mf-hide] > .mf-value, .multifields .mf-row[data-mf-hide] > .mf-title, .multifields .mf-row[data-mf-expand] > .mf-items, .multifields .mf-row[data-mf-expand] > .mf-value, .multifields .mf-row[data-mf-expand] > .mf-title { display: none }
-.multifields .mf-row[data-mf-hide]::before, .multifields .mf-row[data-mf-expand]::before { content: attr(data-name); position: absolute; z-index: 0; left: .25rem; top: .25rem; right: .25rem; bottom: .25rem; padding: .25rem .5rem; background: #f1f1f1 }
-.multifields .mf-row[data-mf-hide][data-title]::before, .multifields .mf-row[data-mf-expand][data-title]::before { content: attr(data-title); }
-.multifields .mf-row[data-mf-hide]::before { opacity: .5; }
-.multifields .mf-row[data-mf-hide]:hover::before, .multifields .mf-row[data-mf-expand]:hover::before { background: #2196f3; color: #fff; }
-.multifields .mf-row.mf-row-group[data-mf-hide]:hover::before, .multifields .mf-row.mf-row-group[data-mf-expand]:hover::before { background: #0a5; }
+.multifields .mf-row[data-mf-hide]::after, .multifields .mf-row[data-mf-expand]::after { content: attr(data-name); position: absolute; z-index: 0; left: .25rem; top: .25rem; right: .25rem; bottom: .25rem; padding: .25rem .5rem; background: #f1f1f1 }
+.multifields .mf-row[data-mf-hide][data-title]::after, .multifields .mf-row[data-mf-expand][data-title]::after { content: attr(data-title); }
+.multifields .mf-row[data-mf-hide]::after { opacity: .5; }
+.multifields .mf-row[data-mf-hide]:hover::after, .multifields .mf-row[data-mf-expand]:hover::after { background: #2196f3; color: #fff; }
+.multifields .mf-row.mf-row-group[data-mf-hide]:hover::after, .multifields .mf-row.mf-row-group[data-mf-expand]:hover::after { background: #0a5; }
 .multifields .mf-row > .mf-value, .multifields .mf-row > .mf-title { z-index: 1; background: #f1f1f1; border-bottom: 1px solid rgba(0, 0, 0, .1); transition: all .25s; }
 .multifields .mf-row > .mf-title { padding: .25rem .5rem; }
 .multifields .mf-row > .mf-actions .mf-actions-add { transform: scale(.8); transform-origin: center; }
@@ -28,5 +28,5 @@
 .multifields .mf-row > .mf-helper { position: absolute; opacity: 0; visibility: hidden; z-index: 1; top: .5rem; left: 50%; transform: translateX(-50%); margin: -.25rem .25rem; padding: .5rem; background-color: rgba(0, 0, 0, .2); color: #222; font-size: 1.2rem; white-space: nowrap; transition: .5s; }
 .multifields .mf-row > .mf-helper.show { opacity: 1; visibility: visible; }
 /* darkness */
-.darkness .multifields .mf-row > .mf-value, .darkness .multifields .mf-row > .mf-title, .darkness .multifields .mf-row[data-mf-hide]::before, .darkness .multifields .mf-row[data-mf-expand]::before { background-color: #3e4249; border-color: #3e4249; }
+.darkness .multifields .mf-row > .mf-value, .darkness .multifields .mf-row > .mf-title, .darkness .multifields .mf-row[data-mf-hide]::after, .darkness .multifields .mf-row[data-mf-expand]::after { background-color: #3e4249; border-color: #3e4249; }
 .darkness .multifields .mf-row > .mf-helper { background: rgba(255, 255, 255, 2); }
