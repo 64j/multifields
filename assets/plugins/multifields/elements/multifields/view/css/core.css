@@ -23,7 +23,7 @@
 .multifields .mf-actions i { position: relative; z-index: 10; top: -1.25rem; float: left; display: flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; font-size: 0.8125rem; text-align: center; color: #fff; background: #2196f3; cursor: pointer; opacity: 0; visibility: hidden; transition: all .25s; }
 .multifields div:hover > .mf-actions i { opacity: 1; visibility: visible }
 .multifields .mf-actions i::before { position: relative; z-index: 1; }
-.multifields .mf-actions .mf-actions-add { position: absolute; left: 50%; top: auto; bottom: 0; margin: -11px; width: 22px; height: 22px; background: #2196f3; border-radius: 50%; }
+.multifields .mf-actions .mf-actions-add { position: absolute; left: 50%; top: auto; bottom: 0; margin: -11px; width: 22px; height: 22px; visibility: visible; background: #2196f3; border-radius: 50%; }
 .multifields .mf-actions .mf-actions-add::before { content: "\f067"; position: relative; z-index: 1; font-size: 9px; color: #fff; }
 .multifields .mf-actions .mf-actions-add::after { color: inherit; font-size: 22px; }
 .multifields .mf-actions .mf-actions-del { position: absolute; right: 0; background: #e53935 !important; }
