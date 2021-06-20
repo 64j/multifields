@@ -34,6 +34,10 @@ class Image extends \Multifields\Base\Elements
             $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';
         }
 
+        if (!empty($this->params['thumb'])) {
+            $this->params['attr'] .= ' data-thumb="' . $this->params['thumb'] . '"';
+        }
+
         parent::setAttr();
     }
 
