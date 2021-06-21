@@ -6,8 +6,9 @@
 .multifields .mf-thumb.mf-group:hover > .mf-title { background-color: #0a5 !important; border-color: #0a5 !important; color: #fff !important; }
 .multifields .mf-thumb.mf-group:hover > .mf-actions::before { border-color: #0a5 !important; }
 .multifields .mf-thumb[data-mf-hide] > .mf-actions > *:not(.mf-actions-hide) { display: none; }
-.multifields .mf-thumb[data-mf-hide] > *:not(.mf-actions), .multifields .mf-thumb[data-mf-hide] > .mf-actions > *:not(.mf-actions-hide) { opacity: .5; pointer-events: none }
-.multifields .mf-thumb > .mf-actions { background-image: inherit; background-repeat: no-repeat; background-size: contain; background-position: 50% 50% }
+.multifields .mf-thumb[data-mf-hide] > *:not(.mf-actions), .multifields .mf-thumb[data-mf-hide] > .mf-actions > *:not(.mf-actions-hide), .multifields .mf-thumb[data-mf-hide] > .mf-actions::after { opacity: .5; pointer-events: none }
+.multifields .mf-thumb > .mf-actions { background: inherit; }
+.multifields .mf-thumb > .mf-actions::after { content: ""; position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: inherit; background-repeat: no-repeat; background-size: contain; background-position: 50% 50% }
 .multifields .mf-thumb > .mf-actions .mf-actions-add { left: 100%; top: 50%; opacity: 0; visibility: hidden; transform: scale(.8); }
 .multifields .mf-thumb:hover > .mf-actions .mf-actions-add { opacity: 1; visibility: visible; transform: scale(1); }
 .multifields .mf-thumb.mf-group:hover > .mf-actions .mf-actions-add { color: #0a5; }
