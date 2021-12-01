@@ -5,7 +5,7 @@
 ---------------------------
 ## Создание кастомных полей для документов.
 
-Документация https://app.gitbook.com/@64j/s/multifields-2/
+Документация https://64j.gitbook.io/multifields-2/
 
 ### Конфигурация
 Создать конфиг файл в папке assets/plugins/multifields/config/
@@ -18,7 +18,7 @@ assets/plugins/multifields/config/example.slider.php
 ----------------------------
 ## Creating custom fields for documents.
 
-Docs https://app.gitbook.com/@64j/s/multifields-2/
+Docs https://64j.gitbook.io/multifields-2/
 
 ### Config
 Create config file in folder assets/plugins/multifields/config/
