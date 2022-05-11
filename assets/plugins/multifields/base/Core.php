@@ -284,7 +284,8 @@ class Core
             'tv' => $row
         ]);
 
-        $this->setConfig(null);
+        $config = !empty($row['default_text']) ? json_decode($row['default_text'], true) : null;
+        $this->setConfig($config);
         $this->setData(null);
 
         if (empty($this->getConfig('templates'))) {
