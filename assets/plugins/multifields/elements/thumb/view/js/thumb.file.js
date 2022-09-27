@@ -52,9 +52,12 @@ Multifields.element('thumb:file', {
           window.SetUrl(files[0]);
           for (let k in files) {
             if (files.hasOwnProperty(k) && k !== '0') {
+              let template = Multifields.el.dataset['multi'] || Multifields.name,
+                el = Multifields.el.parentElement.closest('[data-type]');
+              el = el.dataset['name'] === template ? el : el.querySelector('[data-name="' + template + '"]')
               Multifields.getTemplate(function(data) {
-                Multifields.el.insertAdjacentHTML('afterend', data.html);
-                Multifields.el = Multifields.el.nextElementSibling;
+                el.insertAdjacentHTML('afterend', data.html);
+                Multifields.el = el.nextElementSibling.dataset['name'] === Multifields.name && el.nextElementSibling || el.nextElementSibling.querySelector('[data-name="' + Multifields.name + '"]');
                 window.lastFileCtrl = Multifields.el.querySelector('.mf-value > input').id;
                 window.SetUrl(files[k]);
               });

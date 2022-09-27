@@ -153,9 +153,12 @@ Multifields.element('thumb', {
           window.SetUrl(files[0]);
           for (let k in files) {
             if (files.hasOwnProperty(k) && k !== '0') {
-              Multifields.getTemplate(function(data) {
-                Multifields.el.insertAdjacentHTML('afterend', data.html);
-                Multifields.el = Multifields.el.nextElementSibling;
+              let template = Multifields.el.dataset['multi'] || Multifields.name,
+              el = Multifields.el.parentElement.closest('[data-type]');
+              el = el.dataset['name'] === template ? el : el.querySelector('[data-name="' + template + '"]')
+              Multifields.getTemplate(template, function(data) {
+                el.insertAdjacentHTML('afterend', data.html);
+                Multifields.el = el.nextElementSibling.dataset['name'] === Multifields.name && el.nextElementSibling || el.nextElementSibling.querySelector('[data-name="' + Multifields.name + '"]');
                 window.lastFileCtrl = Multifields.el.querySelector('.mf-value > input').id;
                 window.SetUrl(files[k]);
                 Multifields.el.style.backgroundImage = 'url(\'../' + files[k] + '\')';

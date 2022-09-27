@@ -31,7 +31,7 @@ class Image extends \Multifields\Base\Elements
         $this->params['attr'] .= 'style="background-image: url(\'../' . $this->params['value'] . '\');' . (!empty($matches[1]) ? $matches[1] : '') . '"';
 
         if (!empty($this->params['multi'])) {
-            $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';
+            $this->params['attr'] .= ' data-multi="' . (is_bool($this->params['multi']) ? $this->params['name'] : $this->params['multi']) . '"';
         }
 
         if (!empty($this->params['thumb'])) {

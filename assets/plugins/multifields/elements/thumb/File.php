@@ -27,7 +27,7 @@ class File extends \Multifields\Base\Elements
     protected function setAttr()
     {
         if (!empty($this->params['multi'])) {
-            $this->params['attr'] .= ' data-multi="' . $this->params['multi'] . '"';
+            $this->params['attr'] .= ' data-multi="' . (is_bool($this->params['multi']) ? $this->params['name'] : $this->params['multi']) . '"';
         }
 
         parent::setAttr();
