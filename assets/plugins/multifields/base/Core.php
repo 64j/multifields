@@ -338,7 +338,7 @@ class Core
             if (class_exists($className)) {
                 $class = new $className();
                 $method = 'action' . ucfirst(strtolower($_REQUEST['action']));
-                if (is_callable([$className, $method])) {
+                if (is_callable([$class, $method])) {
                     try {
                         echo $class->$method($_REQUEST);
                     } catch (\Error $exception) {
