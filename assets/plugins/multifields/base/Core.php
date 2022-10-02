@@ -87,7 +87,7 @@ class Core
             evo.MODX_MANAGER_URL = \'' . MODX_MANAGER_URL . '\';
         }
         if (typeof evo.config.which_browser === \'undefined\') {
-            evo.config.which_browser = \'' . ($evo->configGlobal['which_browser'] ? $evo->configGlobal['which_browser'] : $evo->config['which_browser']) . '\';
+            evo.config.which_browser = \'' . ($evo->configGlobal['which_browser'] ?? $evo->config['which_browser']) . '\';
         }
         </script>';
 
