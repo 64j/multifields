@@ -66,7 +66,7 @@ Multifields.element('thumb:image', {
             if (files.hasOwnProperty(k) && k !== '0') {
               let template = Multifields.el.dataset['multi'] || Multifields.name,
                 el = Multifields.el.parentElement.closest('[data-type]');
-              el = el.dataset['name'] === template ? el : el.querySelector('[data-name="' + template + '"]')
+              el = el.dataset['name'] === template ? el : el.querySelector('[data-name="' + template + '"]');
               Multifields.getTemplate(template, function(data) {
                 el.insertAdjacentHTML('afterend', data.html);
                 Multifields.el = el.nextElementSibling.dataset['name'] === Multifields.name && el.nextElementSibling || el.nextElementSibling.querySelector('[data-name="' + Multifields.name + '"]');
