@@ -86,11 +86,9 @@ class Front
 
                 default:
                     $out = $this->renderData(self::getData(), 0, self::getConfig('templates'));
-                    $out = $out['mf.items'];
+                    $out = $this->tpl(self::getParams('tplWrap'), ['mf.wrap' => $out['mf.items']]);
                     break;
             }
-            
-            $out = $this->tpl(self::getParams('tplWrap'), ['mf.wrap' => $out]);
         }
 
         return $out;
