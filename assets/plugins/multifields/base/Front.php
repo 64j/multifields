@@ -66,7 +66,11 @@ class Front
         if (!isset($params['tvName'])) {
             $params['tvName'] = '';
         }
-
+        
+        if (!isset($params['tplWrap'])) {
+            $params['tplWrap'] = '@CODE: [+mf.wrap+]';
+        }
+        
         self::setParams($params);
         self::setConfig(null);
         self::setData(null);
@@ -85,6 +89,8 @@ class Front
                     $out = $out['mf.items'];
                     break;
             }
+            
+            $out = $this->tpl(self::getParams('tplWrap'), ['mf.wrap' => $out]);
         }
 
         return $out;
