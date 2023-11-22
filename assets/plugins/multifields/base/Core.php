@@ -34,7 +34,7 @@ class Core
 
         if (!is_dir($this->getCacheFolder())) {
             mkdir($this->getCacheFolder(), 0755);
-            file_put_contents($this->getCacheFolder() . '.htaccess', "order deny,allow\nallow from all\n");
+            file_put_contents($this->getCacheFolder() . '.htaccess', "<ifModule mod_authz_core.c>\nRequire all granted\n</ifModule>\n<ifModule !mod_authz_core.c>\norder deny,allow\nallow from all\n</ifModule>\n");  
         }
 
         require_once MODX_MANAGER_PATH . 'includes/tmplvars.inc.php';
