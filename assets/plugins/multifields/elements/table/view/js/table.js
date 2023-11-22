@@ -153,7 +153,7 @@ Multifields.element('table', {
     if (Multifields.elements.table.target.parentElement.cells.length < 5) {
       Multifields.elements.table.addColumn();
     }
-    Multifields.el.querySelectorAll('tbody tr').forEach(function(row) {
+    Multifields.el.querySelectorAll('tbody > tr').forEach(function(row) {
       row.cells[Multifields.elements.table.target.cellIndex].parentElement.removeChild(row.cells[Multifields.elements.table.target.cellIndex]);
     });
     Multifields.elements.table.target.parentElement.removeChild(Multifields.elements.table.target);
@@ -174,7 +174,7 @@ Multifields.element('table', {
       id: id
     }, function(data) {
       Multifields.elements.table.target.dataset['type'] = type;
-      Multifields.elements.table.el.querySelectorAll('tbody tr').forEach(function(row, i) {
+      Multifields.elements.table.el.querySelectorAll('tbody > tr').forEach(function(row, i) {
         let _input = row.cells[Multifields.elements.table.target.cellIndex].querySelector('input'),
             input;
         row.cells[Multifields.elements.table.target.cellIndex].innerHTML = data.html.replace(new RegExp(id, 'g'), id + '_' + i);
